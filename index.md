@@ -11,6 +11,7 @@ import lanzou.client; //导入刚安装的扩展库
 
 console.setTitle("Lanzou Client");
 
+var lanzou = lanzou.client()
 var list = lanzou.getShare("https://www.lanzous.com/b594057/", "5sfr");
 console.dumpJson( list )
 
