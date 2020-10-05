@@ -5,8 +5,8 @@
 
 ```js
 //安装扩展库
-_IMPORTURL["lanzou.client"] = "库链接"
-import lanzou.client; //导入刚安装的扩展库
+_IMPORTURL["库名称"] = "库链接"
+import 库名称; //导入刚安装的扩展库
 ```
 
 #### 库列表
