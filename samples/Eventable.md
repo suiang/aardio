@@ -8,7 +8,7 @@ title: "事件表"
 #### 示例代码
 
 ```js
-_URL = "http://suiang.cn/aardio/lib/table.event.tar.lzma"
+_URL = "https://suiang.cn/aardio/lib/table.event.tar.lzma"
 _IMPORTURL["table.event"] = _URL
 
 import console;
