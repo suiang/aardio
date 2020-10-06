@@ -2,6 +2,11 @@
 title: "微信推送"
 ---
 
+#### 使用说明：
+
+1. 登入：用GitHub账号[登入网站](http://sc.ftqq.com/?c=github&a=login)，就能获得一个[SCKEY](http://sc.ftqq.com/?c=code)（在「发送消息」页面）
+2. 绑定：点击[「微信推送」](http://sc.ftqq.com/?c=wechat&a=bind)，扫码关注同时即可完成绑定
+
 #### 示例代码：
 
 ```js
