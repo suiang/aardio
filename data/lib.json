@@ -3,35 +3,35 @@
         "author":"suiang",
         "description":"获取ip信息",
         "keywords":"ip ip2region",
-        "url":"http://suiang.cn/aardio/lib/ip2region.tar.lzma",
+        "url":"https://suiang.cn/aardio/lib/ip2region.tar.lzma",
         "version":"1.0.0.0"
     },
     "jsonStore":{
         "author":"suiang",
         "description":"JSON 存储服务",
         "keywords":"json store",
-        "url":"http://suiang.cn/aardio/lib/jsonStore.tar.lzma",
+        "url":"https://suiang.cn/aardio/lib/jsonStore.tar.lzma",
         "version":"1.0.0.0"
     },
     "lanzou.client":{
         "author":"suiang",
         "description":"获取蓝奏云分享直连",
         "keywords":"lanzou",
-        "url":"http://suiang.cn/aardio/lib/lanzou.client.tar.lzma",
+        "url":"https://suiang.cn/aardio/lib/lanzou.client.tar.lzma",
         "version":"1.0.0.0"
     },
     "ServerChan":{
         "author":"suiang",
         "description":"微信推送",
         "keywords":"wechat 微信",
-        "url":"http://suiang.cn/aardio/lib/ServerChan.tar.lzma",
+        "url":"https://suiang.cn/aardio/lib/ServerChan.tar.lzma",
         "version":"1.0.0.0"
     },
     "table.event":{
         "author":"suiang",
         "description":"事件表",
         "keywords":"table event",
-        "url":"http://suiang.cn/aardio/lib/table.event.tar.lzma",
+        "url":"https://suiang.cn/aardio/lib/table.event.tar.lzma",
         "version":"1.0.0.0"
     }
  }
