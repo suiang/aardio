@@ -17,7 +17,7 @@ title:  "JSON 存储服务"
 
 ```js
 
-_URL = "http://suiang.cn/aardio/lib/jsonStore.tar.lzma"
+_URL = "https://suiang.cn/aardio/lib/jsonStore.tar.lzma"
 _IMPORTURL["jsonStore"] = _URL
 
 import console;
