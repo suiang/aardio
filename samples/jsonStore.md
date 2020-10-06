@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "JSON 存储服务"
 ---
 
@@ -8,13 +7,8 @@ title:  "JSON 存储服务"
 
 ```js
 
-/*
-JSON storage service
-https://extendsclass.com/json-storage.html.
-This JSON storage service allows you to store and share JSON bins, and manipulate this data over a simple HTTP API.
-You can create and share bin without account. You must create a free account to use HTTP API (in order to have an API key)
-*/
-_IMPORTURL["jsonStore"] = "http://suiang.cn/aardio/lib/jsonStore.tar.lzma"
+_URL = "http://suiang.cn/aardio/lib/jsonStore.tar.lzma"
+_IMPORTURL["jsonStore"] = _URL
 
 import console;
 import jsonStore;
