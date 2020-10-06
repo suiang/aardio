@@ -1,6 +1,9 @@
 ---
 title: "事件表"
 ---
+#### 使用说明
+
+参照：[A Series of Tubes for Lua tables.](http://develephant.github.io/Eventable/)
 
 #### 示例代码：
 
