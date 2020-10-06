@@ -18,15 +18,15 @@ var nopl = "https://www.lanzoux.com/iRwihgmkl0j";
 var purl = "https://www.lanzoux.com/i2XAqgmkl1a"
 var pwd = "AArdio";
 
-var lanzou = lanzou.client()
+var lan = lanzou.client()
 
-console.printf('无密码分享链接：\n%s\n', lanzou.getShare(nopl))
-console.printf('有密码分享链接：\n%s', lanzou.getShare(purl, pwd))
+console.printf('无密码分享链接：\n%s\n', lan.getShare(nopl))
+console.printf('有密码分享链接：\n%s', lan.getShare(purl, pwd))
 
-var list = lanzou.getShare("https://www.lanzous.com/b594057/", "5sfr");
+var list = lan.getShare("https://www.lanzous.com/b594057/", "5sfr")
 console.dumpJson( list )
 
-console.log( lanzou.getShare( list.text[1].id) )
+console.log( lan.getShare( list.text[1].id) )
 
 console.pause(true);
 
