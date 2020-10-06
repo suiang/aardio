@@ -1,6 +1,16 @@
 ---
 title:  "JSON 存储服务"
 ---
+#### 使用说明
+
+此 JSON 存储服务允许您存储和共享 JSON bin，并在简单的 HTTP API 上操作此数据。<br />
+可以创建和共享没有帐户的 bin，只有[创建帐户](https://extendsclass.com/create-account-form)才能使用 API 密钥（免费）创建私有 bin。
+
+#### 使用限制
+
+- 每月 10000 个请求
+- Bin 限制为 100 KB
+- 帐户配额：10 MB
 
 #### 示例代码：
 
