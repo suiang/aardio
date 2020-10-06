@@ -6,7 +6,7 @@ title: "微信推送"
 
 ```js
 _URL = "http://suiang.cn/aardio/lib/ServerChan.tar.lzma"
-_IMPORTURL[""] = _URL
+_IMPORTURL["ServerChan"] = _URL
 
 import console; 
 import ServerChan;
