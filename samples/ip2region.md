@@ -6,7 +6,7 @@ title: "获取 IP 信息"
 
 使用前需要[下载数据库](https://gitee.com/lionsoul/ip2region/tree/master/data)，保存到非中文目录。
 
-#### 示例代码：
+#### 示例代码
 
 ```js
 _URL = "http://suiang.cn/aardio/lib/ip2region.tar.lzma"
