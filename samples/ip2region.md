@@ -15,7 +15,7 @@ var region = ip2region("\res\ip2region.db");
 var ip = ip2region.getIp();
 var info = region.getIpInfo( ip );
  
- console.varDump( info )
+console.varDump( info )
  
 console.log( tostring( info ) )
 console.pause(true);
