@@ -37,12 +37,12 @@ waiter.emit('order', 'Pancakes')
 
 var etbl = event()
 etbl.on('party', function(evt, when){
-	console.printf('The party is %s.', when)
+    console.printf('The party is %s.', when)
 })
 
 //etbl.emit('party', 'tonight')
 etbl.goParty = function(when){
-	owner.emit('party', when)
+    owner.emit('party', when)
 }
 etbl.goParty('tonight')
 
