@@ -12,7 +12,6 @@ You can create and share bin without account. You must create a free account to 
 _IMPORTURL["jsonStore"] = "http://suiang.cn/aardio/lib/jsonStore.tar.lzma"
 
 import console;
-import web.json;
 import jsonStore;
 
 var jsonStore = jsonStore();
