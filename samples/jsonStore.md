@@ -1,4 +1,4 @@
-## jsonStore
+## JSON storage service
 
 
 ```js
