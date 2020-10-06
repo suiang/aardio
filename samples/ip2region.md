@@ -9,7 +9,7 @@ title: "获取 IP 信息"
 #### 示例代码
 
 ```js
-_URL = "http://suiang.cn/aardio/lib/ip2region.tar.lzma"
+_URL = "https://suiang.cn/aardio/lib/ip2region.tar.lzma"
 _IMPORTURL["ip2region"] = _URL
 
 import console; 
