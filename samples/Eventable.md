@@ -6,7 +6,7 @@ title: "事件表"
 
 参照：[A Series of Tubes for Lua tables.](http://develephant.github.io/Eventable/)
 
-#### 示例代码
+##### 示例代码
 
 ```js
 _URL = "https://suiang.cn/aardio/lib/table.event.tar.lzma"
