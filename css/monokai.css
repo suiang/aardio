@@ -349,7 +349,7 @@
 }
 
 .syntaxhighlighter .keyword {
-  font-weight: bold !important;
+  font-weight: normal !important;
   color: #F92672 !important;
 }
 
