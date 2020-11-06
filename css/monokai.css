@@ -215,7 +215,7 @@
 
 .syntaxhighlighter.printing .keyword {
   color: #006699 !important;
-  font-weight: bold !important;
+  font-weight: normal !important;
 }
 
 .syntaxhighlighter.printing .preprocessor {
