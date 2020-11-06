@@ -1,0 +1,74 @@
+<html><head><meta content='text/html; charset=utf-8' http-equiv='Content-Type'></head><body>
+<!--StartFragment   -->
+<p style="font-family: Cascadia Code PL Regular"></font><font color="#0000ff">import</font><font color="#000000">&nbsp;console;<BR>
+</font><font color="#0000ff">import</font><font color="#000000">&nbsp;web.json;<BR>
+</font><font color="#0000ff">import</font><font color="#000000">&nbsp;string.html<BR>
+</font><font color="#0000ff">import</font><font color="#000000">&nbsp;web.rest.client<BR>
+<BR>
+console.showLoading(</font><font color="#800000">"正在获取数据ing..."</font><font color="#000000">)<BR>
+_host&nbsp;=&nbsp;</font><font color="#800000">"https://www.todaybing.com"</font><font color="#000000">;<BR>
+_api&nbsp;=&nbsp;</font><font color="#800000">"https://www.todaybing.com/web/api"</font><font color="#000000">;<BR>
+<BR>
+</font><font color="#0000ff">var</font><font color="#000000">&nbsp;http&nbsp;=&nbsp;web.rest.client();<BR>
+http.referer&nbsp;=&nbsp;_host<BR>
+<BR>
+</font><font color="#008000">//获取token<BR>
+</font><font color="#0000ff">var</font><font color="#000000">&nbsp;getToken&nbsp;=&nbsp;http.api(_host,&nbsp;</font><font color="#800000">"GET"</font><font color="#000000">,&nbsp;</font><font color="#0000ff">function</font><font color="#000000">(ret)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;ret&nbsp;=&nbsp;string.match(ret,&nbsp;</font><font color="#800000">"s\s=\s(%{})"</font><font color="#000000">)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">return</font><font color="#000000">&nbsp;web.json.parse(ret)[[</font><font color="#800000">"tk"</font><font color="#000000">]];<BR>
+})<BR>
+<BR>
+</font><font color="#008000">//获取列表<BR>
+</font><font color="#000000">getList&nbsp;=&nbsp;</font><font color="#0000ff">function</font><font color="#000000">(data)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;list&nbsp;=&nbsp;{}<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;doc&nbsp;=&nbsp;string.html(http.post(_api,&nbsp;data))<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;content&nbsp;=&nbsp;doc.queryEles([</font><font color="#800000">'class'</font><font color="#000000">]&nbsp;=&nbsp;</font><font color="#800000">"media-content"</font><font color="#000000">)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">for</font><font color="#000000">&nbsp;(i&nbsp;=&nbsp;1;&nbsp;#&nbsp;content)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table.push(list,&nbsp;_host&nbsp;+&nbsp;content[ i ].href)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;}<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">return</font><font color="#000000">&nbsp;list;<BR>
+}<BR>
+<BR>
+</font><font color="#008000">//获取详情<BR>
+</font><font color="#000000">getDetail&nbsp;=&nbsp;</font><font color="#0000ff">function</font><font color="#000000">(url)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">return</font><font color="#000000">&nbsp;http.api(url,&nbsp;</font><font color="#800000">"GET"</font><font color="#000000">,&nbsp;</font><font color="#0000ff">function</font><font color="#000000">(ret)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;addr&nbsp;=&nbsp;</font><font color="#800000">""</font><font color="#000000"><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;ret&nbsp;=&nbsp;string.html(ret)<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;image&nbsp;=&nbsp;ret.queryEle([</font><font color="#800000">'class'</font><font color="#000000">]&nbsp;=&nbsp;</font><font color="#800000">"top-main-bg"</font><font color="#000000">).style<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">var</font><font color="#000000">&nbsp;address&nbsp;=&nbsp;ret.queryEle([</font><font color="#800000">'class'</font><font color="#000000">]&nbsp;=&nbsp;</font><font color="#800000">"text-sm"</font><font color="#000000">).innerText()<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string.replace(address,&nbsp;</font><font color="#800000">":+"</font><font color="#000000">,&nbsp;</font><font color="#0000ff">function</font><font color="#000000">(s)&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr&nbsp;=&nbsp;addr&nbsp;+&nbsp;</font><font color="#800000">"&nbsp;"</font><font color="#000000">&nbsp;+&nbsp;s<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000ff">return</font><font color="#000000">&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addr&nbsp;=&nbsp;string.trim(addr);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image&nbsp;=&nbsp;string.match(image,&nbsp;</font><font color="#800000">"\((.+)\)"</font><font color="#000000">);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title&nbsp;=&nbsp;ret.queryEle(tagName&nbsp;=&nbsp;</font><font color="#800000">"h2"</font><font color="#000000">).innerText();<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time&nbsp;=&nbsp;ret.queryEle(tagName&nbsp;=&nbsp;</font><font color="#800000">"time"</font><font color="#000000">).innerText();<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;content&nbsp;=&nbsp;ret.queryEle([</font><font color="#800000">'class'</font><font color="#000000">]&nbsp;=&nbsp;</font><font color="#800000">"text-1"</font><font color="#000000">).outerXml()<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;})()<BR>
+}<BR>
+<BR>
+</font><font color="#008000">//post&nbsp;parameters<BR>
+</font><font color="#0000ff">var</font><font color="#000000">&nbsp;data&nbsp;=&nbsp;{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;append&nbsp;=&nbsp;</font><font color="#800000">"list-home"</font><font color="#000000">;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;paged&nbsp;=&nbsp;3;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;token&nbsp;=&nbsp;getToken();<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;action&nbsp;=&nbsp;</font><font color="#800000">"ajax_load_posts"</font><font color="#000000">;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;=&nbsp;</font><font color="#800000">"home"</font><font color="#000000">;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;=&nbsp;</font><font color="#800000">""</font><font color="#000000"><BR>
+}<BR>
+</font><font color="#008000">//url&nbsp;list<BR>
+</font><font color="#0000ff">var</font><font color="#000000">&nbsp;list&nbsp;=&nbsp;getList(data)<BR>
+<BR>
+</font><font color="#008000">//get&nbsp;all&nbsp;detail<BR>
+</font><font color="#0000ff">var</font><font color="#000000">&nbsp;details&nbsp;=&nbsp;{}<BR>
+</font><font color="#0000ff">for</font><font color="#000000">&nbsp;(i&nbsp;=&nbsp;1;&nbsp;#&nbsp;list)&nbsp;table.push(details,&nbsp;getDetail(list[ i ]))<BR>
+<BR>
+console.dumpJson(details)<BR>
+console.pause(</font><font color="#0000ff">true</font><font color="#000000">);<BR>
+<BR>
+</font><font color="#008000">//https://suiang.cn/aardio/code/getImg.html</font></p>
+<!--EndFragment-->
+</body>
+</html>
