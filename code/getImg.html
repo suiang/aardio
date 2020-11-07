@@ -14,7 +14,6 @@ import web.json;
 import string.html
 import web.rest.client
 
-console.showLoading("正在获取数据ing...")
 _host = "https://www.todaybing.com";
 _api = "https://www.todaybing.com/web/api";
 
@@ -61,6 +60,8 @@ getDetail = function(url) {
     })()
 }
 
+console.showLoading("正在获取数据ing...")
+
 // Post parameters
 var data = {
     append = "list-home";
@@ -88,8 +89,6 @@ console.dumpJson( details )
 
 // https://suiang.cn/aardio/code/getImg.html
 console.pause(true);
-
-
 ]]></script>
 </body>
 </html>
