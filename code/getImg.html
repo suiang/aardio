@@ -29,13 +29,15 @@ var getToken = http.api(_host, "GET", function(ret) {
 
 //获取列表
 getList = function(data) {
-    var list = {}
-    var doc = string.html(http.post(_api, data))
-    var content = doc.queryEles(['class'] = "media-content")
-    for (i = 1; # content) {
-        table.push(list, _host + content[i].href)
-    }
-    return list;
+    return http.api(_api,,function(ret){
+        var list = {}
+    	var doc = string.html( ret )
+    	var content = doc.queryEles(['class'] = "media-content")
+    	for (i = 1; # content) {
+        	table.push(list, _host + content[i].href)
+    	}
+    	return list; 
+    })(data); 
 }
 
 //获取详情
@@ -59,7 +61,7 @@ getDetail = function(url) {
     })()
 }
 
-//post parameters
+// Post parameters
 var data = {
     append = "list-home";
     paged = 1;
@@ -67,22 +69,26 @@ var data = {
     action = "ajax_load_posts";
     page = "home";
 }
-//url list
+
+// Get url list
 var list = {}
 for(i=1;3){
     data.paged = i
-  var t = getList(data)
-  table.push(list, table.pop(t,#t) )
+	var t = getList(data)
+	table.push(list, table.pop(t,#t) )
 }
 
-//get all detail
+// Get all detail
 var details = {}
 for (i = 1; #list) table.push(details, getDetail(list[i]))
+
+// Save results to json
 string.save("/images.json", web.json.stringify(details) )
-console.dumpJson(details)
-console.pause(true);
+console.dumpJson( details )
 
 //https://suiang.cn/aardio/code/getImg.html
+console.pause(true);
+
 
 ]]></script>
 </body>
