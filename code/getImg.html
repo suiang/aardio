@@ -8,7 +8,7 @@
 </head>
 <body>
 <script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
-//获取图片
+// 获取图片
 import console;
 import web.json;
 import string.html
@@ -21,13 +21,13 @@ _api = "https://www.todaybing.com/web/api";
 var http = web.rest.client();
 http.referer = _host
 
-//获取token
+// 获取 token
 var getToken = http.api(_host, "GET", function(ret) {
     var ret = string.match(ret, "s\s=\s(%{})")
     return web.json.parse(ret)[["tk"]];
 })
 
-//获取列表
+// 获取列表
 getList = function(data) {
     return http.api(_api,,function(ret){
         var list = {}
@@ -40,7 +40,7 @@ getList = function(data) {
     })(data); 
 }
 
-//获取详情
+// 获取详情
 getDetail = function(url) {
     return http.api(url, "GET", function(ret) {
         var addr = ""
@@ -86,7 +86,7 @@ for (i = 1; #list) table.push(details, getDetail(list[i]))
 string.save("/images.json", web.json.stringify(details) )
 console.dumpJson( details )
 
-//https://suiang.cn/aardio/code/getImg.html
+// https://suiang.cn/aardio/code/getImg.html
 console.pause(true);
 
 
