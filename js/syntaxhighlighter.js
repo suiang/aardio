@@ -78,13 +78,13 @@
 	  });
 	});
 	
-	var _domready = __webpack_require__(52);
+	var _domready = __webpack_require__(47);
 	
 	var _domready2 = _interopRequireDefault(_domready);
 	
 	var _core2 = _interopRequireDefault(_core);
 	
-	var _dasherize = __webpack_require__(53);
+	var _dasherize = __webpack_require__(48);
 	
 	var dasherize = _interopRequireWildcard(_dasherize);
 	
@@ -394,16 +394,7 @@
 	registerBrush(__webpack_require__(45));
 	
 	registerBrush(__webpack_require__(46));
-	
-	registerBrush(__webpack_require__(47));
-	
-	registerBrush(__webpack_require__(48));
-	
-	registerBrush(__webpack_require__(49));
-	
-	registerBrush(__webpack_require__(50));
-	
-	registerBrush(__webpack_require__(51));
+
 	
 	/*
 	
@@ -3737,21 +3728,30 @@
 	var regexLib = __webpack_require__(3).commonRegExp;
 	
 	function Brush() {
-	  // AppleScript brush by David Chambers
-	  // http://davidchambersdesign.com/
+	  // aardio brush by Jacen.He
+	  // http://www.aardio.com/
 	  var keywords = 'begin end false true if else elseif class function return while do namespace ' +
         'select case catch try for in this global self owner var def null and not or ' +
         'break continue import with ctor try catch eval import type assert assertf error ' +
         'rget loadcode , dumpcode collectgarbage call invoke tostring topointer tonumber ' +
-        'sleep execute setlocale setprivilege '
-        ;
-	  this.regexList = [
-			{ regex: /\/(\*+)((?!\1\/)[\s\S])*\1\//g, css: 'comments' },
-			{ regex: /"([^"])*"/g, css: 'string' },
-			{ regex: regexLib.multiLineSingleQuotedString, css: 'string' },
-			{ regex: regexLib.singleLineCComments, css: 'comments' },
-			{ regex: new RegExp(this.getKeywords(keywords), 'gm'), css: 'keyword' }
-	  ];
+        'sleep execute setlocale setprivilege ';
+
+	  this.regexList = [{
+	  	regex: /\/(\*+)((?!\1\/)[\s\S])*\1\//g,
+	  	css: 'comments' 
+	  }, {
+	  	regex: /"([^"])*"/g,
+	  	css: 'string'
+	  }, {
+	  	regex: regexLib.multiLineSingleQuotedString,
+	  	css: 'string'
+	  }, {
+	  	regex: regexLib.singleLineCComments,
+	  	css: 'comments'
+	  }, {
+	  	regex: new RegExp(this.getKeywords(keywords), 'gm'),
+	  	css: 'keyword'
+	  }];
 	};
 	
 	Brush.prototype = new BrushBase();
@@ -3760,58 +3760,6 @@
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var BrushBase = __webpack_require__(22);
-	var regexLib = __webpack_require__(3).commonRegExp;
-	
-	function Brush() {
-	  // Created by Peter Atoria @ http://iAtoria.com
-	
-	  var inits = 'class interface function package';
-	
-	  var keywords = '-Infinity ...rest Array as AS3 Boolean break case catch const continue Date decodeURI ' + 'decodeURIComponent default delete do dynamic each else encodeURI encodeURIComponent escape ' + 'extends false final finally flash_proxy for get if implements import in include Infinity ' + 'instanceof int internal is isFinite isNaN isXMLName label namespace NaN native new null ' + 'Null Number Object object_proxy override parseFloat parseInt private protected public ' + 'return set static String super switch this throw true try typeof uint undefined unescape ' + 'use void while with';
-	
-	  this.regexList = [{
-	    regex: regexLib.singleLineCComments,
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.multiLineCComments,
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.doubleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: regexLib.singleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: /\b([\d]+(\.[\d]+)?|0x[a-f0-9]+)\b/gi,
-	    css: 'value'
-	  }, {
-	    regex: new RegExp(this.getKeywords(inits), 'gm'),
-	    css: 'color3'
-	  }, {
-	    regex: new RegExp(this.getKeywords(keywords), 'gm'),
-	    css: 'keyword'
-	  }, {
-	    regex: new RegExp('var', 'gm'),
-	    css: 'variable'
-	  }, {
-	    regex: new RegExp('trace', 'gm'),
-	    css: 'color1'
-	  }];
-	
-	  this.forHtmlScript(regexLib.scriptScriptTags);
-	};
-	
-	Brush.prototype = new BrushBase();
-	Brush.aliases = ['actionscript3', 'as3'];
-	module.exports = Brush;
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3869,54 +3817,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var BrushBase = __webpack_require__(22);
-	var regexLib = __webpack_require__(3).commonRegExp;
-	
-	function Brush() {
-	  // Contributed by Jen
-	  // http://www.jensbits.com/2009/05/14/coldfusion-brush-for-syntaxhighlighter-plus
-	
-	  var funcs = 'Abs ACos AddSOAPRequestHeader AddSOAPResponseHeader AjaxLink AjaxOnLoad ArrayAppend ArrayAvg ArrayClear ArrayDeleteAt ' + 'ArrayInsertAt ArrayIsDefined ArrayIsEmpty ArrayLen ArrayMax ArrayMin ArraySet ArraySort ArraySum ArraySwap ArrayToList ' + 'Asc ASin Atn BinaryDecode BinaryEncode BitAnd BitMaskClear BitMaskRead BitMaskSet BitNot BitOr BitSHLN BitSHRN BitXor ' + 'Ceiling CharsetDecode CharsetEncode Chr CJustify Compare CompareNoCase Cos CreateDate CreateDateTime CreateObject ' + 'CreateODBCDate CreateODBCDateTime CreateODBCTime CreateTime CreateTimeSpan CreateUUID DateAdd DateCompare DateConvert ' + 'DateDiff DateFormat DatePart Day DayOfWeek DayOfWeekAsString DayOfYear DaysInMonth DaysInYear DE DecimalFormat DecrementValue ' + 'Decrypt DecryptBinary DeleteClientVariable DeserializeJSON DirectoryExists DollarFormat DotNetToCFType Duplicate Encrypt ' + 'EncryptBinary Evaluate Exp ExpandPath FileClose FileCopy FileDelete FileExists FileIsEOF FileMove FileOpen FileRead ' + 'FileReadBinary FileReadLine FileSetAccessMode FileSetAttribute FileSetLastModified FileWrite Find FindNoCase FindOneOf ' + 'FirstDayOfMonth Fix FormatBaseN GenerateSecretKey GetAuthUser GetBaseTagData GetBaseTagList GetBaseTemplatePath ' + 'GetClientVariablesList GetComponentMetaData GetContextRoot GetCurrentTemplatePath GetDirectoryFromPath GetEncoding ' + 'GetException GetFileFromPath GetFileInfo GetFunctionList GetGatewayHelper GetHttpRequestData GetHttpTimeString ' + 'GetK2ServerDocCount GetK2ServerDocCountLimit GetLocale GetLocaleDisplayName GetLocalHostIP GetMetaData GetMetricData ' + 'GetPageContext GetPrinterInfo GetProfileSections GetProfileString GetReadableImageFormats GetSOAPRequest GetSOAPRequestHeader ' + 'GetSOAPResponse GetSOAPResponseHeader GetTempDirectory GetTempFile GetTemplatePath GetTickCount GetTimeZoneInfo GetToken ' + 'GetUserRoles GetWriteableImageFormats Hash Hour HTMLCodeFormat HTMLEditFormat IIf ImageAddBorder ImageBlur ImageClearRect ' + 'ImageCopy ImageCrop ImageDrawArc ImageDrawBeveledRect ImageDrawCubicCurve ImageDrawLine ImageDrawLines ImageDrawOval ' + 'ImageDrawPoint ImageDrawQuadraticCurve ImageDrawRect ImageDrawRoundRect ImageDrawText ImageFlip ImageGetBlob ImageGetBufferedImage ' + 'ImageGetEXIFTag ImageGetHeight ImageGetIPTCTag ImageGetWidth ImageGrayscale ImageInfo ImageNegative ImageNew ImageOverlay ImagePaste ' + 'ImageRead ImageReadBase64 ImageResize ImageRotate ImageRotateDrawingAxis ImageScaleToFit ImageSetAntialiasing ImageSetBackgroundColor ' + 'ImageSetDrawingColor ImageSetDrawingStroke ImageSetDrawingTransparency ImageSharpen ImageShear ImageShearDrawingAxis ImageTranslate ' + 'ImageTranslateDrawingAxis ImageWrite ImageWriteBase64 ImageXORDrawingMode IncrementValue InputBaseN Insert Int IsArray IsBinary ' + 'IsBoolean IsCustomFunction IsDate IsDDX IsDebugMode IsDefined IsImage IsImageFile IsInstanceOf IsJSON IsLeapYear IsLocalHost ' + 'IsNumeric IsNumericDate IsObject IsPDFFile IsPDFObject IsQuery IsSimpleValue IsSOAPRequest IsStruct IsUserInAnyRole IsUserInRole ' + 'IsUserLoggedIn IsValid IsWDDX IsXML IsXmlAttribute IsXmlDoc IsXmlElem IsXmlNode IsXmlRoot JavaCast JSStringFormat LCase Left Len ' + 'ListAppend ListChangeDelims ListContains ListContainsNoCase ListDeleteAt ListFind ListFindNoCase ListFirst ListGetAt ListInsertAt ' + 'ListLast ListLen ListPrepend ListQualify ListRest ListSetAt ListSort ListToArray ListValueCount ListValueCountNoCase LJustify Log ' + 'Log10 LSCurrencyFormat LSDateFormat LSEuroCurrencyFormat LSIsCurrency LSIsDate LSIsNumeric LSNumberFormat LSParseCurrency LSParseDateTime ' + 'LSParseEuroCurrency LSParseNumber LSTimeFormat LTrim Max Mid Min Minute Month MonthAsString Now NumberFormat ParagraphFormat ParseDateTime ' + 'Pi PrecisionEvaluate PreserveSingleQuotes Quarter QueryAddColumn QueryAddRow QueryConvertForGrid QueryNew QuerySetCell QuotedValueList Rand ' + 'Randomize RandRange REFind REFindNoCase ReleaseComObject REMatch REMatchNoCase RemoveChars RepeatString Replace ReplaceList ReplaceNoCase ' + 'REReplace REReplaceNoCase Reverse Right RJustify Round RTrim Second SendGatewayMessage SerializeJSON SetEncoding SetLocale SetProfileString ' + 'SetVariable Sgn Sin Sleep SpanExcluding SpanIncluding Sqr StripCR StructAppend StructClear StructCopy StructCount StructDelete StructFind ' + 'StructFindKey StructFindValue StructGet StructInsert StructIsEmpty StructKeyArray StructKeyExists StructKeyList StructKeyList StructNew ' + 'StructSort StructUpdate Tan TimeFormat ToBase64 ToBinary ToScript ToString Trim UCase URLDecode URLEncodedFormat URLSessionFormat Val ' + 'ValueList VerifyClient Week Wrap Wrap WriteOutput XmlChildPos XmlElemNew XmlFormat XmlGetNodeType XmlNew XmlParse XmlSearch XmlTransform ' + 'XmlValidate Year YesNoFormat';
-	
-	  var keywords = 'cfabort cfajaximport cfajaxproxy cfapplet cfapplication cfargument cfassociate cfbreak cfcache cfcalendar ' + 'cfcase cfcatch cfchart cfchartdata cfchartseries cfcol cfcollection cfcomponent cfcontent cfcookie cfdbinfo ' + 'cfdefaultcase cfdirectory cfdiv cfdocument cfdocumentitem cfdocumentsection cfdump cfelse cfelseif cferror ' + 'cfexchangecalendar cfexchangeconnection cfexchangecontact cfexchangefilter cfexchangemail cfexchangetask ' + 'cfexecute cfexit cffeed cffile cfflush cfform cfformgroup cfformitem cfftp cffunction cfgrid cfgridcolumn ' + 'cfgridrow cfgridupdate cfheader cfhtmlhead cfhttp cfhttpparam cfif cfimage cfimport cfinclude cfindex ' + 'cfinput cfinsert cfinterface cfinvoke cfinvokeargument cflayout cflayoutarea cfldap cflocation cflock cflog ' + 'cflogin cfloginuser cflogout cfloop cfmail cfmailparam cfmailpart cfmenu cfmenuitem cfmodule cfNTauthenticate ' + 'cfobject cfobjectcache cfoutput cfparam cfpdf cfpdfform cfpdfformparam cfpdfparam cfpdfsubform cfpod cfpop ' + 'cfpresentation cfpresentationslide cfpresenter cfprint cfprocessingdirective cfprocparam cfprocresult ' + 'cfproperty cfquery cfqueryparam cfregistry cfreport cfreportparam cfrethrow cfreturn cfsavecontent cfschedule ' + 'cfscript cfsearch cfselect cfset cfsetting cfsilent cfslider cfsprydataset cfstoredproc cfswitch cftable ' + 'cftextarea cfthread cfthrow cftimer cftooltip cftrace cftransaction cftree cftreeitem cftry cfupdate cfwddx ' + 'cfwindow cfxml cfzip cfzipparam';
-	
-	  var operators = 'all and any between cross in join like not null or outer some';
-	
-	  this.regexList = [{
-	    regex: new RegExp('--(.*)$', 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.xmlComments,
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.doubleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: regexLib.singleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: new RegExp(this.getKeywords(funcs), 'gmi'),
-	    css: 'functions'
-	  }, {
-	    regex: new RegExp(this.getKeywords(operators), 'gmi'),
-	    css: 'color1'
-	  }, {
-	    regex: new RegExp(this.getKeywords(keywords), 'gmi'),
-	    css: 'keyword'
-	  }];
-	}
-	
-	Brush.prototype = new BrushBase();
-	Brush.aliases = ['coldfusion', 'cf'];
-	module.exports = Brush;
-
-/***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3965,7 +3866,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4019,7 +3920,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4082,7 +3983,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4125,7 +4026,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4160,53 +4061,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var BrushBase = __webpack_require__(22);
-	var regexLib = __webpack_require__(3).commonRegExp;
-	
-	function Brush() {
-	  // Contributed by Jean-Lou Dupont
-	  // http://jldupont.blogspot.com/2009/06/erlang-syntax-highlighter.html
-	
-	  // According to: http://erlang.org/doc/reference_manual/introduction.html#1.5
-	  var keywords = 'after and andalso band begin bnot bor bsl bsr bxor ' + 'case catch cond div end fun if let not of or orelse ' + 'query receive rem try when xor' +
-	  // additional
-	  ' module export import define';
-	
-	  this.regexList = [{
-	    regex: new RegExp("[A-Z][A-Za-z0-9_]+", 'g'),
-	    css: 'constants'
-	  }, {
-	    regex: new RegExp("\\%.+", 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: new RegExp("\\?[A-Za-z0-9_]+", 'g'),
-	    css: 'preprocessor'
-	  }, {
-	    regex: new RegExp("[a-z0-9_]+:[a-z0-9_]+", 'g'),
-	    css: 'functions'
-	  }, {
-	    regex: regexLib.doubleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: regexLib.singleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: new RegExp(this.getKeywords(keywords), 'gm'),
-	    css: 'keyword'
-	  }];
-	};
-	
-	Brush.prototype = new BrushBase();
-	Brush.aliases = ['erl', 'erlang'];
-	module.exports = Brush;
-
-/***/ }),
-/* 33 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4263,89 +4118,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var BrushBase = __webpack_require__(22);
-	var regexLib = __webpack_require__(3).commonRegExp;
-	
-	function Brush() {
-	
-	  var inits = 'class interface package macro enum typedef extends implements dynamic in for if while else do try switch case catch';
-	
-	  var keywords = 'return break continue new throw cast using import function public private inline static untyped callback true false null Int Float String Void Std Bool Dynamic Array Vector';
-	
-	  this.regexList = [{
-	    regex: regexLib.singleLineCComments,
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.multiLineCComments,
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.doubleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: regexLib.singleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: /\b([\d]+(\.[\d]+)?|0x[a-f0-9]+)\b/gi,
-	    css: 'value'
-	  }, {
-	    regex: new RegExp(this.getKeywords(inits), 'gm'),
-	    css: 'color3'
-	  }, {
-	    regex: new RegExp(this.getKeywords(keywords), 'gm'),
-	    css: 'keyword'
-	  }, {
-	    regex: new RegExp('var', 'gm'),
-	    css: 'variable'
-	  }, {
-	    regex: new RegExp('trace', 'gm'),
-	    css: 'color1'
-	  }, {
-	    regex: new RegExp('#if', 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: new RegExp('#elseif', 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: new RegExp('#end', 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: new RegExp('#error', 'gm'),
-	    css: 'comments'
-	  }];
-	
-	  //standard compiler conditionals flags
-	  var flags = ["debug", "error", "cpp", "js", "neko", "php", "flash", "flash8", "flash9", "flash10", "flash10", "mobile", "desktop", "web", "ios", "android", "iphone"];
-	
-	  //append the flags to the array with a ! operator
-	  var i;
-	  var length = flags.length;
-	  for (i = 0; i <= length - 1; i++) {
-	    this.regexList.push({
-	      regex: new RegExp(flags[i], 'gm'),
-	      css: 'comments'
-	    });
-	    this.regexList.push({
-	      regex: new RegExp('!' + flags[i], 'gm'),
-	      css: 'comments'
-	    });
-	  }
-	
-	  this.forHtmlScript(regexLib.scriptScriptTags);
-	}
-	
-	;
-	
-	Brush.prototype = new BrushBase();
-	Brush.aliases = ['haxe', 'hx'];
-	module.exports = Brush;
-
-/***/ }),
-/* 35 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4396,7 +4169,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 36 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4441,7 +4214,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 37 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4480,7 +4253,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 38 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4564,7 +4337,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 39 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4622,7 +4395,7 @@
 	exports.default = Brush;
 
 /***/ }),
-/* 40 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4639,7 +4412,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 41 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4705,7 +4478,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 42 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4762,7 +4535,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 43 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4811,7 +4584,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 44 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4887,7 +4660,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 45 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4934,7 +4707,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 46 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4978,7 +4751,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 47 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5113,49 +4886,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var BrushBase = __webpack_require__(22);
-	var regexLib = __webpack_require__(3).commonRegExp;
-	
-	function Brush() {
-	  // Contributed by Chad Granum
-	  this.regexList = [{
-	    regex: new RegExp('^1..\\d+', 'gm'),
-	    css: 'plain bold italic'
-	  }, {
-	    regex: new RegExp('^ok( \\d+)?', 'gm'),
-	    css: 'keyword'
-	  }, {
-	    regex: new RegExp('^not ok( \\d+)?', 'gm'),
-	    css: 'color3 bold'
-	  }, {
-	    regex: new RegExp('(?!^\\s*)#.*$', 'gm'),
-	    css: 'variable bold'
-	  }, {
-	    regex: new RegExp('^#.*$', 'gm'),
-	    css: 'comments bold'
-	  }, {
-	    regex: new RegExp('^(?!(not )?ok)[^1].*$', 'gm'),
-	    css: 'comments'
-	  }, {
-	    regex: regexLib.doubleQuotedString,
-	    css: 'string'
-	  }, {
-	    regex: regexLib.singleQuotedString,
-	    css: 'string'
-	  }];
-	}
-	
-	Brush.prototype = new BrushBase();
-	Brush.aliases = ['tap', 'Tap', 'TAP'];
-	module.exports = Brush;
-
-/***/ }),
-/* 49 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5191,7 +4922,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 50 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5224,7 +4955,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 51 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5274,7 +5005,7 @@
 	module.exports = Brush;
 
 /***/ }),
-/* 52 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5310,7 +5041,7 @@
 	});
 
 /***/ }),
-/* 53 */
+/* 48 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -5336,4 +5067,3 @@
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=syntaxhighlighter.js.map
