@@ -55,6 +55,29 @@ console.varDump(get)
 
 console.log( get() ) // 最后调用 元方法 _call 发起请求
 
+/*
+到这里 我们一次请求的工作就完成了！
+下面第三个参数 开始处理返回值！
+返回值 肯定要在请求之后才能处理
+145行 request函数中处理
+...
+//owner[["_partten"]] api中第三个参数  ret 请求返回的原始数据
+if( owner[["_partten"]] && ret ){  
+		var tp = type( owner._partten);	 // 判断参数3 类型 根据不同类型分别处理
+		if( tp == "table"){
+			return ..string.map(ret,owner._partten);
+		}
+		elseif( tp == "function"){
+			return owner._partten(ret);
+		}
+		
+		ret = ..string.match(ret,owner._partten);
+		if(!ret) return null,"服务器返回的数据中未找到匹配的部分"
+	}
+	// 参数3 为空就调用函数 parseResponseResult 处理
+	return this.parseResponseResult(ret);
+}
+*/
 // https://suiang.cn/aardio/code/restApi.html
 console.pause();
 ]]></script>
