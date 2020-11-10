@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>发布文件到 Github</title>
+  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
+  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+</head>
+<body>
+<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
+// ${name: publishGithub}
+// ${title: 发布文件到 Github}
+ 
+import crypt
+import console;
+import web.rest.jsonClient
+  
+var http = web.rest.jsonClient();
+var repos = http.api("https://api.github.com/repos/");
+http.addHeaders = {
+    ["Authorization"] = "token your-token-value"
+}
+ 
+var info = repos["用户名"]["仓库名"]["路径"].contents.get();
+http.beforeStringifyRequestParameters = function(params){   
+    if(info[["sha"]]) params.sha = info[["sha"]];
+    params.message = (info[["sha"]] ? "Updata ":"Add ") + "some file!"
+    return params; 
+}
+ 
+var ret = repos["用户名"]["仓库名"]["路径"].contents.put({
+    content = crypt.bin.encodeBase64( string.load(文件) )
+})
+ 
+console.pause(true);
+
+// https://suiang.cn/aardio/code/publishGithub.html
+]]></script>
+</body>
+</html>

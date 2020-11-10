@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>web.rest 请求过程</title>
+  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
+  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+</head>
+<body>
+<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
+// ${name: restApi}
+// ${title: web.rest 请求过程}
+  
+import console; 
+import web.rest.client
+  
+var http = web.rest.client()
+var api = http.api("http://eu.httpbin.org/api/{program}/{lang}"); 
+console.varDump(api)
+  
+// 下面把一次请求 api.language.aardo.get() 分开来看
+  
+var language = api["language"] 
+console.varDump(language)
+/*
+在 api 表中找 language，就会触发 _get 元方法
+api 中成员都是_下划线开头的只读成员，所以为了继续向下传递
+就返回一个经过数据处理，具有同样数据结构带有同一个元表_meta的新表
+  
+api成员只读 保证了定义一次，就不能修改，可以多次重复调用
+例如：api.language.python() ...
+  
+不是 _defaultMethod 表定义的请求方法 就处理 url模板
+然后 
+    return new api{
+        _urlTemplate = urlTemplate;
+        ...
+        @_meta
+    }
+*/
+  
+var aardio = language["aardio"]
+console.varDump(aardio)
+  
+/*
+_defaultMethod = { head = "HEAD";get = "GET"; post = "POST"; put = "PUT"; delete = "DELETE"; patch ="PATCH"} ;
+if( _defaultMethod[k] ) {
+    ... return new api{
+        _httpMethod = _defaultMethod[k];
+        ...
+        @_meta
+    }
+}
+*/
+var get = aardio["get"]  
+console.varDump(get)
+  
+console.log( get() ) // 最后调用 元方法 _call 发起请求
+  
+/*
+到这里 我们一次请求的工作就完成了！
+下面第三个参数 开始处理返回值！
+返回值 肯定要在请求之后才能处理
+145行 request函数中处理
+...
+//owner[["_partten"]] api中第三个参数  ret 请求返回的原始数据
+if( owner[["_partten"]] && ret ){  
+        var tp = type( owner._partten);  // 判断参数3 类型 根据不同类型分别处理
+        if( tp == "table"){
+            return ..string.map(ret,owner._partten);
+        }
+        elseif( tp == "function"){
+            return owner._partten(ret);
+        }
+          
+        ret = ..string.match(ret,owner._partten);
+        if(!ret) return null,"服务器返回的数据中未找到匹配的部分"
+    }
+    // 参数3 为空就调用函数 parseResponseResult 处理
+    return this.parseResponseResult(ret);
+}
+*/
+  
+console.pause();
+ 
+// https://suiang.cn/aardio/code/restApi.html
+]]></script>
+</body>
+</html>
