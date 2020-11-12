@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>安装 monokai 主题</title>
+  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
+  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+</head>
+<body>
+<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
+// ${name: installMonokai}
+// ${title: 安装 monokai 主题}
+
+import process; 
+import web.rest.client
+var http = web.rest.client();
+_path = io._exedir + "config\themes\monokai.xml"
+http.api("https://suiang.cn/aardio/data/monokai.xml","GET",function(ret){
+	if(ret) string.save(_path, ret)
+	return process.explore_select(_path); 
+})()
+
+// https://suiang.cn/aardio/code/installMonokai.html
+]]></script>
+</body>
+</html>
