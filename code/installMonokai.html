@@ -14,7 +14,7 @@
 import process; 
 import web.rest.client
 var http = web.rest.client();
-_path = io._exedir + "config\themes\monokai.xml"
+_path = "~\config\themes\monokai.xml"
 http.api("https://suiang.cn/aardio/data/monokai.xml","GET",function(ret){
 	if(ret) string.save(_path, ret)
 	return process.explore_select(_path); 
