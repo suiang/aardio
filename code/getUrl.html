@@ -22,12 +22,13 @@ var http = web.rest.client();
 var getUrl = function(url){
     return http.api(url ,"GET" ,function(ret){
     	var hlsUrl = string.match( ret, "hlsUrl\s=\s\'(.+?)\'" );
-    	var json = web.json.parse( string.match(ret, "RedBag\:\s(\{.+?\})") )
     	var t = string.split(hlsUrl,'/')
     	if(t[3] == "i3.vzan.cc"){
+    		var json = web.json.parse(
+    			string.match(ret, "RedBag\:\s(\{.+?\})") )
     		return string.format(
         		"https://i3.vzan.cc/clip/%s/%s/%s"
-        		,json.liveId ,json.topicId ,t[#t])
+        		,json.liveId ,json.topicId ,t[#t] )
     	} else return hlsUrl;  
 	
 	})()
