@@ -10,26 +10,32 @@
 <script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
 // ${name: getUrl}
 // ${title: 获取播放地址}
-
+ 
 import console;
 import web.json; 
 import web.rest.client
-
-_url = "https://wx.vzan.com/live/tvchat-405180913?jumpitd=1"
+ 
+_url1 = "https://wx.vzan.com/live/tvchat-405180913?jumpitd=1"
+_url2 = "https://wx.vzan.com/live/tvchat-808243?shareuid=0&v=1605360819240#" 
 
 var http = web.rest.client();
-var getUrl = http.api(_url,"GET",function(ret){
-    var hlsUrl = string.match( ret, "hlsUrl\s=\s\'(.+?)\'" );
-	var json = web.json.parse( string.match(ret, "RedBag\:\s(\{.+?\})") )
-	var t = string.split(hlsUrl,'/')
-	return string.format(
-		"https://i3.vzan.cc/clip/%s/%s/%s"
-		,json.liveId ,json.topicId ,t[#t]
-	)
-})
+var getUrl = function(url){
+    return http.api(url ,"GET" ,function(ret){
+    	var hlsUrl = string.match( ret, "hlsUrl\s=\s\'(.+?)\'" );
+    	var json = web.json.parse( string.match(ret, "RedBag\:\s(\{.+?\})") )
+    	var t = string.split(hlsUrl,'/')
+    	if(t[3] == "i3.vzan.cc"){
+    		return string.format(
+        		"https://i3.vzan.cc/clip/%s/%s/%s"
+        		,json.liveId ,json.topicId ,t[#t])
+    	} else return hlsUrl;  
+	
+	})()
+}
 
-console.log( getUrl() ) 
-
+console.log( getUrl(_url1) )
+console.log( getUrl(_url2) )  
+ 
 console.pause(true);
 
 // https://suiang.cn/aardio/code/getUrl.html
