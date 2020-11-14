@@ -13,7 +13,8 @@
  
 import console; 
 import web.rest.client
- 
+
+// 保存测试文件
 _path = "~\key.txt"
 var text = /*
 line0
@@ -38,7 +39,8 @@ http.extraUrlParameters = {
     c = 3;
     path_column = 1
 }
- 
+
+// 打开文件流
 var file = io.open(_path)
 while( var line = file.read() ) {
     var ret = api.search[line]()
