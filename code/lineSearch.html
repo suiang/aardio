@@ -42,7 +42,7 @@ http.extraUrlParameters = {
 var fs = io.open(_path)
 while( var line = fs.read() ) {
 	var ret = api.search[line]()
-	console.log( http.ok(), http.lastRequestUrl )
+	console.log( http.lastRequestMethod, http.ok(), http.lastRequestUrl )
 }
 
 console.pause(true);
