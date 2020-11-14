@@ -23,7 +23,9 @@ var getUrl = http.api("https://wx.vzan.com/live/tvchat-405180913?jumpitd=1","GET
 	var t = string.split(hlsUrl,'/')
 	return string.format("https://i3.vzan.cc/clip/%s/%s/%s", json.liveId, json.topicId, t[#t]); 
 })
+
 console.log( getUrl() ) 
+
 console.pause(true);
 
 // https://suiang.cn/aardio/code/getUrl.html
