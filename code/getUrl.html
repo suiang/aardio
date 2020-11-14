@@ -15,13 +15,17 @@ import console;
 import web.json; 
 import web.rest.client
 
-var http = web.rest.client();
+_url = "https://wx.vzan.com/live/tvchat-405180913?jumpitd=1"
 
-var getUrl = http.api("https://wx.vzan.com/live/tvchat-405180913?jumpitd=1","GET",function(ret){
+var http = web.rest.client();
+var getUrl = http.api(_url,"GET",function(ret){
     var hlsUrl = string.match( ret, "hlsUrl\s=\s\'(.+?)\'" );
 	var json = web.json.parse( string.match(ret, "RedBag\:\s(\{.+?\})") )
 	var t = string.split(hlsUrl,'/')
-	return string.format("https://i3.vzan.cc/clip/%s/%s/%s", json.liveId, json.topicId, t[#t]); 
+	return string.format(
+		"https://i3.vzan.cc/clip/%s/%s/%s"
+		,json.liveId ,json.topicId ,t[#t]
+	)
 })
 
 console.log( getUrl() ) 
