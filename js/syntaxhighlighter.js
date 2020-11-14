@@ -3734,7 +3734,7 @@
         'select case catch try for in this global self owner var def null and not or ' +
         'break continue import with ctor try catch eval import type assert assertf error ' +
         'rget loadcode , dumpcode collectgarbage call invoke tostring topointer tonumber ' +
-        'sleep execute setlocale setprivilege reduce lambda λ';
+        'sleep execute setlocale setprivilege loadcodex reduce lambda λ';
 
 	  this.regexList = [{
 	  	regex: /\/(\*+)((?!\1\/)[\s\S])*\1\//g,
