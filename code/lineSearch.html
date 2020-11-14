@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>rest 循环请求</title>
+  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
+  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+</head>
+<body>
+<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
+// ${name: lineSearch}
+// ${title: rest 循环请求}
+
+import console; 
+import web.rest.client
+
+_path = "~\key.txt"
+var text = /*
+line0
+line1
+line2
+line3
+line4
+line5
+line6
+line7
+line8
+line9
+*/
+string.save(_path, text)
+
+var http = web.rest.client()
+var api = http.api("http://eu.httpbin.org/?{0}={1}","GET")
+http.extraUrlParameters = {
+	j = 1;
+	c = 3;
+	path_column = 1
+}
+
+var fs = io.open(_path)
+while( var line = fs.read() ) {
+	var ret = api.search[line]()
+	console.log( http.ok(), http.lastRequestUrl )
+}
+
+console.pause(true);
+
+// https://suiang.cn/aardio/code/lineSearch.html
+]]></script>
+</body>
+</html>
