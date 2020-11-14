@@ -31,6 +31,8 @@ string.save(_path, text)
 
 var http = web.rest.client()
 var api = http.api("http://eu.httpbin.org/?{0}={1}","GET")
+
+// 附加到所有请求URL的默认参数
 http.extraUrlParameters = {
 	j = 1;
 	c = 3;
