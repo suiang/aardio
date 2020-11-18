@@ -44,9 +44,9 @@ console.log( value )
 
 // 高阶函数
 // 仿string.reduce 写个 table.reduce 
-table.reduce = function(t,f,...){
+table.reduce = function(t, f,...){
 	if( type(f) !="table" ) f = {f;...};
-	return reduce(f, lambda(t,f) f(t), t);
+	return reduce(f, lambda(t, f) f(t), t);
 };
 
 // 计算数组中正数的平均值
@@ -54,7 +54,7 @@ var nums = {2, -5, 9, 7, -2, 5, 3, 1, 0, -3, 8}
 
 var average = table.reduce(nums, {
 	λ(t) table.filter(t, λ(x) x>0);
-	λ(t) reduce(t, λ(x,y) x+y) / #t
+	λ(t) reduce(t, λ(x, y) x+y) / #t
 });
  
 console.log( average )
