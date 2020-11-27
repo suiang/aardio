@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>解析蓝奏云直连</title>
-  <link rel="icon" href="../favicon.ico">
-  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
-  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+    <meta charset="utf-8">
+	<title>解析蓝奏云直连</title>
+	<link rel="icon" href="../favicon.ico">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
 </head>
-<body>
-<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
-// ${name: lanClient}
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: lanClient}
 // ${title: 解析蓝奏云直连}
-
+ 
 // 自动安装 lanzou.client
 _URL_ = "http://suiang.cn/aardio/lib/lanzou.client.tar.lzma"
 _IMPORTURL["lanzou.client"] = _URL_
-
+ 
 import console;
 import lanzou.client;
-
+ 
 console.setTitle("Lanzou Client");
-
+ 
 var nopl = "https://www.lanzoux.com/iRwihgmkl0j";
 var purl = "https://www.lanzoux.com/i2XAqgmkl1a"
 var pwd = "AArdio";
-
+ 
 var lanzou = lanzou.client()
-
+ 
 console.printf('无密码分享链接：\n%s\n', lanzou.getShare(nopl))
 console.printf('有密码分享链接：\n%s', lanzou.getShare(purl, pwd))
-
+ 
 var list = lanzou.getShare("https://www.lanzous.com/b594057/", "5sfr");
 console.dumpJson( list )
-
+ 
 console.log( lanzou.getShare( list.text[1].id) ) //通过Id获取
-
+ 
 console.pause(true);
 
 // https://suiang.cn/aardio/code/lanClient.html
-]]></script>
+</code></pre>
+
 </body>
 </html>
