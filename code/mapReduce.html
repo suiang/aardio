@@ -1,76 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>函数式编程</title>
-  <link rel="icon" href="../favicon.ico">
-  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
-  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+    <meta charset="utf-8">
+	<title>函数式编程</title>
+	<link rel="icon" href="../favicon.ico">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
 </head>
-<body>
-<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
-// ${name: mapReduce}
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: mapReduce}
 // ${title: 函数式编程}
-
-import console;
  
+import console;
+  
 _meta = {
-	_get = {
-		add = λ(b){ _v = owner._v + b; @_meta }
-		sub = λ(b){ _v = owner._v - b; @_meta }
-		mul = λ(b){ _v = owner._v * b; @_meta }
-		div = λ(b){ _v = owner._v / b; @_meta }
-		equ = λ() owner._v
-	}
+    _get = {
+        add = lambda(b){ _v = owner._v + b; @_meta }
+        sub = lambda(b){ _v = owner._v - b; @_meta }
+        mul = lambda(b){ _v = owner._v * b; @_meta }
+        div = lambda(b){ _v = owner._v / b; @_meta }
+        equ = lambda() owner._v
+    }
 }
-
+ 
 // 链式调用
-var num = λ(a){ _v = a; @_meta }
+var num = lambda(a){ _v = a; @_meta }
 var value = num(7).add(9).div(4).mul(9).sub(6).equ()
-
+ 
 console.log( value )
-
+ 
 /*
  Currying:
  把一个函数的多个参数分解成多个函数，
  然后把函数多层封装起来，
  每层函数都返回一个函数去接收下一个参数。
 */
-
-var sum = λ(x) λ(y) λ(z) x + y + z;
+ 
+var sum = lambda(x) lambda(y) lambda(z) x + y + z;
 var value = sum(8)(5)(7)
-
+ 
 console.log( value )
-
+ 
 // 高阶函数
 // 仿string.reduce 写个 table.reduce 
 table.reduce = function(t, f,...){
-	if( type(f) !="table" ) f = {f;...};
-	return reduce(f, lambda(t, f) f(t), t);
+    if( type(f) !="table" ) f = {f;...};
+    return reduce(f, lambda(t, f) f(t), t);
 };
-
+ 
 // 计算数组中正数的平均值
 var nums = {2, -5, 9, 7, -2, 5, 3, 1, 0, -3, 8}
-
-var average = table.reduce(nums, {
-	λ(t) table.filter(t, λ(x) x>0);
-	λ(t) reduce(t, λ(x, y) x+y) / #t
-});
  
+var average = table.reduce(nums, {
+    lambda(t) table.filter(t, lambda(x) x>0);
+    lambda(t) reduce(t, lambda(x, y) x+y) / #t
+});
+  
 console.log( average )
-
+ 
 // 找出偶数乘以3
 var nums = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
+ 
 var t = table.reduce(nums, {
-	λ(t) table.filter(t, λ(x) x%2 == 0);
-	λ(t) table.map(t, λ(x) x*3)
+    lambda(t) table.filter(t, lambda(x) x%2 == 0);
+    lambda(t) table.map(t, lambda(x) x*3)
 })
-
+ 
 console.varDump( t )
 console.pause(true);
 
 // https://suiang.cn/aardio/code/mapReduce.html
-]]></script>
+</code></pre>
+
 </body>
 </html>
