@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>rest 循环请求</title>
-  <link rel="icon" href="../favicon.ico">
-  <script type="text/javascript" src="../js/syntaxhighlighter.js"></script>
-  <link type="text/css" rel="stylesheet" href="../css/monokai.css">
+    <meta charset="utf-8">
+	<title>rest 循环请求</title>
+	<link rel="icon" href="../favicon.ico">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
 </head>
-<body>
-<script type="text/syntaxhighlighter" class="brush: aar"><![CDATA[
-// ${name: lineSearch}
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: lineSearch}
 // ${title: rest 循环请求}
- 
+  
 import console; 
 import web.rest.client
-
+ 
 // 保存测试文件
 _path = "~\key.txt"
 var text = /*
@@ -30,31 +29,32 @@ line8
 line9
 */
 string.save(_path, text)
- 
+  
 var http = web.rest.client()
 var api = http.api("http://eu.httpbin.org/?{0}={1}","GET")
- 
+  
 // 附加到所有请求URL的默认参数
 http.extraUrlParameters = {
     j = 1;
     c = 3;
     path_column = 1
 }
-
+ 
 // 打开文件流
 var file = io.open(_path)
 while( var line = file.read() ) {
     var ret = api.search[line]()
     console.log( http.lastRequestMethod, http.ok(), http.lastRequestUrl )
 }
-
+ 
 // 关闭文件流移除文件
 file.close()
 io.remove( _path )
- 
+  
 console.pause(true);
- 
+
 // https://suiang.cn/aardio/code/lineSearch.html
-]]></script>
+</code></pre>
+
 </body>
 </html>
