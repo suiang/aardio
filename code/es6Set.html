@@ -22,7 +22,7 @@ class Set{
 	ctor(t,...){
 		if(type(t)!="table") t = {t,...}
 		this = reduce(t,function(p,n){
-			if(!find(p,n) ) push(p,n)
+			if(!..table.find(p,n) ) ..table.push(p,n)
 			return p
 		},{})	
 	};
@@ -31,10 +31,10 @@ class Set{
 
 namespace Set{
     
-    pop = ..table.pop;
-    find = ..table.find;
-    push = ..table.push;
-    remove = ..table.remove;
+    var pop = ..table.pop;
+    var find = ..table.find;
+    var push = ..table.push;
+    var remove = ..table.remove;
     
 	_metaProperty = ..util.metaProperty(
 		add = function(v,...){
