@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<title>�</title>
+	<link rel="icon" href="../favicon.ico">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: functional}
+// ${title: 函数式编程初探}
+
+import console; 
+
+// 简单的高阶函数
+forEach = function(t,f) for(k,v in t) f(v,k)
+times = function(n, f) for(i=1;n) f(i)
+unless = function(p,f) if(!p) f()
+
+
+var t = {1,2,3,4,5};
+  
+forEach(t, lambda(v) unless( 
+	v%2, λ() console.log(v, " is even") 
+))
+
+times(10, lambda(n) unless(
+	n%2, λ() console.log(n, " is even")
+))
+
+console.log("--------------------------------")
+
+// 函数调试
+tap = function(v){
+	return lambda(fn) unless( 
+		!(type(fn)==="function" && fn(v))
+		,λ() console.printf('参数值: %s, 返回值: %s', v, fn(v))
+	)
+}
+
+forEach(t, lambda(v) tap(v)( math.sqrt ))
+
+console.pause(true);
+// https://suiang.cn/aardio/code/functional.html
+</code></pre>
+</body>
+</html>
