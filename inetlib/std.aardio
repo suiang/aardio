@@ -1,0 +1,43 @@
+namespace std;
+
+forEach = function(t,f) {
+	for(k,v in t) f(v,k)
+}
+
+times = function(n, f) {
+	for(i=1;n) f(i)
+}
+
+unless = function(p,f) {
+	if(!p) f()
+}
+
+tap = function(v){
+	return lambda(fn) unless( 
+		!(type(fn)==="function" && fn(v))
+		,λ() ..console.dumpJson(["参数值"]=v, ["返回值"]=fn(v))
+	)
+}
+
+meta = function(t, add = true){
+	t@ = add ? {
+		_get = ..table.map(..table, function(v){
+			return lambda(...) v(owner,...)
+		});
+		_float = true; //允许移除元表	
+	} : null
+	return t; 
+}
+
+reducex = function(t, f,...){
+    if( type(f) !="table" ) f = {f,...};
+    return reduce(f, lambda(t, f) f(t), t);
+};
+
+// -----------------------------------------------------
+..tap = tap;
+..meta = meta;
+..unless = unless;
+..times = times;
+..forEach = forEach;
+..table.reduce = reducex;
