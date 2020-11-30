@@ -24,7 +24,7 @@ meta = function(t, add = true){
 		_get = ..table.map(..table, function(v){
 			return lambda(...) v(owner,...)
 		});
-		_float = true; //允许移除元表	
+		_float = true;
 	} : null
 	return t; 
 }
