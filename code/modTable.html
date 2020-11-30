@@ -18,9 +18,10 @@ Javascript Array 可以直接调用方法 eg:[1,2,3].map(...)
 table 每次都要  table.map(t, ...), 那么如何才能像js一样通过 t.map(...)调用呢?
 
 元表(metatable)允许我们改变表(table)的行为, 可以通过 t@ = {_get = table}
-给表 t 指定原表为 table库, 这样就可以通过 t.map(t,...) 调用了。
+给表 t 指定元表为 table库, 这样就可以通过 t.map(t,...) 调用了。
 可是这里每次都还要输入 t 参数感觉怪怪的 2333,  
-下面通过 table.map 给 table库函数绑定 owner 参数就可以了！
+下面通过 table.map 给 table库每个函数绑定 owner 参数，
+并返回一个新的表作为元表！
 
 注意：
 这里只是绑定了第一参数是表的函数，
