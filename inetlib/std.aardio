@@ -10,6 +10,11 @@ meta = function(t, add = true){
 	return t; 
 }
 
+reducex = function(t, f,...){
+    if( type(f) !="table" ) f = {f,...};
+    return reduce(f, lambda(t, f) f(t), t);
+};
+
 curry = lambda(f) λ(x) λ(y) f(x,y)
 unless = function(p,f) if(!p) f()
 times = function(n, f) for(i=1;n) f(i)
@@ -53,3 +58,4 @@ memoized = function(f){
 ..forEach = forEach;
 ..compose = compose;
 ..memoized = memoized;
+..table.reduce = reducex;
