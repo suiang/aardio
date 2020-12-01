@@ -29,10 +29,16 @@ tap = function(v){
 	))
 }
 
+compose = function(...){
+    var fs = {...}; 
+    ..table.reverse( fs )
+	return lambda(v) reduce(fs, λ(p,f) f(p), v)
+}
+
 memoized = function(f){
 	var r = {};
 	return function(n) {
-		if(!r[n]) r[n]= f(n)
+		if(!r[n]) r[n]= f(n);
 		return r[n]; 
 	}
 }
@@ -40,9 +46,10 @@ memoized = function(f){
 // -----------------------------------------------------
 ..tap = tap;
 ..meta = meta;
+..times = times;
 ..curry = curry;
 ..unless = unless;
-..times = times;
 ..forEach = forEach;
+..compose = compose;
 ..memoized = memoized;
 ..table.reduce = reducex;
