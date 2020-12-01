@@ -33,11 +33,12 @@ console.log("--------------------------------")
 
 // 函数调试
 tap = function(v){
-	return lambda(fn) unless( 
+	return lambda(fn) unless ( 
 		!(type(fn)==="function")
-		,λ() console.dumpJson(["参数值"] = v
-			,["返回值"] = fn(v) || "No return values!")
-	)
+		,λ() console.dumpJson ({
+			["参数值"] = v;
+			["返回值"] = fn(v) || "No return values!"
+	}))
 }
 
 forEach(t, lambda(v) tap(v)( math.sqrt ))
