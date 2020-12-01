@@ -10,11 +10,6 @@ meta = function(t, add = true){
 	return t; 
 }
 
-reducex = function(t, f,...){
-    if( type(f) !="table" ) f = {f,...};
-    return reduce(f, lambda(t, f) f(t), t);
-};
-
 curry = lambda(f) λ(x) λ(y) f(x,y)
 unless = function(p,f) if(!p) f()
 times = function(n, f) for(i=1;n) f(i)
@@ -35,6 +30,11 @@ compose = function(...){
 	return lambda(v) reduce(fs, λ(p,f) f(p), v)
 }
 
+pipe = function(...){
+	var fs = {...}; 
+	return lambda(v) reduce(fs, λ(p,f) f(p), v); 
+}
+
 memoized = function(f){
 	var r = {};
 	return function(n) {
@@ -46,10 +46,10 @@ memoized = function(f){
 // -----------------------------------------------------
 ..tap = tap;
 ..meta = meta;
+..pipe = pipe;
 ..times = times;
 ..curry = curry;
 ..unless = unless;
 ..forEach = forEach;
 ..compose = compose;
 ..memoized = memoized;
-..table.reduce = reducex;
