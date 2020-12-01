@@ -42,5 +42,9 @@
     {
         "name":"restApi",
         "title":"web.rest 请求过程"
+    },
+    {
+        "name":"testUpdatex",
+        "title":"测试同步json列表"
     }
 ]
