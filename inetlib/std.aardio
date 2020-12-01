@@ -7,6 +7,7 @@ meta = function(t, add = true){
 		});
 		_float = true;
 	} : null
+	return t; 
 }
 
 reducex = function(t, f,...){
@@ -14,6 +15,7 @@ reducex = function(t, f,...){
     return reduce(f, lambda(t, f) f(t), t);
 };
 
+curry = lambda(f) λ(x) λ(y) f(x,y)
 unless = function(p,f) if(!p) f()
 times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
@@ -27,10 +29,20 @@ tap = function(v){
 	))
 }
 
+memoized = function(f){
+	var r = {};
+	return function(n) {
+		if(!r[n]) r[n]= f(n)
+		return r[n]; 
+	}
+}
+
 // -----------------------------------------------------
 ..tap = tap;
 ..meta = meta;
+..curry = curry;
 ..unless = unless;
 ..times = times;
 ..forEach = forEach;
+..memoized = memoized;
 ..table.reduce = reducex;
