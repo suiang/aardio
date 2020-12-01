@@ -29,6 +29,11 @@ tap = function(v){
 	))
 }
 
+identity = function(it){
+	..console.varDump( it );
+	return it; 
+}
+
 compose = function(...){
     var fs = {...}; 
     ..table.reverse( fs )
@@ -57,5 +62,6 @@ memoized = function(f){
 ..unless = unless;
 ..forEach = forEach;
 ..compose = compose;
+..identity = identity;
 ..memoized = memoized;
 ..table.reduce = reducex;
