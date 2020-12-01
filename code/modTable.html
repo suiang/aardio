@@ -35,13 +35,12 @@ meta = function(t, add = true){
 		});
 		_float = true; //允许移除元表	
 	} : null
-	return t; 
 }
 
 var t = {1,2,3,4,5}
 
 // 添加元表
-t = meta(t); 
+ meta(t); 
 
 // 测试代码
 console.varDump( t.filter( lambda(v) v>2 ) ) 
@@ -50,7 +49,7 @@ console.varDump( t.map( math.sqrt ) )
 console.varDump( t.pop() )
 
 // 移除元表
-t = meta(t,false)
+meta(t,false)
 console.pause(true);
 
 // https://suiang.cn/aardio/code/modTable
