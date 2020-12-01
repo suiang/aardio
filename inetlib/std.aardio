@@ -7,7 +7,6 @@ meta = function(t, add = true){
 		});
 		_float = true;
 	} : null
-	return t; 
 }
 
 reducex = function(t, f,...){
