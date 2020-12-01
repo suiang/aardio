@@ -20,11 +20,12 @@ times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
 
 tap = function(v){
-	return lambda(fn) unless( 
+	return lambda(fn) unless ( 
 		!(type(fn)==="function")
-		,λ() ..console.dumpJson(["参数值"] = v
-			,["返回值"] = fn(v) || "No return values!")
-	)
+		,λ()..console.dumpJson(
+			["参数值"] = v,
+			["返回值"] = fn(v) || "No return values!"
+	))
 }
 
 // -----------------------------------------------------
