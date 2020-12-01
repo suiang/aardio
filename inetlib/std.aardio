@@ -5,7 +5,7 @@ meta = function(t, add = true){
 		_get = ..table.map(..table, function(v){
 			return lambda(...) v(owner,...)
 		});
-		_float = true; //允许移除元表	
+		_float = true;
 	} : null
 	return t; 
 }
@@ -21,8 +21,9 @@ forEach = function(t,f) for(k,v in t) f(v,k)
 
 tap = function(v){
 	return lambda(fn) unless( 
-		!(type(fn)==="function" && fn(v) )
-		,λ() ..console.dumpJson(["参数值"]=v, ["返回值"]=fn(v))
+		!(type(fn)==="function")
+		,λ() ..console.dumpJson(["参数值"] = v
+			,["返回值"] = fn(v) || "No return values!")
 	)
 }
 
