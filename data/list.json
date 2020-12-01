@@ -46,5 +46,9 @@
     {
         "name":"testUpdatex",
         "title":"测试同步json列表"
+    },
+    {
+        "name":"testUpdatexx",
+        "title":"测试同步json列表"
     }
 ]
