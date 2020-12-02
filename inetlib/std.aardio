@@ -86,11 +86,10 @@ Maybe._meta = {
             return owner; 
         }
         join = function(){
-            if(owner.isNothing()) return;
-            return owner.value; 
+            return owner.isNothing() ? owner : owner.value; 
         }
         chain = function(f){
-            return owner.map(f).join(); 
+            return owner.map(f).join();
         }
         log = function(){
             if(owner.isNothing()) owner.value = "null"
