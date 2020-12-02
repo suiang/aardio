@@ -97,6 +97,8 @@ Maybe._meta = {
             ..console.dumpJson(["Maybe"] = {value = owner.value })
         }
     }
+    _call = lambda() owner.log();
+    _type = "Maybe";
 }
 ..Maybe = Maybe;
 
@@ -115,6 +117,8 @@ Nothing._meta = {
             ..console.dumpJson(["Nothing"] = {value = owner.value})
         }
     }
+    _call = lambda() owner.log();
+    _type = "Nothing";
 }
 
 class Some{
@@ -133,6 +137,8 @@ Some._meta = {
             ..console.dumpJson(["Some"] = {value = owner.value})
         }
     }
+    _call = lambda() owner.log();
+    _type = "Some";
 }
 ..Some = Some;
 ..Nothing = Nothing;
