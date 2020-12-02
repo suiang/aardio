@@ -95,6 +95,7 @@ Maybe._meta = {
         log = function(){
             if(owner.isNothing()) owner.value = "null"
             ..console.dumpJson(["Maybe"] = {value = owner.value })
+            return owner; 
         }
     }
     _call = lambda() owner.log();
@@ -115,6 +116,7 @@ Nothing._meta = {
         }
         log = function(){
             ..console.dumpJson(["Nothing"] = {value = owner.value})
+            return owner; 
         }
     }
     _call = lambda() owner.log();
@@ -130,11 +132,14 @@ class Some{
 Some._meta = {
     _get = {
         map = function(fn){
-            owner.value = fn(owner.value)
+            if( type(owner.value)=="table" )
+            	..meta(owner.value)
+            owner.value = fn(owner.value);
             return owner; 
         }
         log = function(){
             ..console.dumpJson(["Some"] = {value = owner.value})
+            return owner; 
         }
     }
     _call = lambda() owner.log();
