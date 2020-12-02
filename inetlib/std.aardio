@@ -81,7 +81,7 @@ Maybe._meta = {
             return owner.value === null; 
         }
         map = function(f){
-            if( type(owner.value)=="table" )..meta(owner.value) 
+            meta(owner.value) 
             if(!owner.isNothing()) owner.value = f(owner.value)
             return owner; 
         }
@@ -132,8 +132,7 @@ class Some{
 Some._meta = {
     _get = {
         map = function(fn){
-            if( type(owner.value)=="table" )
-            	..meta(owner.value)
+            meta(owner.value)
             owner.value = fn(owner.value);
             return owner; 
         }
