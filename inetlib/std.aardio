@@ -1,18 +1,20 @@
 namespace std;
 
 meta = function(t, add = true){
-	t@ = add ? {
-		_get = ..table.map(..table, function(v){
-			return lambda(...) v(owner,...)
-		});
-		_float = true;
-	} : null
-	return t; 
+    if( type(t)=="table" ) { 
+        t@ = add ? {
+            _get = ..table.map(..table, function(v){
+                return lambda(...) v(owner,...)
+            });
+            _float = true;
+        } : null
+    }
+    return t; 
 }
 
 reducex = function(t, f,...){
     if( type(f) !="table" ) f = {f,...};
-    return reduce(f, lambda(t, f) f(t), t);
+    return reduce(f, lambda(t, f) meta(f(t)), t);
 };
 
 curry = lambda(f) λ(x) λ(y) f(x,y)
@@ -21,36 +23,36 @@ times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
 
 tap = function(v){
-	return lambda(f) unless ( 
-		!(type(f)==="function")
-		,λ()..console.dumpJson(
-			["参数值"] = v,
-			["返回值"] = f(v) || "No return values!"
-	))
+    return lambda(f) unless ( 
+        !(type(f)==="function")
+        ,λ()..console.dumpJson(
+            ["参数值"] = v,
+            ["返回值"] = f(v) || "No return values!"
+    ))
 }
 
 identity = function(it){
-	..console.varDump( it );
-	return it; 
+    ..console.varDump( it );
+    return it; 
 }
 
 compose = function(...){
     var fs = {...}; 
     ..table.reverse( fs )
-	return lambda(v) reduce(fs, λ(p,f) f(p), v)
+    return lambda(v) reduce(fs, λ(p,f) f(p), v)
 }
 
 pipe = function(...){
-	var fs = {...}; 
-	return lambda(v) reduce(fs, λ(p,f) f(p), v); 
+    var fs = {...}; 
+    return lambda(v) reduce(fs, λ(p,f) f(p), v); 
 }
 
 memoized = function(f){
-	var r = {};
-	return function(n) {
-		if(!r[n]) r[n]= f(n);
-		return r[n]; 
-	}
+    var r = {};
+    return function(n) {
+        if(!r[n]) r[n]= f(n);
+        return r[n]; 
+    }
 }
 
 //--------------------------
@@ -68,69 +70,69 @@ memoized = function(f){
 //--------------------------
 
 class Maybe{
-	ctor(val){
-		this.value = val;
-	};
-	@_meta
+    ctor(val){
+        this.value = val;
+    };
+    @_meta
 }
 Maybe._meta = {
-	_get = {
-		isNothing = function(){
-			return owner.value === null; 
-		}
-		map = function(f){
-			if( type(owner.value)=="table" )..meta(owner.value) 
-			if(!owner.isNothing()) owner.value = f(owner.value)
-			return owner; 
-		}
-		join = function(){
-			if(owner.isNothing()) return;
-			return owner.value; 
-		}
-		chain = function(f){
-			return owner.map(f).join(); 
-		}
-		log = function(){
-			if(owner.isNothing()) owner.value = "null"
-			..console.dumpJson(["Maybe"] = {value = owner.value })
-		}
-	}
+    _get = {
+        isNothing = function(){
+            return owner.value === null; 
+        }
+        map = function(f){
+            if( type(owner.value)=="table" )..meta(owner.value) 
+            if(!owner.isNothing()) owner.value = f(owner.value)
+            return owner; 
+        }
+        join = function(){
+            if(owner.isNothing()) return;
+            return owner.value; 
+        }
+        chain = function(f){
+            return owner.map(f).join(); 
+        }
+        log = function(){
+            if(owner.isNothing()) owner.value = "null"
+            ..console.dumpJson(["Maybe"] = {value = owner.value })
+        }
+    }
 }
 ..Maybe = Maybe;
 
 class Nothing{
-	ctor(val){
-		this.value = val;
-	};
-	@_meta
+    ctor(val){
+        this.value = val;
+    };
+    @_meta
 }
 Nothing._meta = {
-	_get = {
-		map = function(f){
-			return owner; 
-		}
-		log = function(){
-			..console.dumpJson(["Nothing"] = {value = owner.value})
-		}
-	}
+    _get = {
+        map = function(f){
+            return owner; 
+        }
+        log = function(){
+            ..console.dumpJson(["Nothing"] = {value = owner.value})
+        }
+    }
 }
 
 class Some{
-	ctor(val){
-		this.value = val;
-	};
-	@_meta;
+    ctor(val){
+        this.value = val;
+    };
+    @_meta;
 }
 Some._meta = {
-	_get = {
-		map = function(fn){
-			owner.value = fn(owner.value)
-			return owner; 
-		}
-		log = function(){
-			..console.dumpJson(["Some"] = {value = owner.value})
-		}
-	}
+    _get = {
+        map = function(fn){
+            owner.value = fn(owner.value)
+            return owner; 
+        }
+        log = function(){
+            ..console.dumpJson(["Some"] = {value = owner.value})
+        }
+    }
 }
 ..Some = Some;
 ..Nothing = Nothing;
