@@ -67,6 +67,7 @@ memoized = function(f){
 ..identity = identity;
 ..memoized = memoized;
 ..table.reduce = reducex;
+..table.of = lambda(...){...}
 //--------------------------
 
 class Maybe{
