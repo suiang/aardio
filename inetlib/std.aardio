@@ -1,4 +1,5 @@
 namespace std;
+import util.metaProperty
 
 meta = function(t, add = true){
     if( type(t)=="table" ) { 
@@ -11,11 +12,6 @@ meta = function(t, add = true){
     }
     return t; 
 }
-
-reducex = function(t, f,...){
-    if( type(f) !="table" ) f = {f,...};
-    return reduce(f, lambda(t, f) meta(f(t)), t);
-};
 
 curry = lambda(f) λ(x) λ(y) f(x,y)
 unless = function(p,f) if(!p) f()
@@ -66,10 +62,15 @@ memoized = function(f){
 ..compose = compose;
 ..identity = identity;
 ..memoized = memoized;
-..table.reduce = reducex;
-..table.of = lambda(...){...}
-//--------------------------
 
+//--------------------------
+..table.of = lambda(...){...};
+..table.reduce = = function(t, f,...){
+    if( type(f) !="table" ) f = {f,...};
+    return reduce(f, lambda(t, f) meta(f(t)), t);
+};
+
+//--------------------------
 class Maybe{
     ctor(val){
         this.value = val;
@@ -147,3 +148,41 @@ Some._meta = {
 ..Some = Some;
 ..Nothing = Nothing;
 ..Either = { Some = Some, Nothing = Nothing}
+
+class Set{
+    ctor(t,...){
+        if(type(t)!="table") t = {t,...}
+        this = reduce(t,function(p,n){
+            if(!..table.find(p,n) ) ..table.push(p,n)
+            return p
+        },{})	
+    };
+    @_metaProperty;
+}
+namespace Set{
+    var pop = ..table.pop;
+    var find = ..table.find;
+    var push = ..table.push;
+    var remove = ..table.remove;
+    _metaProperty = ..util.metaProperty(
+        add = function(v,...){
+            if(type(v)!="table") v = {v,...}
+            owner = reduce(v,function(p,n){
+                if( !find(p,n) ) push(p,n)
+                return p
+            },owner)
+            return owner; 
+        }
+        delete = function(v){
+            return !!remove(owner, find(owner,v)||0)  
+        }
+        has = function(v){
+            return !!find(owner, v); 
+        }
+        clear = function(){
+            pop(owner,#owner)
+        }
+        size = { _get = lambda() #owner };
+    )	
+}
+..Set = Set;
