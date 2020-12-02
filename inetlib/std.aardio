@@ -53,7 +53,7 @@ memoized = function(f){
 	}
 }
 
-// -----------------------------------------------------
+//--------------------------
 ..tap = tap;
 ..meta = meta;
 ..pipe = pipe;
@@ -65,3 +65,73 @@ memoized = function(f){
 ..identity = identity;
 ..memoized = memoized;
 ..table.reduce = reducex;
+//--------------------------
+
+class Maybe{
+	ctor(val){
+		this.value = val;
+	};
+	@_meta
+}
+Maybe._meta = {
+	_get = {
+		isNothing = function(){
+			return owner.value === null; 
+		}
+		map = function(f){
+			if( type(owner.value)=="table" )..meta(owner.value) 
+			if(!owner.isNothing()) owner.value = f(owner.value)
+			return owner; 
+		}
+		join = function(){
+			if(owner.isNothing()) return;
+			return owner.value; 
+		}
+		chain = function(f){
+			return owner.map(f).join(); 
+		}
+		log = function(){
+			if(owner.isNothing()) owner.value = "null"
+			..console.dumpJson(["Maybe"] = {value = owner.value })
+		}
+	}
+}
+..Maybe = Maybe;
+
+class Nothing{
+	ctor(val){
+		this.value = val;
+	};
+	@_meta
+}
+Nothing._meta = {
+	_get = {
+		map = function(f){
+			return owner; 
+		}
+		log = function(){
+			..console.dumpJson(["Nothing"] = {value = owner.value})
+		}
+	}
+}
+
+class Some{
+	ctor(val){
+		this.value = val;
+	};
+	@_meta;
+}
+Some._meta = {
+	_get = {
+		map = function(fn){
+			owner.value = fn(owner.value)
+			return owner; 
+		}
+		log = function(){
+			..console.dumpJson(["Some"] = {value = owner.value})
+		}
+	}
+}
+..Some = Some;
+..Nothing = Nothing;
+..Either = { Some = Some, Nothing = Nothing}
