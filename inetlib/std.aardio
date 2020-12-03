@@ -35,12 +35,12 @@ identity = function(it){
 compose = function(...){
     var fs = {...}; 
     ..table.reverse( fs )
-    return lambda(v) reduce(fs, λ(p,f) f(p), v)
+    return lambda(v) reduce(fs, λ(p,f) meta(f(p)), meta(v))
 }
 
 pipe = function(...){
     var fs = {...}; 
-    return lambda(v) reduce(fs, λ(p,f) f(p), v); 
+    return lambda(v) reduce(fs, λ(p,f) meta(f(p)), meta(v)); 
 }
 
 memoized = function(f){
@@ -67,7 +67,7 @@ memoized = function(f){
 ..table.of = lambda(...){...};
 ..table.reduce = function(t, f,...){
     if( type(f) !="table" ) f = {f,...};
-    return reduce(f, lambda(t, f) meta(f(t)), t);
+    return reduce(f, lambda(t, f) meta(f(t)), meta(t));
 };
 
 //--------------------------
