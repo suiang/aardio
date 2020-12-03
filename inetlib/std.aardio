@@ -1,7 +1,6 @@
 namespace std;
 import util.metaProperty
-
-// Functional Programming library for AArdio by suiang
+/* Functional Programming library for AArdio by suiang */
 
 meta = function(t, add = true){
     if( type(t)=="table" ) { 
