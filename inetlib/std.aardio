@@ -1,5 +1,6 @@
 namespace std;
 import util.metaProperty
+
 /* Functional Programming library for AArdio by suiang */
 
 meta = function(t, add = true){
@@ -65,13 +66,14 @@ memoized = function(f){
 ..memoized = memoized;
 
 //--------------------------
+
 ..table.of = lambda(...){...};
 ..table.reduce = function(t, f,...){
     if( type(f) !="table" ) f = {f,...};
     return reduce(f, lambda(t, f) meta(f(t)), meta(t));
 };
-
 //--------------------------
+
 class Maybe{
     ctor(val){
         this.value = val;
