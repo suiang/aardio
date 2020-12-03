@@ -161,32 +161,26 @@ class Set{
     };
     @_metaProperty;
 }
-namespace Set{
-    var pop = ..table.pop;
-    var find = ..table.find;
-    var push = ..table.push;
-    var remove = ..table.remove;
-    _metaProperty = ..util.metaProperty(
-        add = function(v,...){
-            if(type(v)!="table") v = {v,...}
-            owner = reduce(v,function(p,n){
-                if( !find(p,n) ) push(p,n)
-                return p
-            },owner)
-            return owner; 
-        }
-        delete = function(v){
-            return !!remove(owner, find(owner,v)||0)  
-        }
-        has = function(v){
-            return !!find(owner, v); 
-        }
-        clear = function(){
-            pop(owner,#owner)
-        }
-        size = { _get = lambda() #owner };
-    )	
-}
+Set._metaProperty = util.metaProperty(
+    add = function(v,...){
+        if(type(v)!="table") v = {v,...}
+        owner = reduce(v,function(p,n){
+            if( !..table.find(p,n) ) ..table.push(p,n)
+            return p
+        },owner)
+        return owner; 
+    }
+    delete = function(v){
+        return !!..table.remove(owner, ..table.find(owner,v)||0)
+    }
+    has = function(v){
+        return !!..table.find(owner, v); 
+    }
+    clear = function(){
+        ..table.pop(owner,#owner)
+    }
+    size = { _get = lambda() #owner };
+)
 ..Set = Set;
 
 /*
