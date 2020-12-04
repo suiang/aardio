@@ -1,5 +1,7 @@
+import util;
+import util.metaProperty;
+
 namespace std;
-import util.metaProperty
 
 /* Functional Programming library for AArdio by suiang */
 
@@ -64,7 +66,7 @@ memoized = function(f){
 ..compose = compose;
 ..identity = identity;
 ..memoized = memoized;
-
+..partial = ..util.bind;
 //--------------------------
 
 ..table.of = lambda(...){...};
@@ -72,8 +74,8 @@ memoized = function(f){
     if( type(f) !="table" ) f = {f,...};
     return reduce(f, lambda(t, f) meta(f(t)), meta(t));
 };
-//--------------------------
 
+//--------------------------
 class Maybe{
     ctor(val){
         this.value = val;
@@ -162,7 +164,7 @@ class Set{
     };
     @_metaProperty;
 }
-Set._metaProperty = util.metaProperty(
+Set._metaProperty = ..util.metaProperty(
     add = function(v,...){
         if(type(v)!="table") v = {v,...}
         owner = reduce(v,function(p,n){
