@@ -5,8 +5,11 @@ namespace std;
 
 /* Functional Programming library for AArdio by suiang */
 
+isCallable = ..util.isCallable;
+isTable = lambda(t) return type(t)==type.table;
+
 meta = function(t, add = true){
-    if( type(t)=="table" ) { 
+    if( isTable(t) ) { 
         t@ = add ? {
             _get = ..table.map(..table, function(v){
                 return lambda(...) v(owner,...)
@@ -24,7 +27,7 @@ forEach = function(t,f) for(k,v in t) f(v,k)
 
 tap = function(v){
     return lambda(f) unless ( 
-        !(type(f)==="function")
+        !( isCallable(f) )
         ,λ()..console.dumpJson(
             ["参数值"] = v,
             ["返回值"] = f(v) || "No return values!"
@@ -67,15 +70,17 @@ memoized = function(f){
 ..identity = identity;
 ..memoized = memoized;
 ..partial = ..util.bind;
+..isCallable = isCallable
 //--------------------------
 
 ..table.of = lambda(...){...};
 ..table.reduce = function(t, f,...){
-    if( type(f) !="table" ) f = {f,...};
+    if( !isTable(f) ) f = {f,...};
     return reduce(f, lambda(t, f) meta(f(t)), meta(t));
 };
-
+..isTable = isTable
 //--------------------------
+
 class Maybe{
     ctor(val){
         this.value = val;
@@ -156,7 +161,7 @@ Some._meta = {
 
 class Set{
     ctor(t,...){
-        if(type(t)!="table") t = {t,...}
+        if( !isTable(t) ) t = {t,...}
         this = reduce(t,function(p,n){
             if(!..table.find(p,n) ) ..table.push(p,n)
             return p
@@ -166,7 +171,7 @@ class Set{
 }
 Set._metaProperty = ..util.metaProperty(
     add = function(v,...){
-        if(type(v)!="table") v = {v,...}
+        if( !isTable(v) ) v = {v,...}
         owner = reduce(v,function(p,n){
             if( !..table.find(p,n) ) ..table.push(p,n)
             return p
