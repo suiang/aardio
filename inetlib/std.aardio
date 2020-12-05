@@ -6,7 +6,7 @@ namespace std;
 /* Functional Programming library for AArdio by suiang */
 
 isCallable = ..util.isCallable;
-isTable = lambda(t) return type(t)==type.table;
+isTable = lambda(t) type(t)==type.table;
 
 meta = function(t, add = true){
     if( isTable(t) ) { 
@@ -25,12 +25,14 @@ unless = function(p,f) if(!p) f()
 times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
 
-tap = function(v){
+tap = function(v,...){
+    var v = {v,...}
     return lambda(f) unless ( 
         !( isCallable(f) )
         ,λ()..console.dumpJson(
             ["参数值"] = v,
-            ["返回值"] = f(v) || "No return values!"
+            ["返回值"] = f(..table.unpackArgs(v))
+            || "No return values!";
     ))
 }
 
