@@ -25,13 +25,12 @@ unless = function(p,f) if(!p) f()
 times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
 
-tap = function(v,...){
-    var v = {v,...}
+tap = function(v){
     return lambda(f) unless ( 
         !( isCallable(f) )
         ,λ()..console.dumpJson(
             ["参数值"] = v,
-            ["返回值"] = f(..table.unpackArgs(v))
+            ["返回值"] = f(v)
             || "No return values!";
     ))
 }
@@ -167,7 +166,7 @@ class Set{
         this = reduce(t,function(p,n){
             if(!..table.find(p,n) ) ..table.push(p,n)
             return p
-        },{})	
+        },{})   
     };
     @_metaProperty;
 }
