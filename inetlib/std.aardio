@@ -163,10 +163,7 @@ Some._meta = {
 class Set{
     ctor(t,...){
         if( !isTable(t) ) t = {t,...}
-        this = reduce(t,function(p,n){
-            if(!..table.find(p,n) ) ..table.push(p,n)
-            return p
-        },{})   
+        this = ..table.unique(t)    
     };
     @_metaProperty;
 }
