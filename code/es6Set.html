@@ -21,11 +21,8 @@ import util.metaProperty
 class Set{
 	ctor(t,...){
 		if(type(t)!="table") t = {t,...}
-		this = reduce(t,function(p,n){
-			if(!..table.find(p,n) ) ..table.push(p,n)
-			return p
-		},{})	
-	};
+		this = ..table.unique(t)
+	}
 	@_metaProperty;
 }
 
