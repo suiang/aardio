@@ -47,4 +47,8 @@
         "name":"wkhtmltox",
         "title":"调用 wkhtmltox 将网页转换为 PDF"
     },
+    {
+        "name":"password",
+        "title":"密码生成器"
+    }
 ]
