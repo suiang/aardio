@@ -40,7 +40,7 @@ var dll = raw.loadDll( "D:\Tools\wkhtmltox\bin\wkhtmltox.dll" )
 console.printf('wkhtmltopdf %s (with patched qt)\n', raw.tostring( dll.wkhtmltopdf_versionP() ) )
 
 // 1. CAPI(int) wkhtmltopdf_init(int use_graphics);
-dll.wkhtmltopdf_init(0)
+dll.wkhtmltopdf_init(1)
 
 // 2. CAPI(wkhtmltopdf_global_settings *) wkhtmltopdf_create_global_settings();
 var pgs = dll.wkhtmltopdf_create_global_settingsP()
