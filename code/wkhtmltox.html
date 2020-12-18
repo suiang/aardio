@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<title>调用 wkhtmltox 将网页转换为 PDF</title>
+	<link rel="icon" href="../favicon.ico">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: wkhtmltox}
+// ${title: 调用 wkhtmltox 将网页转换为 PDF}
+
+import console;
+
+// https://wkhtmltopdf.org/libwkhtmltox/
+// https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html 
+
+// PDF c-bindings
+
+/*
+- wkhtmltopdf_init is called.
+- A wkhtmltopdf_global_settings object is creating by calling wkhtmltopdf_create_global_settings.
+- Non web page specific Setting for the conversion are set by multiple calls to wkhtmltopdf_set_global_setting.
+- A wkhtmltopdf_converter object is created by calling wkhtmltopdf_create_converter, which consumes the global_settings instance.
+- A number of object (web pages) are added to the conversion process, this is done by
+	- Creating a wkhtmltopdf_object_settings instance by calling wkhtmltopdf_create_object_settings.
+	- Setting web page specific Setting by multiple calls to wkhtmltopdf_set_object_setting.
+	- Adding the object to the conversion process by calling wkhtmltopdf_add_object
+- A number of callback function are added to the converter object.
+- The conversion is performed by calling wkhtmltopdf_convert.
+- The converter object is destroyed by calling wkhtmltopdf_destroy_converter.
+*/
+
+var dll = raw.loadDll( "D:\Tools\wkhtmltox\bin\wkhtmltox.dll" )
+
+//获取版本号
+console.log(  raw.tostring( dll.wkhtmltopdf_versionP() ) )
+
+// 1. CAPI(int) wkhtmltopdf_init(int use_graphics);
+dll.wkhtmltopdf_init(0)
+
+// 2. CAPI(wkhtmltopdf_global_settings *) wkhtmltopdf_create_global_settings();
+var pgs = dll.wkhtmltopdf_create_global_settingsP()
+
+// 3. CAPI(int) wkhtmltopdf_set_global_setting(wkhtmltopdf_global_settings * settings, const char * name, const char * value);
+dll.wkhtmltopdf_set_global_setting(pgs, "out", io.fullpath("~\update.pdf") )
+
+// 4. CAPI(wkhtmltopdf_converter *) wkhtmltopdf_create_converter(wkhtmltopdf_global_settings * settings);
+var converter = dll.wkhtmltopdf_create_converterP( pgs )
+
+// 5. CAPI(wkhtmltopdf_object_settings *) wkhtmltopdf_create_object_settings();
+var pos = dll.wkhtmltopdf_create_object_settingsP()
+
+// 6. CAPI(int) wkhtmltopdf_set_object_setting(wkhtmltopdf_object_settings * settings, const char * name, const char * value);
+dll.wkhtmltopdf_set_object_setting(pos, "page", "http://ide.update.aardio.com/log/")
+
+// 7. CAPI(void) wkhtmltopdf_add_object(wkhtmltopdf_converter * converter, wkhtmltopdf_object_settings * setting, const char * data);
+dll.wkhtmltopdf_add_object(converter, pos, null)
+
+// 8. CAPI(int) wkhtmltopdf_convert(wkhtmltopdf_converter * converter);
+console.log( dll.wkhtmltopdf_convert(converter) )
+
+// 9. CAPI(void) wkhtmltopdf_destroy_converter(wkhtmltopdf_converter * converter);
+dll.wkhtmltopdf_destroy_converter(converter)
+
+dll.wkhtmltopdf_deinit()
+
+console.pause(true);
+// https://suiang.cn/aardio/code/wkhtmltox
+</code></pre>
+</body>
+</html>
