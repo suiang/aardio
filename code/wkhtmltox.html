@@ -13,6 +13,8 @@
 
 import console;
 
+console.setTitle("wkhtmltopdf")
+
 // https://wkhtmltopdf.org/libwkhtmltox/
 // https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html 
 
@@ -58,7 +60,6 @@ dll.wkhtmltopdf_set_object_setting(pos, "page", "http://ide.update.aardio.com/lo
 // 7. CAPI(void) wkhtmltopdf_add_object(wkhtmltopdf_converter * converter, wkhtmltopdf_object_settings * setting, const char * data);
 dll.wkhtmltopdf_add_object(converter, pos, null)
 
-// Add callback function
 var msg = {
 	"Loading pages",
 	"Counting pages",
@@ -67,6 +68,7 @@ var msg = {
 	"Printing pages"
 }
 
+// Add callback function
 dll.wkhtmltopdf_set_progress_changed_callback(converter, raw.tocdecl(
     function(cter, val){
     	if(val==100) table.remove(msg)
