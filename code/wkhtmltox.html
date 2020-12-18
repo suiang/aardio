@@ -37,7 +37,7 @@ console.setTitle("wkhtmltopdf")
 var dll = raw.loadDll( "D:\Tools\wkhtmltox\bin\wkhtmltox.dll" )
 
 //获取版本号
-console.log(  raw.tostring( dll.wkhtmltopdf_versionP() ) )
+console.printf('wkhtmltopdf %s (with patched qt)\n', raw.tostring( dll.wkhtmltopdf_versionP() ) )
 
 // 1. CAPI(int) wkhtmltopdf_init(int use_graphics);
 dll.wkhtmltopdf_init(0)
@@ -78,7 +78,7 @@ dll.wkhtmltopdf_set_progress_changed_callback(converter, raw.tocdecl(
 
 dll.wkhtmltopdf_set_finished_callback(converter, raw.tocdecl(
     function(cter, val){
-    	console.log( table.remove(msg) + " done.")
+    	console.log( table.remove(msg) + ' done.\n')
 	},"void(point,int)"
 ))
 
