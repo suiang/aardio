@@ -58,18 +58,18 @@ var pos = dll.wkhtmltopdf_create_object_settingsP()
 dll.wkhtmltopdf_set_object_setting(pos, "page", "http://ide.update.aardio.com/log/")
 
 var objSettings = {
-    ["header.fontSize"] = "6",
+    ["header.fontSize"] = 6,
     ["header.fontName"] = "微软雅黑",
-    ["header.spacing"] = "2.0",
+    ["header.spacing"] = 2.0,
 	["header.right"] = "更 新 日 志",
-	["footer.fontSize"] = "5",
+	["footer.fontSize"] = 5,
 	["footer.fontName"] = "Cascadia Code",
-	["footer.spacing"] = "2.0",
+	["footer.spacing"] = 2.0,
 	["footer.left"] = "[page]/[topage]",
 	["footer.right"] = "http://ide.update.aardio.com/log",
 }
 
-for(k,v in objSettings) dll.wkhtmltopdf_set_object_setting(pos, k, v)
+for(k,v in objSettings) dll.wkhtmltopdf_set_object_setting(pos, k, tostring(v))
 
 // 7. CAPI(void) wkhtmltopdf_add_object(wkhtmltopdf_converter * converter, wkhtmltopdf_object_settings * setting, const char * data);
 dll.wkhtmltopdf_add_object(converter, pos, null)
