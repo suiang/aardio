@@ -69,8 +69,8 @@ var msg = {
 // 添加回调函数
 dll.wkhtmltopdf_set_progress_changed_callback(converter, raw.tocdecl(
     function(cter, val){
-    	if(val==100) console.log( table.remove(msg) + " done.")
-		console.showLoading(val + "% loading ");	
+    	if(val==100) table.remove(msg)
+		console.showLoading( string.format("%s %s%%", msg[1], val) );	
 	}, "void(point,int)"
 ))
 
