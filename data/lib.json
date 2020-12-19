@@ -33,6 +33,13 @@
         "keywords":"table event",
         "url":"https://suiang.cn/aardio/lib/table.event.tar.lzma",
         "version":"1.0.0.0"
+    },
+    "wkhtmltox":{
+        "author":"suiang",
+        "description":"将网页转换为 PDF",
+        "keywords":"wkhtmltox pdf",
+        "url":"https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma",
+        "version":"1.0.0.0"
     }
  }
 
