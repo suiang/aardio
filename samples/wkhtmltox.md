@@ -4,7 +4,7 @@ title: "将网页转换为 PDF"
 
 #### 使用说明
 
-更多设置：[libwkhtmltox Setting](https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html)
+更多设置查看：[libwkhtmltox Setting](https://wkhtmltopdf.org/libwkhtmltox/pagesettings.html)
 
 #### 示例代码
 
@@ -15,7 +15,10 @@ _IMPORTURL["wkhtmltox"] = _URL
 import console; 
 import wkhtmltox;
 
-var pdf = wkhtmltox("http://ide.update.aardio.com/log/", "~\log.pdf")
+var pdf = wkhtmltox(
+    "http://ide.update.aardio.com/log/"
+    ,"~\log.pdf"
+)
 
 //全局设置
 pdf.global.size.pageSize = "A4"
