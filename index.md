@@ -18,3 +18,4 @@ import 库名称; //导入刚安装的扩展库
 - [lanzou.client](samples/lanzou.html) : 获取蓝奏云分享直连
 - [ServerChan](samples/ServerChan.html) : 微信推送 https://sc.ftqq.com
 - [table.event](samples/Eventable.html) : 事件表 https://github.com/develephant/Eventable
+- [wkhtmltox](samples/wkhtmltox.html) : 将网页转换为 PDF https://wkhtmltopdf.org/libwkhtmltox
