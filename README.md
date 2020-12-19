@@ -16,4 +16,4 @@ import 库名称; //导入刚安装的扩展库
 - [lanzou.client](https://suiang.cn/aardio/lib/lanzou.client.tar.lzma) : 获取蓝奏云分享直连
 - [ServerChan](https://suiang.cn/aardio/lib/ServerChan.tar.lzma) : 微信推送 https://sc.ftqq.com
 - [table.event](https://suiang.cn/aardio/lib/table.event.tar.lzma) : 事件表 https://github.com/develephant/Eventable
-- - [wkhtmltox](https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma) : 将网页转换为 PDF https://wkhtmltopdf.org/libwkhtmltox
+- [wkhtmltox](https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma) : 将网页转换为 PDF https://wkhtmltopdf.org/libwkhtmltox
