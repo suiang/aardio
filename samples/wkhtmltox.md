@@ -9,15 +9,20 @@ title: "将网页转换为 PDF"
 #### 示例代码
 
 ```js
+//打印日志
+
 _URL = "https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma"
 _IMPORTURL["wkhtmltox"] = _URL
 
-import console; 
+import console
+import process;
 import wkhtmltox;
+
+console.setTitle("打印日志")
 
 var pdf = wkhtmltox(
     "http://ide.update.aardio.com/log/"
-    ,"~\log.pdf"
+    , "~\help\update-log.pdf"
 )
 
 //全局设置
@@ -64,13 +69,9 @@ pdf.onFinished = function(ctr, val){
     console.log('Convert pdf done.')
 }
 
-//获取版本号
-console.log("wkhtmltox version:", pdf.getVersion() )
-
 //转换
 var ret = pdf.convert()
 if(ret!=1) console.log("Convert pdf failed!")
-
-console.pause(true);
+process.execute("~\help\update-log.pdf");
 
 ```
