@@ -1,15 +1,15 @@
 {
     "ip2region":{
         "author":"suiang",
-        "description":"获取ip信息",
-        "keywords":"ip ip2region",
+        "description":"获取ip信息 https://gitee.com/lionsoul/ip2region",
+        "keywords":"ip2region",
         "url":"https://suiang.cn/aardio/lib/ip2region.tar.lzma",
         "version":"1.0.0.0"
     },
     "jsonStore":{
         "author":"suiang",
-        "description":"JSON 存储服务",
-        "keywords":"json store",
+        "description":"JSON 存储服务 https://extendsclass.com/json-storage.html",
+        "keywords":"jsonStore",
         "url":"https://suiang.cn/aardio/lib/jsonStore.tar.lzma",
         "version":"1.0.0.0"
     },
@@ -22,22 +22,22 @@
     },
     "ServerChan":{
         "author":"suiang",
-        "description":"微信推送",
-        "keywords":"wechat 微信",
+        "description":"微信推送 https://sc.ftqq.com",
+        "keywords":"ServerChan",
         "url":"https://suiang.cn/aardio/lib/ServerChan.tar.lzma",
         "version":"1.0.0.0"
     },
     "table.event":{
         "author":"suiang",
-        "description":"事件表",
-        "keywords":"table event",
+        "description":"事件表 https://github.com/develephant/Eventable",
+        "keywords":"Eventable",
         "url":"https://suiang.cn/aardio/lib/table.event.tar.lzma",
         "version":"1.0.0.0"
     },
     "wkhtmltox":{
         "author":"suiang",
-        "description":"将网页转换为 PDF",
-        "keywords":"wkhtmltox pdf",
+        "description":"将网页转换为 PDF https://wkhtmltopdf.org/libwkhtmltox",
+        "keywords":"wkhtmltox",
         "url":"https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma",
         "version":"1.0.0.0"
     }

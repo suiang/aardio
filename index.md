@@ -13,6 +13,12 @@ import 库名称; //导入刚安装的扩展库
 
 #### 库列表
 
+<dl>{% for object in site.data.lib %}
+    <li><a href="samples/{{ object.last.keywords }}">{{ object | first }}</a>
+        : {{ object.last.description }}
+    </li>{% endfor %}
+</dl>
+
 <dl>
     <li><a href="samples/ip2region">ip2region</a>
         : 获取ip信息 https://gitee.com/lionsoul/ip2region
