@@ -2,9 +2,11 @@
 title:  "代码段"
 ---
 
+#### 随手记代码
 <dl>
 {% for object in site.data.list %}
-  <dd>name: {{ object.name }}</dd>
-  <dd>title: {{ object.title }}</dd>
+  <li>
+      <a href="code/"+{{ object.name }}+".html">{{ object.title }}</a>
+  </li>
 {% endfor %}
 </dl>
