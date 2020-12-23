@@ -6,7 +6,7 @@ title:  "代码段"
 <dl>
 {% for object in site.data.list %}
   <li>
-      <a href="code/"+{{ object.name }}+".html">{{ object.title }}</a>
+      <a href="code/{{ object.name }}.html">{{ object.title }}</a>
   </li>
 {% endfor %}
 </dl>
