@@ -7,7 +7,7 @@ title:  "代码段"
 <dl>
 {% for object in site.data.list %}
   <li>
-      <a href="{{ object.name }}">{{ object.title }}</a>
+      <a href="{{ object.name }}">{{ object.title }}：</a>
       https://suiang.cn/aardio/code/{{ object.name }}
   </li>
 {% endfor %}
