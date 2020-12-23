@@ -13,6 +13,11 @@ import 库名称; //导入刚安装的扩展库
 
 #### 库列表
 
+<dl>
+    <li><a href="samples/ip2region">ip2region</a>
+        : 获取ip信息 https://gitee.com/lionsoul/ip2region
+    </li>
+</dl>
 - [ip2region](samples/ip2region) : 获取ip信息 https://gitee.com/lionsoul/ip2region
 - [jsonStore](samples/jsonStore) : JSON 存储服务 https://extendsclass.com/json-storage.html
 - [lanzou.client](samples/lanzou) : 获取蓝奏云分享直连
