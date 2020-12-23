@@ -18,7 +18,3 @@ import 库名称; //导入刚安装的扩展库
         : {{ object.last.description }}
     </li>{% endfor %}
 </dl>
-
-#### 代码段
-
-<dl><li><a href="code">随手记代码</a></li></dl>
