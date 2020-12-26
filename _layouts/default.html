@@ -61,9 +61,10 @@
         ga('send', 'pageview');
       </script>
     {% endif %}
-    <script type="text/javascript">
+    <script type="text/javascript" src="{{ site.baseurl }}/js/prism.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+     <script type="text/javascript">
       $('pre').addClass("line-numbers").css("white-space", "pre-wrap");
     </script>
-    <script type="text/javascript" src="{{ site.baseurl }}/js/prism.js"></script>
   </body>
 </html>
