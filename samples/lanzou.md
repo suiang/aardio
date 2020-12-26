@@ -8,7 +8,7 @@ title: "获取蓝奏云分享直连"
 #### 示例代码
 
 
-```js
+```aardio
 _URL = "https://suiang.cn/aardio/lib/lanzou.client.tar.lzma"
 _IMPORTURL["lanzou.client"] = _URL
 

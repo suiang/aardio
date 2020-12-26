@@ -1,321 +1,254 @@
+/**
+ * Monokai theme for PrismJS by suiang
+ * Website: https://suiang.cn
+ */
+
+/*
+MONOKIA   HEX
+--------- -------
+背景灰    #272822
+文本白    #D4D4D4
+数字紫    #AE81FF
+注释灰    #7E8E91
+关键红    #F92672
+符串黄    #E6DB74
+关键蓝    #66D9EF
+处理绿    #A6E22E
+*/
+/*
 body {
   background: #272822;
   font-size: 12px;
 }
-.syntaxhighlighter a,
-.syntaxhighlighter div,
-.syntaxhighlighter code,
-.syntaxhighlighter table,
-.syntaxhighlighter table td,
-.syntaxhighlighter table tr,
-.syntaxhighlighter table tbody,
-.syntaxhighlighter table thead,
-.syntaxhighlighter table caption,
-.syntaxhighlighter textarea {
-  -moz-border-radius: 0 0 0 0 !important;
-  -webkit-border-radius: 0 0 0 0 !important;
-  background: none !important;
-  border: 0 !important;
-  bottom: auto !important;
-  float: none !important;
-  height: auto !important;
-  left: auto !important;
-  line-height: 1.4em !important;
-  margin: 0 !important;
-  outline: 0 !important;
-  overflow: visible !important;
-  padding: 0 !important;
-  position: static !important;
-  right: auto !important;
-  text-align: left !important;
-  top: auto !important;
-  vertical-align: baseline !important;
-  width: auto !important;
-  box-sizing: content-box !important;
-  font-family: "Cascadia Code PL Regular", "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
-  font-weight: normal !important;
-  font-style: normal !important;
-  font-size: 1em !important;
-  min-height: inherit !important;
-  min-height: auto !important;
+*/
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #D4D4D4;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: 'Cascadia Code PL Regular', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.4;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
 }
 
-.syntaxhighlighter {
-  width: 100% !important;
-  margin: 1em 0 1em 0 !important;
-  position: relative !important;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  font-size: 1em !important;
-}
-.syntaxhighlighter .container:before, .syntaxhighlighter .container:after {
-  content: none !important;
-}
-.syntaxhighlighter.source {
-  overflow: hidden !important;
-}
-.syntaxhighlighter .bold {
-  font-weight: bold !important;
-}
-.syntaxhighlighter .italic {
-  font-style: italic !important;
-}
-.syntaxhighlighter .line {
-  white-space: pre !important;
-}
-.syntaxhighlighter table {
-  width: 100% !important;
-}
-.syntaxhighlighter table caption {
-  text-align: left !important;
-  padding: 0.5em 0 0.5em 1em !important;
-}
-.syntaxhighlighter table td.code {
-  width: 100% !important;
-}
-.syntaxhighlighter table td.code .container {
-  position: relative !important;
-}
-.syntaxhighlighter table td.code .container textarea {
-  box-sizing: border-box !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  border: none !important;
-  background: #272822 !important;
-  padding-left: 1em !important;
-  overflow: hidden !important;
-  white-space: pre !important;
-}
-.syntaxhighlighter table td.gutter .line {
-  text-align: right !important;
-  padding: 0 0.5em 0 1em !important;
-}
-.syntaxhighlighter table td.code .line {
-  padding: 0 1em !important;
-}
-.syntaxhighlighter.nogutter td.code .container textarea, .syntaxhighlighter.nogutter td.code .line {
-  padding-left: 0em !important;
-}
-.syntaxhighlighter.show {
-  display: block !important;
-}
-.syntaxhighlighter.collapsed table {
-  display: none !important;
-}
-.syntaxhighlighter.collapsed .toolbar {
-  padding: 0.1em 0.8em 0em 0.8em !important;
-  font-size: 1em !important;
-  position: static !important;
-  width: auto !important;
-  height: auto !important;
-}
-.syntaxhighlighter.collapsed .toolbar span {
-  display: inline !important;
-  margin-right: 1em !important;
-}
-.syntaxhighlighter.collapsed .toolbar span a {
-  padding: 0 !important;
-  display: none !important;
-}
-.syntaxhighlighter.collapsed .toolbar span a.expandSource {
-  display: inline !important;
-}
-.syntaxhighlighter .toolbar {
-  position: absolute !important;
-  right: 1px !important;
-  top: 1px !important;
-  width: 11px !important;
-  height: 11px !important;
-  font-size: 10px !important;
-  z-index: 10 !important;
-}
-.syntaxhighlighter .toolbar span.title {
-  display: inline !important;
-}
-.syntaxhighlighter .toolbar a {
-  display: block !important;
-  text-align: center !important;
-  text-decoration: none !important;
-  padding-top: 1px !important;
-}
-.syntaxhighlighter .toolbar a.expandSource {
-  display: none !important;
-}
-.syntaxhighlighter.ie {
-  font-size: 0.9em !important;
-  padding: 1px 0 1px 0 !important;
-}
-.syntaxhighlighter.ie .toolbar {
-  line-height: 8px !important;
-}
-.syntaxhighlighter.ie .toolbar a {
-  padding-top: 0px !important;
-}
-.syntaxhighlighter.printing .line.alt1 .content,
-.syntaxhighlighter.printing .line.alt2 .content,
-.syntaxhighlighter.printing .line.highlighted .number,
-.syntaxhighlighter.printing .line.highlighted.alt1 .content,
-.syntaxhighlighter.printing .line.highlighted.alt2 .content {
-  background: none !important;
-}
-.syntaxhighlighter.printing .line .number {
-  color: #bbbbbb !important;
-}
-.syntaxhighlighter.printing .line .content {
-  color: black !important;
-}
-.syntaxhighlighter.printing .toolbar {
-  display: none !important;
-}
-.syntaxhighlighter.printing a {
-  text-decoration: none !important;
-}
-.syntaxhighlighter.printing .plain, .syntaxhighlighter.printing .plain a {
-  color: black !important;
-}
-.syntaxhighlighter.printing .comments, .syntaxhighlighter.printing .comments a {
-  color: #008200 !important;
-}
-.syntaxhighlighter.printing .string, .syntaxhighlighter.printing .string a {
-  color: blue !important;
-}
-.syntaxhighlighter.printing .keyword {
-  color: #006699 !important;
-  font-weight: normal !important;
-}
-.syntaxhighlighter.printing .preprocessor {
-  color: gray !important;
-}
-.syntaxhighlighter.printing .variable {
-  color: #aa7700 !important;
-}
-.syntaxhighlighter.printing .value {
-  color: #009900 !important;
-}
-.syntaxhighlighter.printing .functions {
-  color: #ff1493 !important;
-}
-.syntaxhighlighter.printing .constants {
-  color: #0066cc !important;
-}
-.syntaxhighlighter.printing .script {
-  font-weight: bold !important;
-}
-.syntaxhighlighter.printing .color1, .syntaxhighlighter.printing .color1 a {
-  color: gray !important;
-}
-.syntaxhighlighter.printing .color2, .syntaxhighlighter.printing .color2 a {
-  color: #ff1493 !important;
-}
-.syntaxhighlighter.printing .color3, .syntaxhighlighter.printing .color3 a {
-  color: red !important;
-}
-.syntaxhighlighter.printing .break, .syntaxhighlighter.printing .break a {
-  color: black !important;
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: hidden;
+	border-radius: 0.3em;
 }
 
-.syntaxhighlighter {
-  background-color: #272822 !important;
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
 }
-.syntaxhighlighter .line.alt1 {
-  background-color: #272822 !important;
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
 }
-.syntaxhighlighter .line.alt2 {
-  background-color: #272822 !important;
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #7E8E91;
 }
-.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
-  background-color: #484848 !important;
+
+.token.punctuation {
+	color: #D4D4D4;
 }
-.syntaxhighlighter .line.highlighted.number {
-  color: black !important;
+
+.token.namespace {
+	opacity: .7;
 }
-.syntaxhighlighter table caption {
-  color: #D4D4D4 !important;
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #D4D4D4;
 }
-.syntaxhighlighter table td.code .container textarea {
-  background: #272822;
-  color: #D4D4D4;
+
+.token.boolean,
+.token.number {
+	color: #AE81FF;
 }
-.syntaxhighlighter .gutter {
-  color: #75715E !important;
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #E6DB74;
 }
-.syntaxhighlighter .gutter .line {
-  border-right: thin dotted #75715E !important;
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #D4D4D4;
 }
-.syntaxhighlighter .gutter .line.highlighted {
-  background-color: #6ce26c !important;
-  color: #272822 !important;
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #D4D4D4;
 }
-.syntaxhighlighter.printing .line .content {
-  border: none !important;
+
+.token.keyword {
+	color: #F92672;
 }
-.syntaxhighlighter.collapsed {
-  overflow: visible !important;
+
+.token.regex,
+.token.important {
+	color: #D4D4D4;
 }
-.syntaxhighlighter.collapsed .toolbar {
-  color: #00f !important;
-  background: #fff !important;
-  border: 1px solid #6ce26c !important;
+
+.token.important,
+.token.bold {
+	font-weight: bold;
 }
-.syntaxhighlighter.collapsed .toolbar a {
-  color: #00f !important;
+.token.italic {
+	font-style: italic;
 }
-.syntaxhighlighter.collapsed .toolbar a:hover {
-  color: #f00 !important;
+
+.token.entity {
+	cursor: help;
 }
-.syntaxhighlighter .toolbar {
-  color: #fff !important;
-  background: #6ce26c !important;
-  border: none !important;
+
+/*
+Prism Line Numbers
+*/
+
+pre[class*="language-"].line-numbers {
+	position: relative;
+	padding-left: 3.8em;
+	counter-reset: linenumber;
 }
-.syntaxhighlighter .toolbar a {
-  color: #fff !important;
+
+pre[class*="language-"].line-numbers > code {
+	position: relative;
+	white-space: inherit;
 }
-.syntaxhighlighter .toolbar a:hover {
-  color: #000 !important;
+
+.line-numbers .line-numbers-rows {
+	position: absolute;
+	pointer-events: none;
+	top: 0;
+	font-size: 100%;
+	left: -3.8em;
+	width: 3em; /* works for line-numbers below 1000 lines */
+	letter-spacing: -1px;
+	border-right: 1px dotted #999;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
 }
-.syntaxhighlighter .plain, .syntaxhighlighter .plain a {
-  color: #D4D4D4 !important;
+
+.line-numbers-rows > span {
+    display: block;
+    counter-increment: linenumber;
 }
-.syntaxhighlighter .comments, .syntaxhighlighter .comments a {
-  color: #7E8E91 !important;
+
+.line-numbers-rows > span::before {
+    content: counter(linenumber);
+    color: #999;
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
 }
-.syntaxhighlighter .string, .syntaxhighlighter .string a {
-  color: #E6DB74 !important;
+
+/*
+Prism Toolbar CSS
+*/
+
+div.code-toolbar {
+	position: relative;
 }
-.syntaxhighlighter .keyword {
-  font-weight: normal !important;
-  color: #F92672 !important;
+
+div.code-toolbar > .toolbar {
+	position: absolute;
+	top: .3em;
+	right: .2em;
+	transition: opacity 0.3s ease-in-out;
+	opacity: 0;
 }
-.syntaxhighlighter .preprocessor {
-  color: gray !important;
+
+div.code-toolbar:hover > .toolbar {
+	opacity: 1;
 }
-.syntaxhighlighter .variable {
-  color: #aa7700 !important;
+
+/* Separate line b/c rules are thrown out if selector is invalid.
+   IE11 and old Edge versions don't support :focus-within. */
+div.code-toolbar:focus-within > .toolbar {
+	opacity: 1;
 }
-.syntaxhighlighter .value {
-  color: #009900 !important;
+
+div.code-toolbar > .toolbar .toolbar-item {
+	display: inline-block;
 }
-.syntaxhighlighter .functions {
-  color: #ff1493 !important;
+
+div.code-toolbar > .toolbar a {
+	cursor: pointer;
 }
-.syntaxhighlighter .constants {
-  color: #0066cc !important;
+
+div.code-toolbar > .toolbar button {
+	background: none;
+	border: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	overflow: visible;
+	padding: 0;
+	-webkit-user-select: none; /* for button */
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
-.syntaxhighlighter .script {
-  font-weight: bold !important;
-  color: #F92672 !important;
-  background-color: none !important;
+
+div.code-toolbar > .toolbar a,
+div.code-toolbar > .toolbar button,
+div.code-toolbar > .toolbar span {
+	color: #bbb;
+	font-size: .8em;
+	padding: 0 .5em;
+	background: #f5f2f0;
+	background: rgba(224, 224, 224, 0.2);
+	box-shadow: 0 2px 0 0 rgba(0,0,0,0.2);
+	border-radius: .5em;
 }
-.syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
-  color: gray !important;
-}
-.syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
-  color: #ff1493 !important;
-}
-.syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
-  color: red !important;
+
+div.code-toolbar > .toolbar a:hover,
+div.code-toolbar > .toolbar a:focus,
+div.code-toolbar > .toolbar button:hover,
+div.code-toolbar > .toolbar button:focus,
+div.code-toolbar > .toolbar span:hover,
+div.code-toolbar > .toolbar span:focus {
+	color: inherit;
+	text-decoration: none;
 }

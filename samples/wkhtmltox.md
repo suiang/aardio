@@ -8,7 +8,7 @@ title: "将网页转换为 PDF"
 
 #### 示例代码
 
-```js
+```aardio
 //打印日志
 
 _URL = "https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma"

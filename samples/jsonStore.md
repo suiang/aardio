@@ -15,7 +15,7 @@ title:  "JSON 存储服务"
 #### 示例代码
 
 
-```js
+```aardio
 
 _URL = "https://suiang.cn/aardio/lib/jsonStore.tar.lzma"
 _IMPORTURL["jsonStore"] = _URL

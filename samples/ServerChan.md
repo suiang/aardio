@@ -9,7 +9,7 @@ title: "微信推送"
 
 #### 示例代码
 
-```js
+```aardio
 _URL = "https://suiang.cn/aardio/lib/ServerChan.tar.lzma"
 _IMPORTURL["ServerChan"] = _URL
 
