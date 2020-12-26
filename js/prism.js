@@ -1564,6 +1564,7 @@ Prism.languages.js = Prism.languages.javascript;
 	var FAILURE_EMPTY_MESSAGE = '✖ Error: File does not exist or is empty';
 
 	var EXTENSIONS = {
+		'aardio': 'aardio',
 		'js': 'javascript',
 		'py': 'python',
 		'rb': 'ruby',
