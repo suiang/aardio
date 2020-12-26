@@ -51,7 +51,7 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-family: 'Cascadia Code PL Regular','Helvetica Neue', Helvetica, Arial, serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 1em;
   line-height: 1.5;
   color: #6d6d6d;
@@ -170,8 +170,8 @@ a.button span {
 
 code, pre {
   margin-bottom: 30px;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
-  font-size: 14px;
+  font-family: 'Cascadia Code PL Regular', Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+  font-size: 12px;
   color: #222;
 }
 
