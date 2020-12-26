@@ -29,7 +29,7 @@ pre[class*="language-"] {
 	font-family: 'Cascadia Code PL Regular', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 	font-size: 1em;
 	text-align: left;
-	white-space: pre-wrap;
+	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
@@ -151,7 +151,7 @@ pre[class*="language-"].line-numbers {
 
 pre[class*="language-"].line-numbers > code {
 	position: relative;
-	white-space: inherit;
+	white-space: pre-wrap;
 }
 
 .line-numbers .line-numbers-rows {
