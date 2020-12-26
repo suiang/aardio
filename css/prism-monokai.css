@@ -29,7 +29,7 @@ pre[class*="language-"] {
 	font-family: 'Cascadia Code PL Regular', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 	font-size: 1em;
 	text-align: left;
-	white-space: pre;
+	white-space: pre-wrap;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
@@ -62,7 +62,7 @@ pre[class*="language-"] {
 :not(pre) > code[class*="language-"] {
 	padding: .1em;
 	border-radius: .3em;
-	white-space: pre-wrap;
+	white-space: normal;
 }
 
 .token.comment,
