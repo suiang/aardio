@@ -1,0 +1,78 @@
+﻿namespace lanzou;
+
+class client {
+    ctor(...) {
+        this = client(...);
+        this.addHeaders = {
+            ["origin"] = _host;
+            ["Accept-Language"] = "zh-CN,zh;q=0.8";
+            ["user-agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36 Edg/79.0.309.51";
+        }
+    };
+
+    getUrl = function(url, pwd) {
+        var data = { action = "downprocess" };
+        this.parseResponseResult = λ(s) s;
+        if (!pwd) {
+            data.sign = this.api(url, "GET", function(ret) {
+                var src = match(ret, `\d{2}\"\ssrc\=\"(.+)\"\sf`);
+                if (src) return this.api(_host + src, "GET", `data\s\=\s\'(.+)\';`)()
+            })()
+            data.ves = 1;
+        } else {
+            data.sign = this.api(url, "GET", `sign\=(.+)\&p`)()
+            data.p = pwd;
+        }
+        this.parseResponseResult = λ(s) parse(s);
+        var ajax = this.post(_host + "ajaxm.php", data)
+		return this._http.location(ajax.dom + '/file/' + ajax.url); 
+    };
+
+    getList = function(url, pwd) {
+        this.parseResponseResult = λ(s) s;
+        var data = this.api(url, "GET", function(ret) {
+            var data = parse(match(ret, `<^\/>data\s\:\s(%{})`))
+            var getValue = λ(s) trim(match(ret, s + "\s\=\s(%'')"), "'")
+            data.t = getValue(data.t)
+            data.k = getValue(data.k)
+            data.pg = 1
+            return data;
+        })();
+        if (pwd) data.pwd = pwd
+        this.parseResponseResult = λ(s) parse(s);
+        return this.post(_host + "filemoreajax.php", data)
+    };
+
+    getId = function(id) {
+        var url = _host + id;
+        return this.getUrl(url);
+    };
+
+    getShare = function(url, pwd) {
+        if (!indexOf(url, "http")) return this.getId(url);
+        if (!!indexOf(url, "/i")) return this.getUrl(url, pwd);
+        if (!!indexOf(url, "/b")) return this.getList(url, pwd);
+    }
+
+}
+
+namespace client {
+    import web.json;
+    import web.rest.client;
+
+    trim = ..string.trim;
+    match = ..string.match;
+    parse = web.json.parse;
+    client = web.rest.client;
+    indexOf = ..string.indexOf;
+    _host = "https://www.lanzous.com/"
+}
+
+/**intellisense()
+lanzou.client = 蓝奏云客户端支持库
+lanzou.client() = 创建蓝奏云客户端\n!lanc.
+!lanc.getUrl(.(url, pwd) = 获取蓝奏云分享直连
+!lanc.getList(.(url, pwd) = 获取蓝奏云分享文件夹列表
+!lanc.getId(.(id) = 通过 id 获取蓝奏云分享直连
+!lanc.getShare(.(url, pwd) = 通过分享链接、Id获取蓝奏云分享直连或文件列表
+end intellisense**/
