@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<title>读取扒站历史记录</title>
+	<link rel="icon" href="../favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: getBazhanList}
+// ${title: 读取扒站历史记录}
+
+import console; 
+import web.rest.client;
+
+var http, cookie = web.rest.client();
+http._http.disableCookies()
+http.afterSend = function(statusCode,contentLength){
+	 cookie = http._http.readHeaderList("set-cookie")["set-cookie"]
+}
+
+var key = http.api("https://bazhan.me/list","GET",`token\s*content\=\"(.+?)\"`)();
+
+http.addHeaders = {
+    ["cookie"] = cookie;
+    ["x-csrf-token"] = key;
+}
+
+var getUrl = http.api("https://bazhan.me/sites","GET", function(ret){
+    var t = {}
+	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" )
+	for k, v in string.gmatch( ret, "\n\|*\|(.+?)\|\|(.+?)[\s\|]" ) table.push(t, {title = k; url = v})
+	return t; 
+})
+
+console.dumpJson( getUrl() )
+console.pause(true);
+
+// https://suiang.cn/aardio/code/getBazhanList
+</code></pre>
+</body>
+</html>
