@@ -50,5 +50,9 @@
     {
         "name":"password",
         "title":"密码生成器"
+    },
+    {
+        "name":"getBazhanList",
+        "title":"读取扒站历史记录"
     }
 ]
