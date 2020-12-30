@@ -33,12 +33,11 @@ var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
 	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" ) + "|"
 	for k, v in string.gmatch( ret, "\n\|*\|(.+?)\|\|(.+?)[\s\|]" ) 
 		table.push(t, {title = k; url = v})
-	return t, ret; 
+	return t; 
 })
 
-var a,b = getUrl()
-console.dumpJson( a )
-console.log( b )
+console.dumpJson( getUrl() )
+
 console.pause(true);
 
 // https://suiang.cn/aardio/code/getBazhanList
