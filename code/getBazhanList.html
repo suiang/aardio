@@ -21,17 +21,18 @@ http.afterSend = function(statusCode,contentLength){
 	 cookie = http._http.readHeaderList("set-cookie")["set-cookie"]
 }
 
-var key = http.api("https://bazhan.me/list","GET",`token\s*content\=\"(.+?)\"`)();
+var key = http.api("https://bazhan.me/list", "GET", `token\s*content\=\"(.+?)\"`)();
 
 http.addHeaders = {
     ["cookie"] = cookie;
     ["x-csrf-token"] = key;
 }
 
-var getUrl = http.api("https://bazhan.me/sites","GET", function(ret){
+var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
     var t = {}
 	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" ) + "|"
-	for k, v in string.gmatch( ret, "\n\|*\|(.+?)\|\|(.+?)[\s\|]" ) table.push(t, {title = k; url = v})
+	for k, v in string.gmatch( ret, "\n\|*\|(.+?)\|\|(.+?)[\s\|]" ) 
+		table.push(t, {title = k; url = v})
 	return t, ret; 
 })
 
