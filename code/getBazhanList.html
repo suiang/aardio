@@ -15,25 +15,20 @@
 import console; 
 import web.rest.client;
 
-var http, cookie = web.rest.client();
-http._http.disableCookies()
-http.afterSend = function(statusCode,contentLength){
-	 cookie = http._http.readHeaderList("set-cookie")["set-cookie"]
-}
+var http = web.rest.client();
 
 console.showLoading("数据读取中ing...")
 
-var key = http.api("https://bazhan.me/list", "GET", `token\s*content\=\"(.+?)\"`)();
+var getToken = http.api("https://bazhan.me/list", "GET" ,`token\s*content\=\"(.+?)\"`)
 
 http.addHeaders = {
-    ["cookie"] = cookie;
-    ["x-csrf-token"] = key;
+    ["x-csrf-token"] = getToken();
 }
 
 var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
     var t = {}
 	var ret = string.replace(ret, "[^\w\p\n]", lambda(s) "|" ) + "|"
-	for k, v in string.gmatch( ret, "\n\|(.+?)\|+(.+?)\|" ) 
+	for k, v in string.gmatch( ret, "\n\|(.+?)\|+\d*(.+?)\|" ) 
 		table.push(t, {title = k; url = v})
 	return t; 
 })
