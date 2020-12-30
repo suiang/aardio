@@ -21,6 +21,8 @@ http.afterSend = function(statusCode,contentLength){
 	 cookie = http._http.readHeaderList("set-cookie")["set-cookie"]
 }
 
+console.showLoading("数据读取中ing...")
+
 var key = http.api("https://bazhan.me/list", "GET", `token\s*content\=\"(.+?)\"`)();
 
 http.addHeaders = {
@@ -30,8 +32,8 @@ http.addHeaders = {
 
 var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
     var t = {}
-	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" ) + "|"
-	for k, v in string.gmatch( ret, "\n\|(.+?)\|\|(.+?)[\s\|]" ) 
+	var ret = string.replace(ret, "[^\w\p\n]", lambda(s) "|" ) + "|"
+	for k, v in string.gmatch( ret, "\n\|(.+?)\|\|(.+?)\|" ) 
 		table.push(t, {title = k; url = v})
 	return t; 
 })
