@@ -30,12 +30,14 @@ http.addHeaders = {
 
 var getUrl = http.api("https://bazhan.me/sites","GET", function(ret){
     var t = {}
-	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" )
+	var ret = string.replace(ret, "[^1-9a-z\-\.\:\/&lt;\r\n&gt;]", lambda(s) "|" ) + "|"
 	for k, v in string.gmatch( ret, "\n\|*\|(.+?)\|\|(.+?)[\s\|]" ) table.push(t, {title = k; url = v})
-	return t; 
+	return t, ret; 
 })
 
-console.dumpJson( getUrl() )
+var a,b = getUrl()
+console.dumpJson( a )
+console.log( b )
 console.pause(true);
 
 // https://suiang.cn/aardio/code/getBazhanList
