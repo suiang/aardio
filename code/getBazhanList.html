@@ -26,14 +26,15 @@ http.addHeaders = {
 }
 
 var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
-    var lst = {}
-	var ret = string.replace(ret, "[^\w\p\n]", lambda(s) "|" ) + "|"
-	for k, v in string.gmatch( ret, "\n\|(.+?)\|+\d*(.+?)\|" ) 
+    var ret, lst = ret + '\n', {};
+	for k, v in string.gmatch( ret, "\n[\c|\w]?(.*?)\c.\s?(.*?)\c" ) 
 		table.push(lst, {site = k; url = v})
 	return lst; 
 })
 
-console.dumpJson( getUrl() )
+var lst = getUrl()
+console.dumpJson( lst )
+console.printf("总计读取数据：%s 条", #lst )
 
 console.pause(true);
 
