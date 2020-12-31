@@ -190,6 +190,8 @@ createWin = function(params){
     return form; 
 }
 
+forEach(self, function(v,k) global[k] = v);
+
 /*
 import inet.http;
 inet.http.import("https://suiang.cn/aardio/inetlib/std.aardio")
