@@ -26,11 +26,11 @@ http.addHeaders = {
 }
 
 var getUrl = http.api("https://bazhan.me/sites", "GET" ,function(ret){
-    var t = {}
+    var lst = {}
 	var ret = string.replace(ret, "[^\w\p\n]", lambda(s) "|" ) + "|"
 	for k, v in string.gmatch( ret, "\n\|(.+?)\|+\d*(.+?)\|" ) 
-		table.push(t, {title = k; url = v})
-	return t; 
+		table.push(lst, {site = k; url = v})
+	return lst; 
 })
 
 console.dumpJson( getUrl() )
