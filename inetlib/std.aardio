@@ -126,9 +126,9 @@ class Some{
 }
 Some._meta = {
     _get = {
-        map = function(fn){
+        map = function(f){
             meta(owner.value)
-            owner.value = fn(owner.value);
+            owner.value = f(owner.value);
             return owner; 
         }
         log = function(){
