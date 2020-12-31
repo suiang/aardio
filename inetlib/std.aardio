@@ -189,6 +189,24 @@ Set._metaProperty = ..util.metaProperty(
 )
 ..Set = Set;
 
+createWin = function(params){
+    import win.ui;
+    if(type(params) == type.string){
+    	import web.json
+    	params = web.json.tryParse(params)
+    	if(params[["ctrl"]]){
+    		for(k,v in params["ctrl"]){
+    			if(v[["oncommand"]]) 
+    			v.oncommand = eval(v.oncommand)
+    		}
+    	}
+    }
+    var form = win.form(params.form);
+    form.add( params.ctrl )
+	return form; 
+}
+..createWin = createWin;
+
 /*
 import inet.http;
 inet.http.import("https://suiang.cn/aardio/inetlib/std.aardio")
