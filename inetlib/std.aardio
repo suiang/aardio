@@ -20,8 +20,9 @@ meta = function(t, add = true){
     return t; 
 }
 
+partial = ..util.bind;
 curry = lambda(f) λ(x) λ(y) f(x,y)
-unless = function(p,f) if(!p) f()
+unless = function(p,f) if(!p) return f()
 times = function(n, f) for(i=1;n) f(i)
 forEach = function(t,f) for(k,v in t) f(v,k)
 
@@ -59,28 +60,11 @@ memoized = function(f){
     }
 }
 
-//--------------------------
-..tap = tap;
-..meta = meta;
-..pipe = pipe;
-..times = times;
-..curry = curry;
-..unless = unless;
-..forEach = forEach;
-..compose = compose;
-..identity = identity;
-..memoized = memoized;
-..partial = ..util.bind;
-..isCallable = isCallable
-//--------------------------
-
 ..table.of = lambda(...){...};
 ..table.reduce = function(t, f,...){
     if( !isTable(f) ) f = {f,...};
     return reduce(f, lambda(t, f) meta(f(t)), meta(t));
 };
-..isTable = isTable
-//--------------------------
 
 class Maybe{
     ctor(val){
@@ -113,7 +97,6 @@ Maybe._meta = {
     _call = lambda() owner.value;
     _type = "Maybe";
 }
-..Maybe = Maybe;
 
 class Nothing{
     ctor(val){
@@ -156,14 +139,16 @@ Some._meta = {
     _call = lambda() owner.value;
     _type = "Some";
 }
-..Some = Some;
-..Nothing = Nothing;
-..Either = { Some = Some, Nothing = Nothing}
+
+Either = {
+    Some = Some,
+    Nothing = Nothing
+};
 
 class Set{
     ctor(t,...){
         if( !isTable(t) ) t = {t,...}
-        this = ..table.unique(t)    
+        this = ..table.unique(t)	
     };
     @_metaProperty;
 }
@@ -187,25 +172,23 @@ Set._metaProperty = ..util.metaProperty(
     }
     size = { _get = lambda() #owner };
 )
-..Set = Set;
 
 createWin = function(params){
     import win.ui;
     if(type(params) == type.string){
-    	import web.json
-    	params = web.json.tryParse(params)
-    	if(params[["ctrl"]]){
-    		for(k,v in params["ctrl"]){
-    			if(v[["oncommand"]]) 
-    			v.oncommand = eval(v.oncommand)
-    		}
-    	}
+        import web.json
+        params = web.json.tryParse(params)
+        if(params[["ctrl"]]){
+            for(k,v in params["ctrl"]){
+                if(v[["oncommand"]]) 
+                v.oncommand = eval(v.oncommand)
+            }
+        }
     }
     var form = win.form(params.form);
     form.add( params.ctrl )
-	return form; 
+    return form; 
 }
-..createWin = createWin;
 
 /*
 import inet.http;
