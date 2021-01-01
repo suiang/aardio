@@ -175,10 +175,11 @@ Set._metaProperty = ..util.metaProperty(
 
 createWin = function(params){
     import win.ui;
-    if(type.isString(params)){
+    var ps = params;
+    if(type.isString(ps)){
         import web.json
-        params = web.json.tryParse(params)
-        var ctrl = params[["ctrl"]]; 
+        ps = web.json.tryParse(ps)
+        var ctrl = ps[["ctrl"]]; 
         if(isTable(ctrl)){
             forEach(ctrl, lambda(v) unless(
                 !v[["oncommand"]], function(){
@@ -186,8 +187,8 @@ createWin = function(params){
             }))
         }
     }
-    var form = win.form(params.form);
-    form.add( params.ctrl )
+    var form = win.form(ps.form);
+    form.add( ps.ctrl )
     return form; 
 }
 
