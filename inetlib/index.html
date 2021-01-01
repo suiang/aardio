@@ -22,13 +22,8 @@
         return (false);
     }
 
-    function changeTitle(title) {
-        document.title = title;
-    }
-
     var lib = getQueryVariable("lib");
-    var title = lib + " library";
-    changeTitle(title);
+    document.title = lib + " library";
     document.write('<pre data-src="' + lib + '.aardio"></pre>');
     </script>
 </body>
