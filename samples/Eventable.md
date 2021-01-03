@@ -27,7 +27,7 @@ cook.on('order', function(evt, food) {
     console.printf('Now cooking %s.', food)
     //-- Do something ...
     //console.varDump( evt )
-    evt.caller.emit('order-up', food)
+    evt.emit('order-up', food)
 })
 
 // --Waiter listens for order
