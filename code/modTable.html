@@ -36,15 +36,14 @@ meta = function(t, add = true){
 		});
 		_float = true; //允许移除元表	
 	} : null
+	return t; 
 }
 
-var t = {1,2,3,4,5}
-
 // 添加元表
- meta(t); 
+var t =  meta({1,2,3,4,5}); 
 
 // 测试代码
-console.varDump( t.filter( lambda(v) v>2 ) ) 
+console.varDump( t.filter( lambda(v) v&gt;2 ) ) 
 console.varDump( t.find(3) )
 console.varDump( t.map( math.sqrt ) )
 console.varDump( t.pop() )
