@@ -6,7 +6,6 @@ class event {
     ctor(o) {
         var o = o or {};
         this, members[o] = o, o;
-
         this.events = {};
         this.muted = false;
         this.isOnce = false;
