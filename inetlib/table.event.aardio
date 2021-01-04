@@ -1,0 +1,128 @@
+//event 事件表
+namespace table;
+
+class event {
+    ctor(o) {
+        var o = o or {};
+        this, members[o] = o, o;
+
+        this.events = {};
+        this.muted = false;
+        this.isOnce = false;
+    };
+    @_meta;
+}
+
+namespace event {
+    
+    _meta = {
+        _get = {
+            on = function(name, callback) {
+                owner.events[name] = callback
+            };
+            once = function(name, callback) {
+                owner.isOnce = true;
+                owner.events[name] = callback
+            };
+            off = function(name) {
+                if (owner.events[name])
+                    owner.events[name] = null
+            };
+            allOff = function() {
+                owner.events = {};
+                owner.muted = false
+            };
+            mute = function(state) {
+                owner.muted = state
+            };
+            isMuted = function() {
+                return owner.muted;
+            };
+            emit = function(name, ...) {
+                var evt = {
+                    name = name;
+                    isOnce = owner.isOnce;
+                    @_meta;
+                }
+                _broadcast(evt, ...)
+                owner.isOnce = false
+            };
+            _onEvent = function(evt, ...) {
+                if (owner.events[evt.name]) {
+                    owner.events[evt.name](evt, ...)
+                    if (owner.isOnce) owner.off(evt.name)
+                }
+            };
+        }
+    }
+    
+    import console;
+    var log = console.log;
+    var push = ..table.push;
+    var sort = ..table.sort;
+    
+    members = {};
+    _broadcast = function(evt, ...) {
+        for (_, mbr in members) {
+            if (mbr and not mbr.muted) {
+                mbr._onEvent(evt, ...)
+            }
+        }
+    };
+    count = function() {
+        var n = 0
+        for (_, mbr in members) {
+            if (mbr) n = n + 1
+        }
+        return n;
+    };
+    list = function() {
+        for (_, mbr in members) {
+            print(mbr.events)
+        }
+    };
+    release = function(mbr) {
+        if (members[mbr]) {
+            members[mbr] = null
+        }
+    };
+
+    var _toString = function(t, indent) {
+        var names = {}
+        if (not indent) indent = ""
+        for (n in t) push(names, n)
+        sort(names);
+        for (_, n in names) {
+            var v = t[n]
+            if (type(v) == "table") {
+                log(indent + tostring(n) + ":")
+                print(v, indent + "   ")
+            } else {
+                if (type(v) == "function") log(indent + tostring(n) + "()")
+                else log(indent + tostring(n) + ": " + tostring(v))
+            }
+        }
+    };
+    print = _toString;
+}
+
+/**intellisense()
+table.event = 事件表
+table.event() = 创建事件表\n!tb_evt.
+table.event.count() = 获取所有事件表的计数
+table.event.list() = 打印所有活动事件名称
+table.event.release(.(事件表) = 释放事件表
+table.event.print(.(事件表) = 打印事件表
+end intellisense**/
+
+/**intellisense(!tb_evt.)
+on = @.on("__/*事件名称*/", function(evt, msg){\n	\n})
+once = @.once("__/*事件名称*/", function(evt, msg) {\n	\ n})
+emit(.(事件名称, 消息) = 将消息广播到监听此事件名称的事件表
+off("__/*事件名称*/") = ‎停止监听某个事件， 其他事件不受影响，恢复监听需要重新注册事件
+allOff() = ‎停止监听所有事件，恢复监听需要重新注册事件
+mute(true) = ‎暂停监听所有事件
+mute(false) = ‎恢复监听所有事件
+isMuted = 是否静音
+isOnce = ‎是否单次监听
+end intellisense **/
