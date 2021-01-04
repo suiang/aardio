@@ -106,23 +106,7 @@ namespace event {
     print = _toString;
 }
 
-/**intellisense()
-table.event = 事件表
-table.event() = 创建事件表\n!tb_evt.
-table.event.count() = 获取所有事件表的计数
-table.event.list() = 打印所有活动事件名称
-table.event.release(.(事件表) = 释放事件表
-table.event.print(.(事件表) = 打印事件表
-end intellisense**/
-
-/**intellisense(!tb_evt.)
-on = @.on("__/*事件名称*/", function(evt, msg){\n	\n})
-once = @.once("__/*事件名称*/", function(evt, msg) {\n	\ n})
-emit(.(事件名称, 消息) = 将消息广播到监听此事件名称的事件表
-off("__/*事件名称*/") = ‎停止监听某个事件， 其他事件不受影响，恢复监听需要重新注册事件
-allOff() = ‎停止监听所有事件，恢复监听需要重新注册事件
-mute(true) = ‎暂停监听所有事件
-mute(false) = ‎恢复监听所有事件
-isMuted = 是否静音
-isOnce = ‎是否单次监听
-end intellisense **/
+/*
+import inet.http;
+inet.http.import("https://suiang.cn/aardio/inetlib/table.event.aardio")
+*/
