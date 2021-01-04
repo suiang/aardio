@@ -1,4 +1,5 @@
-//event 事件表
+import console;
+
 namespace table;
 
 class event {
@@ -56,8 +57,7 @@ namespace event {
         }
     }
     
-    import console;
-    var log = console.log;
+    var log = ..console.log;
     var push = ..table.push;
     var sort = ..table.sort;
     
