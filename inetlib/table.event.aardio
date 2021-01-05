@@ -62,7 +62,7 @@ namespace event {
     
     members = {};
     _broadcast = function(evt, ...) {
-        for (_, mbr in members) {
+        for (mbr in members) {
             if (mbr and not mbr.muted) {
                 mbr._onEvent(evt, ...)
             }
@@ -70,13 +70,13 @@ namespace event {
     };
     count = function() {
         var n = 0
-        for (_, mbr in members) {
+        for (mbr in members) {
             if (mbr) n = n + 1
         }
         return n;
     };
     list = function() {
-        for (_, mbr in members) {
+        for (mbr in members) {
             print(mbr.events)
         }
     };
