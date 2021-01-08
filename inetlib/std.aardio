@@ -173,25 +173,6 @@ Set._metaProperty = ..util.metaProperty(
     size = { _get = lambda() #owner };
 )
 
-createWin = function(params){
-    import win.ui;
-    var ps = params;
-    if(type.isString(ps)){
-        import web.json
-        ps = web.json.tryParse(ps)
-        var ctrl = ps[["ctrl"]]; 
-        if(isTable(ctrl)){
-            forEach(ctrl, lambda(v) unless(
-                !v[["oncommand"]], function(){
-                    v.oncommand = eval(v.oncommand)
-            }))
-        }
-    }
-    var form = win.form(ps.form);
-    form.add( ps.ctrl )
-    return form; 
-}
-
 forEach(self, function(v,k) global[k] = v)
 
 /*
