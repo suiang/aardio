@@ -8,7 +8,7 @@ namespace std;
 isCallable = ..util.isCallable;
 isTable = lambda(t) type(t)==type.table;
 
-meta = function(t, add = true){
+meta = function(t, add = true){ 
     if( isTable(t) ) { 
         t@ = add ? {
             _get = ..table.map(..table, function(v){
@@ -16,7 +16,9 @@ meta = function(t, add = true){
             });
             _float = true;
         } : null
-    } else {
+    };
+    
+    if(type(t) == "string" || type(t) == "number"){
         var tp = type.isString(t)
         t = { _value = t }
         var mt = {
@@ -33,7 +35,7 @@ meta = function(t, add = true){
             _div = lambda(v) owner._value / v;
             _mod = lambda(v) owner._value % v;
         })
-    }
+    };
     return t; 
 }
 
@@ -95,7 +97,7 @@ Maybe._meta = {
             return owner.value === null; 
         }
         map = function(f){
-            meta(owner.value) 
+            owner.value = meta(owner.value) 
             if(!owner.isNothing()) owner.value = f(owner.value)
             return owner; 
         }
@@ -144,7 +146,7 @@ class Some{
 Some._meta = {
     _get = {
         map = function(f){
-            meta(owner.value)
+            owner.value = meta(owner.value) 
             owner.value = f(owner.value);
             return owner; 
         }
