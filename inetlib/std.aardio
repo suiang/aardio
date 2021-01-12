@@ -16,15 +16,23 @@ meta = function(t, add = true){
             });
             _float = true;
         } : null
-    }
-    if( type.isString(t) ){
-        t = { _value = t, @{
-            _get = ..table.map(..string, function(v){
+    } else {
+        var tp = type.isString(t)
+        t = { _value = t }
+        var mt = {
+            _get = ..table.map(tp ? ..string : ..math, function(v){
                 return lambda(...) v(owner._value,...)
             });
             _tostring = lambda() owner._value;
-            _type = "String";
-        }};
+            _type = tp ? "String" : "Namber";
+        }
+        t@ = tp ? mt : ..table.mix(mt,{
+            _add = lambda(v) owner._value + v;
+            _sub = lambda(v) owner._value - v;
+            _mul = lambda(v) owner._value * v;
+            _div = lambda(v) owner._value / v;
+            _mod = lambda(v) owner._value % v;
+        })
     }
     return t; 
 }
@@ -47,7 +55,7 @@ tap = function(v){
 
 identity = function(it){
     ..console.varDump( it );
-    return it; 
+    return it[["_value"]] ? tostring(it) : it;
 }
 
 compose = function(...){
