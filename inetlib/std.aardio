@@ -17,6 +17,15 @@ meta = function(t, add = true){
             _float = true;
         } : null
     }
+    if( type.isString(t) ){
+        t = { _value = t, @{
+            _get = ..table.map(..string, function(v){
+                return lambda(...) v(owner._value,...)
+            });
+            _tostring = lambda() owner._value;
+            _type = "String";
+        }};
+    }
     return t; 
 }
 
