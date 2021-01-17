@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<title>迅雷云加速SDK</title>
+	<link rel="icon" href="../favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>//${name: thunderDownEngine}
+//${title: 迅雷云加速SDK}
+
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="迅雷云加速SDK测试程序";right=574;bottom=187;border="dialog frame";max=false;min=false)
+winform.add(
+btnCancel={cls="button";text="取消";left=386;top=137;right=520;bottom=176;z=6};
+btnDown={cls="button";text="下载";left=238;top=137;right=372;bottom=176;z=1};
+editUrl={cls="edit";text="https://dtapp-pub.dingtalk.com/dingtalk-desktop/win_installer/Release/DingTalk_v6.0.0.11405.exe";left=158;top=18;right=548;bottom=43;edge=1;z=4};
+lbStatus={cls="static";text="0 KB/S";left=48;top=106;right=545;bottom=130;transparent=1;z=3};
+progress={cls="progress";left=32;top=67;right=553;bottom=97;edge=1;max=100;min=0;z=2};
+static={cls="static";text="请输入下载网址:";left=-132;top=19;right=151;bottom=46;align="right";transparent=1;z=5}
+)
+/*}}*/
+
+import inet.http
+import thunder.downEngine;
+
+winform.btnDown.oncommand = function(id, event) {
+    //检查输入参数
+    var url = winform.editUrl.text;
+    if (!inet.url.is(url, 0x0 /*_URLIS_URL*/ )) {
+        winform.msgboxErr("输入了错误的网址")
+        winform.editUrl.setFocus(0, -1);
+        return;
+    }
+
+    //获取下载文件名
+    var http = inet.http();
+    http.head(url);
+    var filename = http.readHeaderContent()[["disposition"]][["filename"]]: "未知";
+    http.close();
+    
+    //创建下载任务
+    var savePath = "D:\"
+    winform.downTask = thunder.downEngine(
+        taskUrl = winform.editUrl.text; 
+        filename = filename; 
+        savePath = savePath;         
+    )
+
+    if (!winform.downTask) error("创建下载任务失败", 2)
+
+    //开始下载
+    winform.downTask.start();
+    winform.btnDown.disabled = true;
+    winform.btnCancel.disabled = false;
+
+    winform.statusTimerId = winform.setInterval(100,
+        function(hwnd, msg, id, tick) {
+            if (!winform.downTask) return 0;
+
+            var info = winform.downTask.queryTaskInfo()
+            if (info.stat = 4 /*_XL_TSC_COMPLETE*/ || info.stat = 1 /*_XL_TSC_ERROR*/ ) {
+                
+                ({[1] = function(){
+                    winform.progress.pos = 0
+                    winform.msgbox("下载错误")
+                },
+                [4] = function(){
+                    winform.progress.pos = 100
+                    winform.msgbox("下载完成")
+                }})[info.stat]()
+                
+                winform.btnDown.disabled = false;
+                winform.btnCancel.disabled = true;
+                winform.statusTimerId = null;
+                return 0;
+            }
+            
+            var totalSize = info.totalSize.format()
+            var totalDownload = info.totalDownload.format()
+            var downloadSpeed = math.size64(info.speed).format()
+            
+            winform.progress.pos = 100 * info.percent;    
+            winform.lbStatus.text = string.format("%s %s 大小: %s 已下载: %s 下载速度: %s/S"
+                ,info.filename
+                ,savePath
+                ,totalSize
+                ,totalDownload
+                ,downloadSpeed
+            )
+        }
+    )
+}
+
+winform.btnCancel.oncommand = function(id, event) {
+    if (winform.statusTimerId)
+        winform.clearInterval(winform.statusTimerId)
+        
+    if (winform.downTask) {
+        winform.downTask.delete()
+        winform.downTask.delTempFile()
+    }
+
+    winform.statusTimerId = null;
+    winform.btnDown.disabled = false;
+    winform.btnCancel.disabled = true;
+    winform.lbStatus.text = "已停止";
+    winform.progress.pos = 0;
+}
+
+winform.show()
+win.loopMessage();
+
+// https://suiang.cn/aardio/code/thunderDownEngine
+</code></pre>
+</body>
+</html>
