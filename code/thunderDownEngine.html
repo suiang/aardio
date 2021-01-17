@@ -85,9 +85,9 @@ winform.btnDown.oncommand = function(id, event) {
             var downloadSpeed = math.size64(info.speed).format()
             
             winform.progress.pos = 100 * info.percent;    
-            winform.lbStatus.text = string.format("%s %s 大小: %s 已下载: %s 下载速度: %s/S"
-                ,info.filename
+            winform.lbStatus.text = string.format("%s%s 大小: %s 已下载: %s 下载速度: %s/S"
                 ,savePath
+                ,info.filename
                 ,totalSize
                 ,totalDownload
                 ,downloadSpeed
