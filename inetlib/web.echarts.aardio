@@ -31,17 +31,17 @@ class echarts{
 
 namespace echarts{
     _html = /*
-        <!doctype html>
-        <html>
-        <head>
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta charset="UTF-8">  
-        </head>
-        <body>
-            <div id="main" style="height:600px;"></div> 
-        </body>
-        </html>
-    */
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8">  
+</head>
+<body>
+  <div id="main" style="height:600px;"></div> 
+</body>
+</html>
+*/
 }
 
 /*
