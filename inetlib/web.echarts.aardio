@@ -16,7 +16,11 @@ class echarts{
     show = lambda() this._form.show();
     loadJS = lambda(url) this.loadScript(url);
     
-    setOption = function(json){
+    setOption = function(option){
+        
+        var json = (type(option) == type.table) ? 
+            ..web.json.stringify(option) : option
+            
         this.doScript(`
             var myChart = echarts.init(document.getElementById('main')); 
             myChart.setOption(`+ json +`);
