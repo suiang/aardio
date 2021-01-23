@@ -7,7 +7,7 @@ namespace web;
 
 class echarts{
     ctor( form ){
-        if(!form) form = ..win.form(text="Echarts";right=759;bottom=500;maxmize=1)
+        if(!form) form = ..win.form(text="Echarts";right=650;bottom=400;exmode="toolwindow")
         this =  ..web.form( form,,,,true );
         this.html = _html
         this._form = form;
