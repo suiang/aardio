@@ -1,0 +1,42 @@
+import string.html
+namespace xpath;
+
+var slice = ..string.slice;
+var split = ..string.split;
+var match = ..string.match;
+
+parse = function(html){
+    return ..string.html(html); 
+}
+
+bindNode = function(node){
+    var fs = function(attr, prv, nxt, idx, arr){
+        var n = match(nxt, "\[(\d+)\]")
+        var p = -1 * (#n+3) //->..x[...n]
+        var s = n ? slice(nxt, 2, p) : slice(nxt, 2)
+        
+        if(attr == "tagName") {
+            s = n ? slice(nxt, 1, p) : nxt
+        };
+        var n = (!n && idx!=#arr) ? 1 : tonumber(n)
+        if(n) return prv.queryEles( [attr] = s )[n]
+        else return prv.queryEles( [attr] = s )
+    }
+    
+    //返回一个xpath函数
+    return function(path){
+        var ps = split(path, '/')
+        return reduce(ps, function(prv,nxt,idx){
+            if(nxt == "text()") return prv.innerText();
+            if(nxt[1]=='@'#) return prv[[slice(nxt,2)]];
+            if(nxt[1]=='.'#) return fs("class", prv, nxt, idx, ps); 
+            if(nxt[1]=='#'#) return fs("id", prv, nxt, idx, ps);
+            else return fs("tagName", prv, nxt, idx, ps);
+        }, node); 
+    }
+}
+
+/*
+import inet.http;
+inet.http.import("https://suiang.cn/aardio/inetlib/xpath.aardio")
+*/
