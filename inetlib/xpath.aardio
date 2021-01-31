@@ -9,7 +9,7 @@ parse = function(html){
     return ..string.html(html); 
 }
 
-bindNode = function(node){
+bind = function(node){
     var fs = function(attr, prv, nxt, idx, arr){
         var n = match(nxt, "\[(\d+)\]")
         var p = -1 * (#n+3) //->..x[...n]
