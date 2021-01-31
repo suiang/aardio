@@ -22,13 +22,14 @@ _url = "http://www.ulzdk.com"
 
 var http = web.rest.htmlClient();
 var api = http.api(_url);
+var bindNode = xpath.bind
 
 //搜索视频
 search = function(s){
     var doc = api.search[s].get();
-    var li = xpath.bind(doc)(".mb20/li")
+    var li = bindNode(doc)(".mb20/li")
     return table.map(li,function(v,k,result){
-        var xpath = xpath.bind(v);
+        var xpath = bindNode(v);
         result[k] = {
             title = xpath("div/a/@title"),
             href  = xpath("div/a/@href"),
