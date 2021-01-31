@@ -13,12 +13,12 @@ bindNode = function(node){
     var fs = function(attr, prv, nxt, idx, arr){
         var n = match(nxt, "\[(\d+)\]")
         var p = -1 * (#n+3) //->..x[...n]
-        var s = n ? slice(nxt, 2, p) : slice(nxt, 2)
         
-        if(attr == "tagName") {
-            s = n ? slice(nxt, 1, p) : nxt
-        };
+        var s = (attr == "tagName") 
+             ? (n ? slice(nxt, 1, p) : nxt) 
+             : (n ? slice(nxt, 2, p) : slice(nxt, 2))
         var n = (!n && idx!=#arr) ? 1 : tonumber(n)
+        
         if(n) return prv.queryEles( [attr] = s )[n]
         else return prv.queryEles( [attr] = s )
     }
