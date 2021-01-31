@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<title>用xpath解析网页</title>
+	<link rel="icon" href="../favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>//${name: xpath}
+//${title: 用xpath解析网页}
+
+import console; 
+import web.rest.htmlClient
+
+//导入xpath支持库
+import inet.http;
+inet.http.import("https://suiang.cn/aardio/inetlib/xpath.aardio")
+var bindNode = xpath.bind;
+
+_url = "http://www.ulzdk.com"
+
+var http = web.rest.htmlClient();
+var api = http.api(_url);
+
+//搜索视频
+search = function(s){
+    var doc = api.search[s].get();
+    var li = bindNode(doc)(".mb20/li")
+    return table.map(li,function(v,k,result){
+        var xpath = bindNode(v);
+        result[k] = {
+            title = xpath("div/a/@title"),
+            href  = xpath("div/a/@href"),
+            img   = xpath("div/a/img/@src"),
+        }
+    });  
+}
+
+//获取详情
+details = function( href ){
+    var doc = api[href].get();
+    var xpath = bindNode(doc)
+
+    var getTable = lambda(cls) table.map(
+        xpath(".mb20/." + cls + "/a") 
+        , function(v,k,result){
+            result[k] = v.innerText()
+     });
+    
+    var trim = lambda(s) string.slice(s,4,,true)
+    var list = lambda(t) table.map(t,function(v,k,result){
+        if(k!=#t) result[k] = v.href
+    })
+    
+    var getList = lambda() table.map(
+        xpath(".mb20/.drama_page")
+        , function(v,k,result){
+            result[k] = list(v.a)
+    }); 
+    
+    return {
+        name     = xpath(".mb20/h1/text()");
+        cover    = xpath(".mb20/.still-poster/a/img/@src");
+        status   = xpath(".mb20/.video_status/text()");
+        actors   = getTable("leading-role");
+        types    = trim( xpath(".mb20/.tv_type/text()") );
+        intros   = xpath(".mb20/.plot_intros/p/text()");
+        alias    = trim( xpath(".mb20/.alias/text()") );
+        director = xpath(".mb20/.tv_xi/span/a/text()");
+        region   = xpath(".mb20/.tv_xi/span[2]/em/text()");
+        time     = xpath(".mb20/.tv_xi/span[3]/em/text()");
+        tags     = getTable("plot-tags");
+        list     = getList();
+        href     = href;	
+    } 
+}
+
+//播放地址
+getPlayer = function(href){
+    var doc = api[href].get();
+    return bindNode(doc)("iframe/@src");
+}
+
+console.dumpJson( search("工作细胞") )
+console.logPause("搜索电影")
+console.clearScreen()
+
+console.dumpJson( details("/vod/11698.html") )
+console.logPause("查看详情")
+console.clearScreen()
+
+console.log( getPlayer("/v/11698-1-1.html") )
+console.log("获取播放地址")
+
+console.pause(true);
+
+// https://suiang.cn/aardio/code/xpath
+</code></pre>
+</body>
+</html>
