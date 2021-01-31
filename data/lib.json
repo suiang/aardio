@@ -40,6 +40,13 @@
         "keywords":"wkhtmltox",
         "url":"https://suiang.cn/aardio/lib/wkhtmltox.tar.lzma",
         "version":"1.0.0.0"
+    },
+    "xpath":{
+        "author":"suiang",
+        "description":"一个简单的类 xpath 支持库",
+        "keywords":"xpath",
+        "url":"https://suiang.cn/aardio/lib/xpath.tar.lzma",
+        "version":"1.0.0.0"
     }
  }
 
