@@ -12,17 +12,13 @@ parse = function(html){
 bind = function(node){
     var fs = function(attr, prv, nxt, idx, arr){
         var n = match(nxt, "\[(\d+)\]")
-        var p = -1 * (#n+3) //->..x[...n]
-        
-        var s = (attr == "tagName") 
-             ? (n ? slice(nxt, 1, p) : nxt) 
-             : (n ? slice(nxt, 2, p) : slice(nxt, 2))
+        var i = (attr == "tagName") ? 1 : 2
+        var j = !n ? #nxt : -1 * (#n+3) //->..x[...n]
+        var s = slice(nxt, i, j)
         var n = (!n && idx!=#arr) ? 1 : tonumber(n)
-        
         if(n) return prv.queryEles( [attr] = s )[n]
         else return prv.queryEles( [attr] = s )
-    }
-    
+    }	
     //返回一个xpath函数
     return function(path){
         var ps = split(path, '/')
@@ -35,6 +31,11 @@ bind = function(node){
         }, node); 
     }
 }
+
+/**intellisense(xpath)
+parse(__) = 创建HTML解析器,参数请指定包含HTML代码的字符串
+bind(__) = 绑定节点, 返回一个类xpath函数
+end intellisense**/
 
 /*
 import inet.http;
