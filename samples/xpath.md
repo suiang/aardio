@@ -12,7 +12,7 @@ title: "简单类 xpath 支持库"
 
 ```aardio
 _URL = "https://suiang.cn/aardio/lib/xpath.tar.lzma"
-_IMPORTURL["ip2region"] = _URL
+_IMPORTURL["xpath"] = _URL
 
 import xpath;
 import console; 
