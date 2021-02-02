@@ -18,3 +18,4 @@ import 库名称; //导入刚安装的扩展库
 - [table.event](https://suiang.cn/aardio/samples/Eventable) : 事件表 https://github.com/develephant/Eventable
 - [wkhtmltox](https://suiang.cn/aardio/samples/wkhtmltox) : 将网页转换为 PDF https://wkhtmltopdf.org/libwkhtmltox
 - [xpath](https://suiang.cn/aardio/samples/xpath) : 一个简单的类 xpath 支持库
+- [libsass](https://suiang.cn/aardio/samples/libass) : Sass 编译库 https://github.com/sass/libsass
