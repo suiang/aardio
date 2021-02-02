@@ -32,7 +32,7 @@ var scss = /**
   color: red;
   font-weight: 100;
 }
-h1.error { //应用到hl.seriousError
+h1.error { //应用到h1.seriousError
   font-size: 1.2rem;
 }
 **/
@@ -44,6 +44,7 @@ console.log( css )
 
 console.pause(true);
 ```
+
 
 #### 输出CSS：
 
