@@ -567,103 +567,103 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 size_t ZSTD_freeCStream(ZSTD_CStream* zcs);
 </pre></b><BR>
 <h3>数据流压缩函数</h3><pre></pre><b><pre>typedef enum {
-    ZSTD_e_continue=0, </b>/* collect more data, encoder decides when to output compressed result, for optimal compression ratio */<b>
-    ZSTD_e_flush=1,    </b>/* flush any data provided so far,
-                        * it creates (at least) one new block, that can be decoded immediately on reception;
-                        * frame will continue: any future data can still reference previously compressed data, improving compression.
-                        * note : multithreaded compression will block to flush as much output as possible. */<b>
-    ZSTD_e_end=2       </b>/* flush any remaining data _and_ close current frame.
-                        * note that frame is only closed after compressed data is fully flushed (return value == 0).
-                        * After that point, any additional data starts a new frame.
-                        * note : each frame is independent (does not reference any content from previous frame).
-                        : note : multithreaded compression will block to flush as much output as possible. */<b>
+    ZSTD_e_continue=0, </b>/* 编码器收集更多的数据，决定何时输出压缩结果，以达到最佳的压缩比 */<b>
+    ZSTD_e_flush=1,    </b>/* 刷新目前提供的所有数据。
+                        * 它创建了（至少）一个新的块，可以在接收时立即解码
+                        * 帧将继续：任何未来的数据仍然可以引用以前压缩的数据，提高压缩比率
+                        * 注意：多线程压缩会块化，以尽可能多的刷新输出 */<b>
+    ZSTD_e_end=2       </b>/* 刷新任何剩余的数据，并关闭当前帧
+                        * 注意，只有在压缩数据完全刷新后，才会关闭帧（返回值==0）
+                        * 在这之后，任何额外的数据都会开始一个新的帧
+                        * 注意：每个帧都是独立的（不引用前一帧的任何内容）
+                        * 注意：多线程压缩会阻塞，以尽可能多地刷新输出 */<b>
 } ZSTD_EndDirective;
 </pre></b><BR>
 <pre><b>size_t ZSTD_compressStream2( ZSTD_CCtx* cctx,
                              ZSTD_outBuffer* output,
                              ZSTD_inBuffer* input,
                              ZSTD_EndDirective endOp);
-</b><p>  Behaves about the same as ZSTD_compressStream, with additional control on end directive.
-  - Compression parameters are pushed into CCtx before starting compression, using ZSTD_CCtx_set*()
-  - Compression parameters cannot be changed once compression is started (save a list of exceptions in multi-threading mode)
-  - output->pos must be <= dstCapacity, input->pos must be <= srcSize
-  - output->pos and input->pos will be updated. They are guaranteed to remain below their respective limit.
-  - endOp must be a valid directive
-  - When nbWorkers==0 (default), function is blocking : it completes its job before returning to caller.
-  - When nbWorkers>=1, function is non-blocking : it copies a portion of input, distributes jobs to internal worker threads, flush to output whatever is available,
-                                                  and then immediately returns, just indicating that there is some data remaining to be flushed.
-                                                  The function nonetheless guarantees forward progress : it will return only after it reads or write at least 1+ byte.
-  - Exception : if the first call requests a ZSTD_e_end directive and provides enough dstCapacity, the function delegates to ZSTD_compress2() which is always blocking.
-  - @return provides a minimum amount of data remaining to be flushed from internal buffers
-            or an error code, which can be tested using ZSTD_isError().
-            if @return != 0, flush is not fully completed, there is still some data left within internal buffers.
-            This is useful for ZSTD_e_flush, since in this case more flushes are necessary to empty all buffers.
-            For ZSTD_e_end, @return == 0 when internal buffers are fully flushed and frame is completed.
-  - after a ZSTD_e_end directive, if internal buffer is not fully flushed (@return != 0),
-            only ZSTD_e_end or ZSTD_e_flush operations are allowed.
-            Before starting a new compression job, or changing compression parameters,
-            it is required to fully flush internal buffers.
+</b><p>  与 ZSTD_compressStream 的行为大致相同，但增加了对结束指令的控制
+  - 在开始压缩之前，使用 ZSTD_CCtx_set*() 将压缩参数推送到 CCtx 中
+  - 一旦开始压缩，压缩参数就无法更改（在多线程模式下保存异常列表）
+  - output->pos 必须 <= dstCapacity，input->pos 必须 <= srcSize
+  - output->pos 和 input->pos 将被更新，它们被保证保持在各自的极限之下
+  - endOp 必须是一个有效的指令
+  - 当 nbWorkers==0（默认）时，函数是阻塞的：它在返回调用者之前完成工作
+  - 当 nbWorkers>=1 时，函数是非阻塞的：它复制一部分输入，将工作分配给内部工作线程，并刷新输出任何可用的东西
+            然后立即返回，只是表示还有一些数据需要刷新
+            不过，该函数还是保证了前进的进度：它只有在读或写了至少1个以上的字节后才会返回
+  - 异常：如果第一次调用请求 ZSTD_e_end 指令并提供了足够的 dstCapacity，则函数委托给 ZSTD_compress2()，而 ZSTD_compress2() 总是阻塞的
+  - @return 提供了从内部缓冲区刷新的最小剩余数据量
+            或一个错误代码，可以使用 ZSTD_isError() 来测试
+            如果 @return != 0，则说明刷新没有完全完成，内部缓冲区中还有一些数据
+            这对于 ZSTD_e_flush 是很有用的，因为在这种情况下，需要更多的刷新来清空所有的缓冲区
+            对于 ZSTD_e_end，当内部缓冲区完全刷新且帧完成时，@return == 0
+  - 在 ZSTD_e_end 指令后，如果内部缓冲区没有完全刷新(@return !=0)
+            只有 ZSTD_e_end 或 ZSTD_e_flush 操作是允许的
+            在开始一个新的压缩作业，或改变压缩参数之前
+            它是需要完全刷新内部缓冲区的
 
 </p></pre><BR>
 
-<pre><b>size_t ZSTD_CStreamInSize(void);    </b>/**< recommended size for input buffer */<b>
+<pre><b>size_t ZSTD_CStreamInSize(void);    </b>/**< 输入缓冲区的推荐大小 */<b>
 </b></pre><BR>
-<pre><b>size_t ZSTD_CStreamOutSize(void);   </b>/**< recommended size for output buffer. Guarantee to successfully flush at least one complete compressed block. */<b>
+<pre><b>size_t ZSTD_CStreamOutSize(void);   </b>/**< 输出缓冲区的推荐大小，保证至少成功刷新一个完整的压缩块 */<b>
 </b></pre><BR>
 <pre><b>size_t ZSTD_initCStream(ZSTD_CStream* zcs, int compressionLevel);
-</b>/*!<b>
- * Alternative for ZSTD_compressStream2(zcs, output, input, ZSTD_e_continue).
- * NOTE: The return value is different. ZSTD_compressStream() returns a hint for
- * the next read size (if non-zero and not an error). ZSTD_compressStream2()
- * returns the minimum nb of bytes left to flush (if non-zero and not an error).
- */
+</b>/*!
+ * ZSTD_compressStream2(zcs, output, input, ZSTD_e_continue) 的替代方案。
+ * 注意：返回值不同。ZSTD_compressStream() 会返回一个提示值，用于提示 ZSTD_compressStream2(zcs, output, input)
+ * 下一次读取的大小(如果非零且不出错) ZSTD_compressStream2()
+ * 返回剩余的最小字节数（如果不为零且不出错）
+ */<b>
 size_t ZSTD_compressStream(ZSTD_CStream* zcs, ZSTD_outBuffer* output, ZSTD_inBuffer* input);
-</b>/*! Equivalent to ZSTD_compressStream2(zcs, output, &emptyInput, ZSTD_e_flush). */<b>
+</b>/*! 相当于 ZSTD_compressStream2(zcs, output, &emptyInput, ZSTD_e_flush). */<b>
 size_t ZSTD_flushStream(ZSTD_CStream* zcs, ZSTD_outBuffer* output);
-</b>/*! Equivalent to ZSTD_compressStream2(zcs, output, &emptyInput, ZSTD_e_end). */<b>
+</b>/*! 相当于 ZSTD_compressStream2(zcs, output, &emptyInput, ZSTD_e_end). */<b>
 size_t ZSTD_endStream(ZSTD_CStream* zcs, ZSTD_outBuffer* output);
 </b><p>
      ZSTD_CCtx_reset(zcs, ZSTD_reset_session_only);
-     ZSTD_CCtx_refCDict(zcs, NULL); // clear the dictionary (if any)
+     ZSTD_CCtx_refCDict(zcs, NULL); // 清空字典(如果有的话)
      ZSTD_CCtx_setParameter(zcs, ZSTD_c_compressionLevel, compressionLevel);
 
 </p></pre><BR>
 
 <a name="Chapter9"></a><h2>数据流解压 - HowTo</h2><pre>
-  A ZSTD_DStream object is required to track streaming operations.
-  Use ZSTD_createDStream() and ZSTD_freeDStream() to create/release resources.
-  ZSTD_DStream objects can be re-used multiple times.
+  需要一个 ZSTD_DStream 对象来跟踪数据流操作
+  使用 ZSTD_createDStream() 和 ZSTD_freeDStream() 来创建/释放资源
+  ZSTD_DStream 对象可以被多次重复使用
 
-  Use ZSTD_initDStream() to start a new decompression operation.
- @return : recommended first input size
-  Alternatively, use advanced API to set specific properties.
+  使用 ZSTD_initDStream() 开始一个新的解压操作
+ @return : 推荐的第一个输入大小
+  或者，使用高级 API 来设置特定的属性
 
-  Use ZSTD_decompressStream() repetitively to consume your input.
-  The function will update both `pos` fields.
-  If `input.pos < input.size`, some input has not been consumed.
-  It's up to the caller to present again remaining data.
-  The function tries to flush all data decoded immediately, respecting output buffer size.
-  If `output.pos < output.size`, decoder has flushed everything it could.
-  But if `output.pos == output.size`, there might be some data left within internal buffers.,
-  In which case, call ZSTD_decompressStream() again to flush whatever remains in the buffer.
-  Note : with no additional input provided, amount of data flushed is necessarily <= ZSTD_BLOCKSIZE_MAX.
- @return : 0 when a frame is completely decoded and fully flushed,
-        or an error code, which can be tested using ZSTD_isError(),
-        or any other value > 0, which means there is still some decoding or flushing to do to complete current frame :
-                                the return value is a suggested next input size (just a hint for better latency)
-                                that will never request more than the remaining frame size.
+  重复使用 ZSTD_decompressStream() 来消耗你的输入
+  该函数将更新两个`pos` 字段。
+  如果 `input.pos < input.size`，则说明有些输入没有被消耗掉
+  剩余的数据要由调用者再次呈现
+  该函数试图在尊重输出缓冲区大小的前提下，立即刷新所有解码的数据
+  如果 `output.pos < output.size`，解码器已经刷新了所有能刷新的数据
+  但如果 `output.pos == output.size`，内部缓冲区可能还有一些数据......
+  在这种情况下，再次调用 ZSTD_decompressStream() 来刷新缓冲区中的剩余数据
+  注意：在没有额外输入的情况下，刷新的数据量一定是 <= ZSTD_BLOCKSIZE_MAX
+ @return : 当一帧完全解码并完全刷新时，返回 0
+        或错误代码，可以使用 ZSTD_isError() 进行测试
+        或任何其他大于 0 的值，这意味着还有一些解码或刷新工作要做，以完成当前帧
+        返回值是一个建议的下一个输入大小（只是一个提示，以获得更好的延迟
+        将永远不会请求超过剩余的帧大小
 
 <BR></pre>
 
-<pre><b>typedef ZSTD_DCtx ZSTD_DStream;  </b>/**< DCtx and DStream are now effectively same object (>= v1.3.0) */<b>
+<pre><b>typedef ZSTD_DCtx ZSTD_DStream;  </b>/**< CCtx 和 CStream 现在实际上是同一个对象 (>= v1.3.0) */<b>
 </b></pre><BR>
 <h3>ZSTD_DStream 管理函数</h3><pre></pre><b><pre>ZSTD_DStream* ZSTD_createDStream(void);
 size_t ZSTD_freeDStream(ZSTD_DStream* zds);
 </pre></b><BR>
 <h3>数据流压缩函数</h3><pre></pre><b><pre></pre></b><BR>
-<pre><b>size_t ZSTD_DStreamInSize(void);    </b>/*!< recommended size for input buffer */<b>
+<pre><b>size_t ZSTD_DStreamInSize(void);    </b>/*!< 输入缓冲区的推荐大小 */<b>
 </b></pre><BR>
-<pre><b>size_t ZSTD_DStreamOutSize(void);   </b>/*!< recommended size for output buffer. Guarantee to successfully flush at least one complete block in all circumstances. */<b>
+<pre><b>size_t ZSTD_DStreamOutSize(void);   </b>/*!< 输出缓冲区的推荐大小，保证在任何情况下都能成功刷新至少一个完整的块 */<b>
 </b></pre><BR>
 <a name="Chapter10"></a><h2>简单字典 API</h2><pre></pre>
 
@@ -672,204 +672,204 @@ size_t ZSTD_freeDStream(ZSTD_DStream* zds);
                          const void* src, size_t srcSize,
                          const void* dict,size_t dictSize,
                                int compressionLevel);
-</b><p>  Compression at an explicit compression level using a Dictionary.
-  A dictionary can be any arbitrary data segment (also called a prefix),
-  or a buffer with specified information (see dictBuilder/zdict.h).
-  Note : This function loads the dictionary, resulting in significant startup delay.
-         It's intended for a dictionary used only once.
-  Note 2 : When `dict == NULL || dictSize < 8` no dictionary is used.
+</b><p>  使用字典进行显式压缩
+  字典可以是任何任意的数据段（也称为前缀）
+  或包含指定信息的缓冲区(参见 dictBuilder/zdict.h)
+  注意：这个函数加载字典，导致明显的启动延迟
+       它的目的是用于只使用一次的字典
+  注意：当`dict == NULL || dictSize < 8`时，不使用字典
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_decompress_usingDict(ZSTD_DCtx* dctx,
                                  void* dst, size_t dstCapacity,
                            const void* src, size_t srcSize,
                            const void* dict,size_t dictSize);
-</b><p>  Decompression using a known Dictionary.
-  Dictionary must be identical to the one used during compression.
-  Note : This function loads the dictionary, resulting in significant startup delay.
-         It's intended for a dictionary used only once.
-  Note : When `dict == NULL || dictSize < 8` no dictionary is used.
+</b><p>  使用已知的字典进行解压
+  字典必须与压缩时使用的字典相同
+  注意：这个函数会加载字典，导致明显的启动延迟
+       它的目的是用于只使用一次的字典
+  注意：当`dict == NULL || dictSize < 8`时，不使用字典
 </p></pre><BR>
 
 <a name="Chapter11"></a><h2>批量处理字典 API</h2><pre></pre>
 
 <pre><b>ZSTD_CDict* ZSTD_createCDict(const void* dictBuffer, size_t dictSize,
                              int compressionLevel);
-</b><p>  When compressing multiple messages or blocks using the same dictionary,
-  it's recommended to digest the dictionary only once, since it's a costly operation.
-  ZSTD_createCDict() will create a state from digesting a dictionary.
-  The resulting state can be used for future compression operations with very limited startup cost.
-  ZSTD_CDict can be created once and shared by multiple threads concurrently, since its usage is read-only.
- @dictBuffer can be released after ZSTD_CDict creation, because its content is copied within CDict.
-  Note 1 : Consider experimental function `ZSTD_createCDict_byReference()` if you prefer to not duplicate @dictBuffer content.
-  Note 2 : A ZSTD_CDict can be created from an empty @dictBuffer,
-      in which case the only thing that it transports is the @compressionLevel.
-      This can be useful in a pipeline featuring ZSTD_compress_usingCDict() exclusively,
-      expecting a ZSTD_CDict parameter with any data, including those without a known dictionary.
+</b><p>  当使用同一字典压缩多个消息或块时
+  建议只消化一次字典，因为这是一个消耗很大的操作
+  ZSTD_createCDict() 将从消化一个字典中创建一个状态
+  所产生的状态可以用于未来的压缩操作，启动成本非常有限
+  ZSTD_CDict 可以创建一次，并由多个线程并发共享，因为它的用法是只读
+  @dictBuffer 可以在 ZSTD_CDict 创建后释放，因为它的内容是复制在 CDict 中的
+  注意1：如果你不想重复 @dictBuffer 的内容，可以考虑实验性的函数`ZSTD_createCDict_byReference()`
+  注意2：一个 ZSTD_CDict 可以从一个空的 @dictBuffer 创建
+      在这种情况下，它唯一传输的是 @compressionLevel
+      这在专门使用 ZSTD_compress_usingCDict() 的流程中很有用
+      期待一个包含任何数据的 ZSTD_CDict 参数，包括那些没有已知字典的数据
 </p></pre><BR>
 
 <pre><b>size_t      ZSTD_freeCDict(ZSTD_CDict* CDict);
-</b><p>  Function frees memory allocated by ZSTD_createCDict().
+</b><p>  函数释放 ZSTD_createCDict() 分配的内存
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_compress_usingCDict(ZSTD_CCtx* cctx,
                                 void* dst, size_t dstCapacity,
                           const void* src, size_t srcSize,
                           const ZSTD_CDict* cdict);
-</b><p>  Compression using a digested Dictionary.
-  Recommended when same dictionary is used multiple times.
-  Note : compression level is _decided at dictionary creation time_,
-     and frame parameters are hardcoded (dictID=yes, contentSize=yes, checksum=no)
+</b><p>  使用消化后的字典进行压缩
+  当同一字典被多次使用时，推荐使用
+  注意：压缩级别是在 _字典创建时决定的_
+       和帧参数是硬编码的 (dictID=yes, contentSize=yes, checksum=no)
 </p></pre><BR>
 
 <pre><b>ZSTD_DDict* ZSTD_createDDict(const void* dictBuffer, size_t dictSize);
-</b><p>  Create a digested dictionary, ready to start decompression operation without startup delay.
-  dictBuffer can be released after DDict creation, as its content is copied inside DDict.
+</b><p>  创建一个消化后的字典，准备开始解压操作，没有启动延迟
+  dictBuffer 可以在创建 DDict 后释放，因为它的内容被复制到 DDict 内部
 </p></pre><BR>
 
 <pre><b>size_t      ZSTD_freeDDict(ZSTD_DDict* ddict);
-</b><p>  Function frees memory allocated with ZSTD_createDDict()
+</b><p>  函数释放用 ZSTD_createDDict() 分配的内存
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_decompress_usingDDict(ZSTD_DCtx* dctx,
                                   void* dst, size_t dstCapacity,
                             const void* src, size_t srcSize,
                             const ZSTD_DDict* ddict);
-</b><p>  Decompression using a digested Dictionary.
-  Recommended when same dictionary is used multiple times.
+</b><p>  使用消化后的字典进行解压
+  如果多次使用同一字典，建议使用
 </p></pre><BR>
 
 <a name="Chapter12"></a><h2>字典辅助函数</h2><pre></pre>
 
 <pre><b>unsigned ZSTD_getDictID_fromDict(const void* dict, size_t dictSize);
-</b><p>  Provides the dictID stored within dictionary.
-  if @return == 0, the dictionary is not conformant with Zstandard specification.
-  It can still be loaded, but as a content-only dictionary.
+</b><p>  提供存储在字典中的 dictID
+  如果 @return == 0，则该字典不符合 Zstandard 规范
+  它仍然可以被加载，但只是作为一个纯内容的字典
 </p></pre><BR>
 
 <pre><b>unsigned ZSTD_getDictID_fromDDict(const ZSTD_DDict* ddict);
-</b><p>  Provides the dictID of the dictionary loaded into `ddict`.
-  If @return == 0, the dictionary is not conformant to Zstandard specification, or empty.
-  Non-conformant dictionaries can still be loaded, but as content-only dictionaries.
+</b><p>  提供加载到 "ddict" 中的字典的 dictID
+  如果 @return == 0，表示该字典不符合 Zstandard 规范，或为空
+  不符合标准的字典仍然可以被加载，但只作为内容字典
 </p></pre><BR>
 
 <pre><b>unsigned ZSTD_getDictID_fromFrame(const void* src, size_t srcSize);
-</b><p>  Provides the dictID required to decompressed the frame stored within `src`.
-  If @return == 0, the dictID could not be decoded.
-  This could for one of the following reasons :
-  - The frame does not require a dictionary to be decoded (most common case).
-  - The frame was built with dictID intentionally removed. Whatever dictionary is necessary is a hidden information.
-    Note : this use case also happens when using a non-conformant dictionary.
-  - `srcSize` is too small, and as a result, the frame header could not be decoded (only possible if `srcSize < ZSTD_FRAMEHEADERSIZE_MAX`).
-  - This is not a Zstandard frame.
-  When identifying the exact failure cause, it's possible to use ZSTD_getFrameHeader(), which will provide a more precise error code.
+</b><p>  提供解压存储在 "src" 中的帧所需的 dictID
+  如果 @return == 0，则 dictID 不能被解压
+  这可能是由于以下原因之一
+  - 帧不需要字典来解码（最常见的情况）
+  - 该框架在构建时有意删除了 dictID，无论需要什么字典，都是一个隐藏的信息
+    注意：这种用例在使用不符合要求的字典时也会发生
+  - `srcSize` 太小了，因此，帧头不能被解码（只有当`srcSize < ZSTD_FRAMEHEADERSIZE_MAX` 时才有可能）
+  - 这不是一个 Zstandard 帧
+  在确定具体的失败原因时，可以使用 ZSTD_getFrameHeader()，它将提供更精确的错误代码
 </p></pre><BR>
 
 <a name="Chapter13"></a><h2>高级字典和前缀 API</h2><pre>
- This API allows dictionaries to be used with ZSTD_compress2(),
- ZSTD_compressStream2(), and ZSTD_decompress(). Dictionaries are sticky, and
- only reset with the context is reset with ZSTD_reset_parameters or
- ZSTD_reset_session_and_parameters. Prefixes are single-use.
+ 这个API允许字典与ZSTD_compress2()、ZSTD_compressStream2() 和 ZSTD_decompress() 一起使用
+ 字典是粘性的，只有用 ZSTD_reset_parameters 或 ZSTD_reset_session_and_parameters 重置上下文
+ 前缀是一次性使用的
 <BR></pre>
 
 <pre><b>size_t ZSTD_CCtx_loadDictionary(ZSTD_CCtx* cctx, const void* dict, size_t dictSize);
-</b><p>  Create an internal CDict from `dict` buffer.
-  Decompression will have to use same dictionary.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Special: Loading a NULL (or 0-size) dictionary invalidates previous dictionary,
-           meaning "return to no-dictionary mode".
-  Note 1 : Dictionary is sticky, it will be used for all future compressed frames.
-           To return to "no-dictionary" situation, load a NULL dictionary (or reset parameters).
-  Note 2 : Loading a dictionary involves building tables.
-           It's also a CPU consuming operation, with non-negligible impact on latency.
-           Tables are dependent on compression parameters, and for this reason,
-           compression parameters can no longer be changed after loading a dictionary.
-  Note 3 :`dict` content will be copied internally.
-           Use experimental ZSTD_CCtx_loadDictionary_byReference() to reference content instead.
-           In such a case, dictionary buffer must outlive its users.
-  Note 4 : Use ZSTD_CCtx_loadDictionary_advanced()
-           to precisely select how dictionary content must be interpreted.
+</b><p>  从 `dict` 缓冲区创建一个内部 CDict
+  解压缩必须使用相同的字典
+ @result : 0，或者一个错误代码（可以用 ZSTD_isError() 测试）
+   特殊 : 加载一个 NULL (或 0-size) 字典会使之前的字典无效
+              意思是 "返回无字典模式"
+  注意1 : 字典是粘性的，它将用于以后所有的压缩帧
+              要返回到 "无字典 "的情况下，加载一个NULL字典（或重置参数）
+  注意2 : 加载字典涉及到建立表
+              这也是一个消耗CPU的操作，对延迟的影响不可忽视
+              表是依赖于压缩参数的，为此
+              压缩参数在加载字典后不能再更改
+  注意3 : `dict` 内容将被内部复制
+              使用实验性的 ZSTD_CCtx_loadDictionary_byReference() 代替引用内容
+              在这种情况下，字典缓冲区必须超过它的用户
+  注意4 : 使用 ZSTD_CCtx_loadDictionary_advanced()
+              以精确地选择必须如何解释字典内容
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_CCtx_refCDict(ZSTD_CCtx* cctx, const ZSTD_CDict* cdict);
-</b><p>  Reference a prepared dictionary, to be used for all next compressed frames.
-  Note that compression parameters are enforced from within CDict,
-  and supersede any compression parameter previously set within CCtx.
-  The parameters ignored are labled as "superseded-by-cdict" in the ZSTD_cParameter enum docs.
-  The ignored parameters will be used again if the CCtx is returned to no-dictionary mode.
-  The dictionary will remain valid for future compressed frames using same CCtx.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Special : Referencing a NULL CDict means "return to no-dictionary mode".
-  Note 1 : Currently, only one dictionary can be managed.
-           Referencing a new dictionary effectively "discards" any previous one.
-  Note 2 : CDict is just referenced, its lifetime must outlive its usage within CCtx.
+</b><p>  引用一个准备好的字典，用于所有下一个压缩帧
+  请注意，压缩参数是在CDict中执行的
+  并取代之前在 CCtx 中设置的任何压缩参数
+  在 ZSTD_cParameter 枚举文档中，被忽略的参数被标记为 "superseded-by-cdict"
+  如果 CCtx 被返回到无字典模式，被忽略的参数将被再次使用
+  该字典在以后使用同一 CCtx 压缩帧时仍然有效
+ @result : 0，或者一个错误代码（可以用 ZSTD_isError() 测试）
+  特殊：引用一个 NULL 的 CDict 意味着 "返回到无字典模式"
+  注1：目前，只能管理一个字典
+           引用一个新的字典可以有效地 "丢弃" 任何以前的字典
+  注2：CDict 只是被引用，它的寿命必须超过它在 CCtx 中的使用时间
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_CCtx_refPrefix(ZSTD_CCtx* cctx,
                      const void* prefix, size_t prefixSize);
-</b><p>  Reference a prefix (single-usage dictionary) for next compressed frame.
-  A prefix is **only used once**. Tables are discarded at end of frame (ZSTD_e_end).
-  Decompression will need same prefix to properly regenerate data.
-  Compressing with a prefix is similar in outcome as performing a diff and compressing it,
-  but performs much faster, especially during decompression (compression speed is tunable with compression level).
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Special: Adding any prefix (including NULL) invalidates any previous prefix or dictionary
-  Note 1 : Prefix buffer is referenced. It **must** outlive compression.
-           Its content must remain unmodified during compression.
-  Note 2 : If the intention is to diff some large src data blob with some prior version of itself,
-           ensure that the window size is large enough to contain the entire source.
-           See ZSTD_c_windowLog.
-  Note 3 : Referencing a prefix involves building tables, which are dependent on compression parameters.
-           It's a CPU consuming operation, with non-negligible impact on latency.
-           If there is a need to use the same prefix multiple times, consider loadDictionary instead.
-  Note 4 : By default, the prefix is interpreted as raw content (ZSTD_dct_rawContent).
-           Use experimental ZSTD_CCtx_refPrefix_advanced() to alter dictionary interpretation.
+</b><p>  为下一个压缩帧引用一个前缀（单用途字典）
+  一个前缀只被 **使用一次**， 在帧结束时 (ZSTD_e_end) 被丢弃，表在帧结束时 (ZSTD_e_end) 被丢弃
+  解压缩将需要相同的前缀来正确地重新生成数据
+  使用前缀进行压缩的结果类似于进行差分和压缩
+  但执行速度要快得多，尤其是在解压过程中(压缩速度可随压缩级别调整)
+ @result : 0，或者一个错误代码（可以用 ZSTD_isError() 测试）
+   特殊：添加任何前缀(包括NULL)都会使之前的前缀或字典无效
+  注意1：前缀缓冲区是参考的。它 **必须** 比压缩时间长
+            它的内容必须在压缩过程中保持不变
+  注意2：如果打算将一些大的 src 数据 blob 与自己的某个先前版本进行比较
+            确保窗口大小足够大，以包含整个源
+            参见 ZSTD_c_windowLog
+  注意3：引用一个前缀涉及到建表，这取决于压缩参数
+            这是一个消耗CPU的操作，对延迟的影响不可忽视
+            如果需要多次使用同一个前缀，可以考虑用loadDictionary代替
+  注意4：默认情况下，前缀被解释为原始内容 (ZSTD_dct_rawContent)
+            使用实验性的 ZSTD_CCtx_refPrefix_advanced() 来改变字典的解释
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_DCtx_loadDictionary(ZSTD_DCtx* dctx, const void* dict, size_t dictSize);
-</b><p>  Create an internal DDict from dict buffer,
-  to be used to decompress next frames.
-  The dictionary remains valid for all future frames, until explicitly invalidated.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Special : Adding a NULL (or 0-size) dictionary invalidates any previous dictionary,
-            meaning "return to no-dictionary mode".
-  Note 1 : Loading a dictionary involves building tables,
-           which has a non-negligible impact on CPU usage and latency.
-           It's recommended to "load once, use many times", to amortize the cost
-  Note 2 :`dict` content will be copied internally, so `dict` can be released after loading.
-           Use ZSTD_DCtx_loadDictionary_byReference() to reference dictionary content instead.
-  Note 3 : Use ZSTD_DCtx_loadDictionary_advanced() to take control of
-           how dictionary content is loaded and interpreted.
+</b><p>  从 dict 缓冲区创建一个内部 DDict
+  用来解压下一帧
+  这个字典对所有未来的帧都是有效的，直到显式失效
+ @result : 0，或者一个错误代码（可以用 ZSTD_isError() 测试）
+   特殊 : 添加一个 NULL (或0-size) 的字典会使之前的字典无效
+              意思是 "返回到无字典模式"
+  注意1 : 加载字典涉及到建表
+              这对 CPU 的使用率和延迟有着不可忽视的影响
+              建议 "一次加载，多次使用"，摊低成本
+  注意2 : `dict` 内容会被内部复制，所以 `dict` 加载后可以释放
+              使用 ZSTD_DCtx_loadDictionary_byReference() 来代替引用字典内容
+  注意3 : 使用 ZSTD_DCtx_loadDictionary_advanced() 来控制
+              如何加载和解释字典内容
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_DCtx_refDDict(ZSTD_DCtx* dctx, const ZSTD_DDict* ddict);
-</b><p>  Reference a prepared dictionary, to be used to decompress next frames.
-  The dictionary remains active for decompression of future frames using same DCtx.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Note 1 : Currently, only one dictionary can be managed.
-           Referencing a new dictionary effectively "discards" any previous one.
-  Special: referencing a NULL DDict means "return to no-dictionary mode".
-  Note 2 : DDict is just referenced, its lifetime must outlive its usage from DCtx.
+</b><p>  引用准备好的字典，用于解压下一帧
+  在使用相同的DCtx解压未来的帧时，该字典仍然有效
+ @result : 0, 或一个错误代码(可以用 ZSTD_isError() 测试)
+  注意1：目前，只能管理一个字典
+            引用一个新的字典会有效地 "丢弃" 之前的任何一个字典
+   特别：引用一个NULL DDict 意味着 "返回到无字典模式"
+  注意2：DDict 只是被引用，它的寿命必须超过 DCtx 的使用时间
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_DCtx_refPrefix(ZSTD_DCtx* dctx,
                      const void* prefix, size_t prefixSize);
-</b><p>  Reference a prefix (single-usage dictionary) to decompress next frame.
-  This is the reverse operation of ZSTD_CCtx_refPrefix(),
-  and must use the same prefix as the one used during compression.
-  Prefix is **only used once**. Reference is discarded at end of frame.
-  End of frame is reached when ZSTD_decompressStream() returns 0.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Note 1 : Adding any prefix (including NULL) invalidates any previously set prefix or dictionary
-  Note 2 : Prefix buffer is referenced. It **must** outlive decompression.
-           Prefix buffer must remain unmodified up to the end of frame,
-           reached when ZSTD_decompressStream() returns 0.
-  Note 3 : By default, the prefix is treated as raw content (ZSTD_dct_rawContent).
-           Use ZSTD_CCtx_refPrefix_advanced() to alter dictMode (Experimental section)
-  Note 4 : Referencing a raw content prefix has almost no cpu nor memory cost.
-           A full dictionary is more costly, as it requires building tables.
+</b><p>  引用一个前缀(单用途字典)来解压下一帧
+  这是 ZSTD_CCtx_refPrefix() 的反向操作
+  并且必须使用与压缩过程中使用的相同的前缀
+  前缀 **只使用一次**，引用在帧结束时被丢弃
+  当 ZSTD_decompressStream() 返回 0 时达到帧结束
+  当 ZSTD_decompressStream() 返回 0 时，帧结束
+@result : 0，或者一个错误代码(可以用 ZSTD_isError() 测试)
+  注1 : 添加任何前缀(包括NULL) 都会使之前设置的前缀或字典无效
+  注2：前缀缓冲区被引用。它**必须**于解压时间
+           前缀缓冲区必须保持不变，直到帧结束
+           当 ZSTD_decompressStream() 返回 0 时达到
+  注3：默认情况下，前缀被视为原始内容 (ZSTD_dct_rawContent)
+           使用 ZSTD_CCtx_refPrefix_advanced() 来改变 dictMode (实验部分)
+  注4：引用一个原始内容前缀几乎没有任何cpu或内存成本
+           一个完整的字典开销是比较大的，因为它需要建立表
 
 </p></pre><BR>
 
@@ -879,33 +879,33 @@ size_t ZSTD_sizeof_CStream(const ZSTD_CStream* zcs);
 size_t ZSTD_sizeof_DStream(const ZSTD_DStream* zds);
 size_t ZSTD_sizeof_CDict(const ZSTD_CDict* cdict);
 size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
-</b><p>  These functions give the _current_ memory usage of selected object.
-  Note that object memory usage can evolve (increase or decrease) over time.
+</b><p>  这些函数给出了所选对象 _当前_ 的内存使用情况
+  请注意，对象的内存使用量可以随着时间的推移而变化（增加或减少）
 </p></pre><BR>
 
 <a name="Chapter14"></a><h2>实验性 API (仅静态链接)</h2><pre>
- The following symbols and constants
- are not planned to join "stable API" status in the near future.
- They can still change in future versions.
- Some of them are planned to remain in the static_only section indefinitely.
- Some of them might be removed in the future (especially when redundant with existing stable functions)
+ 下列符号和常数
+ 不计划在近期加入 "稳定的 API" 状态
+ 它们仍然可以在未来的版本中改变
+ 它们中的一些计划无限期地保留在 static_only 部分
+ 它们中的一些可能会在未来被移除（特别是当与现有的稳定函数多余的时候
 
 <BR></pre>
 
 <pre><b>typedef struct {
-    unsigned int offset;      </b>/* The offset of the match. (NOT the same as the offset code)<b>
+    unsigned int offset;      </b>/* The offset of the match. (NOT the same as the offset code)
                                * If offset == 0 and matchLength == 0, this sequence represents the last
                                * literals in the block of litLength size.
-                               */
+                               */<b>
 
     unsigned int litLength;   </b>/* Literal length of the sequence. */<b>
     unsigned int matchLength; </b>/* Match length of the sequence. */<b>
 
-                              </b>/* Note: Users of this API may provide a sequence with matchLength == litLength == offset == 0.<b>
+                              </b>/* Note: Users of this API may provide a sequence with matchLength == litLength == offset == 0.
                                * In this case, we will treat the sequence as a marker for a block boundary.
-                               */
+                               */<b>
 
-    unsigned int rep;         </b>/* Represents which repeat offset is represented by the field 'offset'.<b>
+    unsigned int rep;         </b>/* Represents which repeat offset is represented by the field 'offset'.
                                * Ranges from [0, 3].
                                *
                                * Repeat offsets are essentially previous offsets from previous sequences sorted in
@@ -926,7 +926,7 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
                                * 'rep', but repeat offsets do not necessarily need to be calculated from an external
                                * sequence provider's perspective. For example, ZSTD_compressSequences() does not
                                * use this 'rep' field at all (as of now).
-                               */
+                               */<b>
 } ZSTD_Sequence;
 </b></pre><BR>
 <pre><b>typedef struct {
@@ -963,9 +963,9 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 </b></pre><BR>
 <pre><b>typedef enum {
     ZSTD_f_zstd1 = 0,           </b>/* zstd frame format, specified in zstd_compression_format.md (default) */<b>
-    ZSTD_f_zstd1_magicless = 1  </b>/* Variant of zstd frame format, without initial 4-bytes magic number.<b>
+    ZSTD_f_zstd1_magicless = 1  </b>/* Variant of zstd frame format, without initial 4-bytes magic number.
                                  * Useful to save 4 bytes per generated frame.
-                                 * Decoder cannot recognise automatically this format, requiring this instruction. */
+                                 * Decoder cannot recognise automatically this format, requiring this instruction. */<b>
 } ZSTD_format_e;
 </b></pre><BR>
 <pre><b>typedef enum {
@@ -975,7 +975,7 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 } ZSTD_forceIgnoreChecksum_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-    </b>/* Note: this enum and the behavior it controls are effectively internal<b>
+    </b>/* Note: this enum and the behavior it controls are effectively internal
      * implementation details of the compressor. They are expected to continue
      * to evolve and should be considered only in the context of extremely
      * advanced performance tuning.
@@ -1006,7 +1006,7 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
      * at the beginning of a compression. However, if experimentation shows that
      * Zstd is making poor choices, it is possible to override that choice with
      * this enum.
-     */
+     */<b>
     ZSTD_dictDefaultAttach = 0, </b>/* Use the default heuristic. */<b>
     ZSTD_dictForceAttach   = 1, </b>/* Never copy the dictionary. */<b>
     ZSTD_dictForceCopy     = 2, </b>/* Always copy the dictionary. */<b>
@@ -1014,11 +1014,11 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 } ZSTD_dictAttachPref_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-  ZSTD_lcm_auto = 0,          </b>/**< Automatically determine the compression mode based on the compression level.<b>
+  ZSTD_lcm_auto = 0,          </b>/**< Automatically determine the compression mode based on the compression level.
                                *   Negative compression levels will be uncompressed, and positive compression
-                               *   levels will be compressed. */
-  ZSTD_lcm_huffman = 1,       </b>/**< Always attempt Huffman compression. Uncompressed literals will still be<b>
-                               *   emitted if Huffman compression is not profitable. */
+                               *   levels will be compressed. */<b>
+  ZSTD_lcm_huffman = 1,       </b>/**< Always attempt Huffman compression. Uncompressed literals will still be
+                               *   emitted if Huffman compression is not profitable. */<b>
   ZSTD_lcm_uncompressed = 2   </b>/**< Always emit uncompressed literals. */<b>
 } ZSTD_literalCompressionMode_e;
 </b></pre><BR>
@@ -1658,7 +1658,7 @@ ZSTD_initCStream_usingCDict_advanced(ZSTD_CStream* zcs,
   `ZSTD_CCtx` object can be re-used (ZSTD_compressBegin()) to compress again.
 <BR></pre>
 
-<h3>Buffer-less streaming compression functions</h3><pre></pre><b><pre>size_t ZSTD_compressBegin(ZSTD_CCtx* cctx, int compressionLevel);
+<h3>无缓冲区数据流压缩函数</h3><pre></pre><b><pre>size_t ZSTD_compressBegin(ZSTD_CCtx* cctx, int compressionLevel);
 size_t ZSTD_compressBegin_usingDict(ZSTD_CCtx* cctx, const void* dict, size_t dictSize, int compressionLevel);
 size_t ZSTD_compressBegin_advanced(ZSTD_CCtx* cctx, const void* dict, size_t dictSize, ZSTD_parameters params, unsigned long long pledgedSrcSize); </b>/**< pledgedSrcSize : If srcSize is not known at init time, use ZSTD_CONTENTSIZE_UNKNOWN */<b>
 size_t ZSTD_compressBegin_usingCDict(ZSTD_CCtx* cctx, const ZSTD_CDict* cdict); </b>/**< note: fails if cdict==NULL */<b>
@@ -1736,56 +1736,56 @@ size_t ZSTD_copyCCtx(ZSTD_CCtx* cctx, const ZSTD_CCtx* preparedCCtx, unsigned lo
   For skippable frames ZSTD_decompressContinue() always returns 0 : it only skips the content.
 <BR></pre>
 
-<h3>Buffer-less streaming decompression functions</h3><pre></pre><b><pre>typedef enum { ZSTD_frame, ZSTD_skippableFrame } ZSTD_frameType_e;
+<h3>无缓冲区数据流解压函数</h3><pre></pre><b><pre>typedef enum { ZSTD_frame, ZSTD_skippableFrame } ZSTD_frameType_e;
 typedef struct {
-    unsigned long long frameContentSize; </b>/* if == ZSTD_CONTENTSIZE_UNKNOWN, it means this field is not available. 0 means "empty" */<b>
-    unsigned long long windowSize;       </b>/* can be very large, up to <= frameContentSize */<b>
+    unsigned long long frameContentSize; </b>/* 如果 == ZSTD_CONTENTSIZE_UNKNOWN, 表示该字段不可用，0表示 "empty" */<b>
+    unsigned long long windowSize;       </b>/* 可以非常大，达到 <= frameContentSize */<b>
     unsigned blockSizeMax;
-    ZSTD_frameType_e frameType;          </b>/* if == ZSTD_skippableFrame, frameContentSize is the size of skippable content */<b>
+    ZSTD_frameType_e frameType;          </b>/* 如果 == ZSTD_skippableFrame, frameContentSize 是可跳转内容的大小 */<b>
     unsigned headerSize;
     unsigned dictID;
     unsigned checksumFlag;
 } ZSTD_frameHeader;
 </pre></b><BR>
-<pre><b>size_t ZSTD_getFrameHeader(ZSTD_frameHeader* zfhPtr, const void* src, size_t srcSize);   </b>/**< doesn't consume input */<b>
-</b>/*! ZSTD_getFrameHeader_advanced() :<b>
- *  same as ZSTD_getFrameHeader(),
- *  with added capability to select a format (like ZSTD_f_zstd1_magicless) */
+<pre><b>size_t ZSTD_getFrameHeader(ZSTD_frameHeader* zfhPtr, const void* src, size_t srcSize);   </b>/**< 不消耗输入 */<b>
+</b>/*! ZSTD_getFrameHeader_advanced() :
+ *  与 ZSTD_getFrameHeader() 相同
+ *  增加了选择格式的能力(如 ZSTD_f_zstd1_magicless) */<b>
 size_t ZSTD_getFrameHeader_advanced(ZSTD_frameHeader* zfhPtr, const void* src, size_t srcSize, ZSTD_format_e format);
-size_t ZSTD_decodingBufferSize_min(unsigned long long windowSize, unsigned long long frameContentSize);  </b>/**< when frame content size is not known, pass in frameContentSize == ZSTD_CONTENTSIZE_UNKNOWN */<b>
-</b><p>  decode Frame Header, or requires larger `srcSize`.
- @return : 0, `zfhPtr` is correctly filled,
-          >0, `srcSize` is too small, value is wanted `srcSize` amount,
-           or an error code, which can be tested using ZSTD_isError()
+size_t ZSTD_decodingBufferSize_min(unsigned long long windowSize, unsigned long long frameContentSize);  </b>/**< 当帧内容大小未知时，传入 frameContentSize == ZSTD_CONTENTSIZE_UNKNOWN */<b>
+</b><p>  解码帧头，或需要更大的 `srcSize`
+ @return : 0, `zfhPtr` 被正确填充
+          >0, `srcSize` 太小，值是需要 `srcSize` 的大小
+           或错误代码，可以使用 ZSTD_isError() 来测试
 </p></pre><BR>
 
 <pre><b>typedef enum { ZSTDnit_frameHeader, ZSTDnit_blockHeader, ZSTDnit_block, ZSTDnit_lastBlock, ZSTDnit_checksum, ZSTDnit_skippableFrame } ZSTD_nextInputType_e;
 </b></pre><BR>
 <a name="Chapter23"></a><h2>区块级 API</h2><pre></pre>
 
-<pre><b></b><p>    Frame metadata cost is typically ~12 bytes, which can be non-negligible for very small blocks (< 100 bytes).
-    But users will have to take in charge needed metadata to regenerate data, such as compressed and content sizes.
+<pre><b></b><p>    帧元数据的成本通常是~12字节，对于很小的块（< 100字节）来说，这个成本可能是不可忽略的
+    但用户将不得不负责需要的元数据来再生数据，如压缩和内容大小
 
-    A few rules to respect :
-    - Compressing and decompressing require a context structure
-      + Use ZSTD_createCCtx() and ZSTD_createDCtx()
-    - It is necessary to init context before starting
-      + compression : any ZSTD_compressBegin*() variant, including with dictionary
-      + decompression : any ZSTD_decompressBegin*() variant, including with dictionary
-      + copyCCtx() and copyDCtx() can be used too
-    - Block size is limited, it must be <= ZSTD_getBlockSize() <= ZSTD_BLOCKSIZE_MAX == 128 KB
-      + If input is larger than a block size, it's necessary to split input data into multiple blocks
-      + For inputs larger than a single block, consider using regular ZSTD_compress() instead.
-        Frame metadata is not that costly, and quickly becomes negligible as source size grows larger than a block.
-    - When a block is considered not compressible enough, ZSTD_compressBlock() result will be 0 (zero) !
-      ===> In which case, nothing is produced into `dst` !
-      + User __must__ test for such outcome and deal directly with uncompressed data
-      + A block cannot be declared incompressible if ZSTD_compressBlock() return value was != 0.
-        Doing so would mess up with statistics history, leading to potential data corruption.
-      + ZSTD_decompressBlock() _doesn't accept uncompressed data as input_ !!
-      + In case of multiple successive blocks, should some of them be uncompressed,
-        decoder must be informed of their existence in order to follow proper history.
-        Use ZSTD_insertBlock() for such a case.
+    几个规则要尊重 。
+    - 压缩和解压需要一个上下文结构
+      + 使用 ZSTD_createCCtx() 和 ZSTD_createDCtx()
+    - 在开始之前，必须先启动上下文
+      +压缩：任何 ZSTD_compressBegin*() 变体，包括带字典的
+      + 解压：任何 ZSTD_decompressBegin*() 变体，包括带字典的变体
+      + copyCCtx() 和copyDCtx() 也可以使用
+    - 块的大小是有限制的，必须是 <= ZSTD_getBlockSize() <= ZSTD_BLOCKSIZE_MAX == 128 KB
+      + 如果输入的数据大于一个块的大小，则需要将输入数据分割成多个块
+      + 对于大于单个块的输入，可以考虑使用常规的 ZSTD_compress() 代替
+        帧元数据的成本并不高，而且当源大小大于一个块时，元数据很快就会变得微不足道
+    - 当一个块被认为不够可压缩时，ZSTD_compressBlock() 的结果将是0 (0) !
+      ===> 在这种情况下，没有任何东西产生到 `dst` 中 !
+      + 用户必须测试这样的结果，并直接处理未压缩的数据
+      + 如果 ZSTD_compressBlock() 的返回值是 != 0，则不能宣布一个块是不可压缩的
+        这样做会扰乱统计历史，导致潜在的数据损坏
+      + ZSTD_decompressBlock() _不接受未压缩的数据作为输入_ !!
+      + 在有多个连续块的情况下，是否应该对其中的一些块进行解压
+        解码器必须被告知它们的存在，以便遵循正确的历史
+        使用 ZSTD_insertBlock() 来处理这种情况
 </p></pre><BR>
 
 <h3>原始的 zstd 块函数</h3><pre></pre><b><pre>size_t ZSTD_getBlockSize   (const ZSTD_CCtx* cctx);
