@@ -893,56 +893,55 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 <BR></pre>
 
 <pre><b>typedef struct {
-    unsigned int offset;      </b>/* The offset of the match. (NOT the same as the offset code)
-                               * If offset == 0 and matchLength == 0, this sequence represents the last
-                               * literals in the block of litLength size.
+    unsigned int offset;      </b>/* 匹配的偏移量 (与偏移量代码不同)
+                               * 如果 offset == 0 且 matchLength == 0，则该序列代表
+                               * litLength 大小的块中的最后一个 iteral
                                */<b>
 
-    unsigned int litLength;   </b>/* Literal length of the sequence. */<b>
-    unsigned int matchLength; </b>/* Match length of the sequence. */<b>
+    unsigned int litLength;   </b>/* 序列的字面长度 */<b>
+    unsigned int matchLength; </b>/* 序列的匹配长度 */<b>
 
-                              </b>/* Note: Users of this API may provide a sequence with matchLength == litLength == offset == 0.
-                               * In this case, we will treat the sequence as a marker for a block boundary.
+                              </b>/* 注意：该 API 的用户可以提供一个 matchLength == litLength == offset == 0 的序列
+                               * 在这种情况下，我们将把该序列作为块边界的标记
                                */<b>
 
-    unsigned int rep;         </b>/* Represents which repeat offset is represented by the field 'offset'.
-                               * Ranges from [0, 3].
+    unsigned int rep;         </b>/* 表示 "offset" 字段代表哪个重复偏移量
+                               * 范围为 [0, 3].
                                *
-                               * Repeat offsets are essentially previous offsets from previous sequences sorted in
-                               * recency order. For more detail, see doc/zstd_compression_format.md
+                               * 重复偏移量实质上是按时间顺序排序的前一个序列的前一个偏移量
+                               * 更多细节，请参见doc/zstd_compression_format.md
                                *
-                               * If rep == 0, then 'offset' does not contain a repeat offset.
-                               * If rep > 0:
-                               *  If litLength != 0:
+                               * 如果 rep == 0, 那么 'offset' 不包含重复偏移
+                               * 如果 rep > 0:
+                               *  if litLength != 0:
                                *      rep == 1 --> offset == repeat_offset_1
                                *      rep == 2 --> offset == repeat_offset_2
                                *      rep == 3 --> offset == repeat_offset_3
-                               *  If litLength == 0:
+                               *  if litLength == 0:
                                *      rep == 1 --> offset == repeat_offset_2
                                *      rep == 2 --> offset == repeat_offset_3
                                *      rep == 3 --> offset == repeat_offset_1 - 1
                                *
-                               * Note: This field is optional. ZSTD_generateSequences() will calculate the value of
-                               * 'rep', but repeat offsets do not necessarily need to be calculated from an external
-                               * sequence provider's perspective. For example, ZSTD_compressSequences() does not
-                               * use this 'rep' field at all (as of now).
+                               * 注意：这个字段是可选的，ZSTD_generateSequences() 将计算 'rep' 的值
+                               * 但从外部序列提供者的角度来看，重复偏移量不一定需要计算
+                               * 例如，ZSTD_compressSequences() 根本不使用这个 'rep' 字段（目前）
                                */<b>
 } ZSTD_Sequence;
 </b></pre><BR>
 <pre><b>typedef struct {
-    unsigned windowLog;       </b>/**< largest match distance : larger == more compression, more memory needed during decompression */<b>
-    unsigned chainLog;        </b>/**< fully searched segment : larger == more compression, slower, more memory (useless for fast) */<b>
-    unsigned hashLog;         </b>/**< dispatch table : larger == faster, more memory */<b>
-    unsigned searchLog;       </b>/**< nb of searches : larger == more compression, slower */<b>
-    unsigned minMatch;        </b>/**< match length searched : larger == faster decompression, sometimes less compression */<b>
-    unsigned targetLength;    </b>/**< acceptable match size for optimal parser (only) : larger == more compression, slower */<b>
-    ZSTD_strategy strategy;   </b>/**< see ZSTD_strategy definition above */<b>
+    unsigned windowLog;       </b>/**< 最大的匹配距离：较大的匹配距离 == 更多的压缩，解压时需要更多的内存 */<b>
+    unsigned chainLog;        </b>/**< 完全搜索段：更大 == 更多的压缩，更慢，更多的内存(对快速搜索无用) */<b>
+    unsigned hashLog;         </b>/**< 派遣表：更大的 == 更快的，更多的内存 */<b>
+    unsigned searchLog;       </b>/**< 搜索的数量 : 更大的 == 更多的压缩，更慢 */<b>
+    unsigned minMatch;        </b>/**< 搜索到的匹配长度：较大的匹配长度 == 更快的解压速度，有时较少的压缩 */<b>
+    unsigned targetLength;    </b>/**< 最佳解析器的可接受匹配大小(仅适用于)：更大的匹配大小 == 更多的压缩，更慢 */<b>
+    ZSTD_strategy strategy;   </b>/**< 见上文 ZSTD_strategy 定义 */<b>
 } ZSTD_compressionParameters;
 </b></pre><BR>
 <pre><b>typedef struct {
-    int contentSizeFlag; </b>/**< 1: content size will be in frame header (when known) */<b>
-    int checksumFlag;    </b>/**< 1: generate a 32-bits checksum using XXH64 algorithm at end of frame, for error detection */<b>
-    int noDictIDFlag;    </b>/**< 1: no dictID will be saved into frame header (dictID is only useful for dictionary compression) */<b>
+    int contentSizeFlag; </b>/**< 1: 内容大小将在帧头中 (when known) */<b>
+    int checksumFlag;    </b>/**< 1: 在帧尾使用 XXH64 算法生成一个 32-bits 的校验和，用于错误检测 */<b>
+    int noDictIDFlag;    </b>/**< 1: 不将 dictID 保存到帧头（dictID只对字典压缩有用） */<b>
 } ZSTD_frameParameters;
 </b></pre><BR>
 <pre><b>typedef struct {
@@ -951,126 +950,112 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 } ZSTD_parameters;
 </b></pre><BR>
 <pre><b>typedef enum {
-    ZSTD_dct_auto = 0,       </b>/* dictionary is "full" when starting with ZSTD_MAGIC_DICTIONARY, otherwise it is "rawContent" */<b>
-    ZSTD_dct_rawContent = 1, </b>/* ensures dictionary is always loaded as rawContent, even if it starts with ZSTD_MAGIC_DICTIONARY */<b>
-    ZSTD_dct_fullDict = 2    </b>/* refuses to load a dictionary if it does not respect Zstandard's specification, starting with ZSTD_MAGIC_DICTIONARY */<b>
+    ZSTD_dct_auto = 0,       </b>/* 以 ZSTD_MAGIC_DICTIONARY 开头的字典为 "full"，否则为 "rawContent" */<b>
+    ZSTD_dct_rawContent = 1, </b>/* 确保字典总是以 rawContent 加载，即使它以ZSTD_MAGIC_DICTIONARY开头 */<b>
+    ZSTD_dct_fullDict = 2    </b>/* 如果不尊重 Zstandard 的规范，拒绝加载字典，从ZSTD_MAGIC_DICTIONARY 开始 */<b>
 } ZSTD_dictContentType_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-    ZSTD_dlm_byCopy = 0,  </b>/**< Copy dictionary content internally */<b>
-    ZSTD_dlm_byRef = 1    </b>/**< Reference dictionary content -- the dictionary buffer must outlive its users. */<b>
+    ZSTD_dlm_byCopy = 0,  </b>/**< 在内部复制字典内容 */<b>
+    ZSTD_dlm_byRef = 1    </b>/**< 引用字典内容 -- 字典缓冲区必须超过其调用者的生命周期 */<b>
 } ZSTD_dictLoadMethod_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-    ZSTD_f_zstd1 = 0,           </b>/* zstd frame format, specified in zstd_compression_format.md (default) */<b>
-    ZSTD_f_zstd1_magicless = 1  </b>/* Variant of zstd frame format, without initial 4-bytes magic number.
-                                 * Useful to save 4 bytes per generated frame.
-                                 * Decoder cannot recognise automatically this format, requiring this instruction. */<b>
+    ZSTD_f_zstd1 = 0,           </b>/* zstd 帧格式，在 zstd_compression_format.md中指定（默认） */<b>
+    ZSTD_f_zstd1_magicless = 1  </b>/* zstd 帧格式的变体，没有初始的 4-bytes 魔数
+                                 * 用于为每个生成的帧节省4个字节
+                                 * 解码器不能自动识别这种格式，需要此指令 */<b>
 } ZSTD_format_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-    </b>/* Note: this enum controls ZSTD_d_forceIgnoreChecksum */<b>
+    </b>/* 注意：这个枚举控制 ZSTD_d_forceIgnoreChecksum */<b>
     ZSTD_d_validateChecksum = 0,
     ZSTD_d_ignoreChecksum = 1
 } ZSTD_forceIgnoreChecksum_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-    </b>/* Note: this enum and the behavior it controls are effectively internal
-     * implementation details of the compressor. They are expected to continue
-     * to evolve and should be considered only in the context of extremely
-     * advanced performance tuning.
+    </b>/* 注意：这个枚举和它所控制的行为实际上是压缩机的内部实现细节
+     * 预计这些细节将继续发展，只应在极其先进的性能调整的情况下考虑
      *
-     * Zstd currently supports the use of a CDict in three ways:
+     * Zstd 目前支持以三种方式使用 CDict :
      *
-     * - The contents of the CDict can be copied into the working context. This
-     *   means that the compression can search both the dictionary and input
-     *   while operating on a single set of internal tables. This makes
-     *   the compression faster per-byte of input. However, the initial copy of
-     *   the CDict's tables incurs a fixed cost at the beginning of the
-     *   compression. For small compressions (< 8 KB), that copy can dominate
-     *   the cost of the compression.
+     * - CDict 的内容可以复制到工作环境中
+     *   这意味着压缩可以搜索字典和输入，同时在一组内部表上操作
+     *   这使得每字节输入的压缩速度更快，然而，CDict 表的初始副本在压缩
+     *   开始时产生了固定的成本，对于小的压缩（< 8 KB），该副本可能会主导压缩成本
      *
-     * - The CDict's tables can be used in-place. In this model, compression is
-     *   slower per input byte, because the compressor has to search two sets of
-     *   tables. However, this model incurs no start-up cost (as long as the
-     *   working context's tables can be reused). For small inputs, this can be
-     *   faster than copying the CDict's tables.
+     * - CDict 的表可以就地使用，在这种模式下，每个输入字节的压缩速度较慢，
+     *   因为压缩机必须搜索两套表，然而，这种模式不产生启动成本(只要工作上下文的表格可以重复使用)
+     *   对于小的输入，这可以是 比复制CDict的表格更快
      *
-     * - The CDict's tables are not used at all, and instead we use the working
-     *   context alone to reload the dictionary and use params based on the source
-     *   size. See ZSTD_compress_insertDictionary() and ZSTD_compress_usingDict().
-     *   This method is effective when the dictionary sizes are very small relative
-     *   to the input size, and the input size is fairly large to begin with.
+     * - CDict 的表根本没有被使用，相反，我们只使用工作上下文来重新加载字典
+     *   并使用基于源大小的参数，参见ZSTD_compress_insertDictionary() 和 ZSTD_compress_usingDict()
+     *   当字典大小相对于输入大小非常小，而输入大小一开始就相当大时，这个方法是有效的
      *
-     * Zstd has a simple internal heuristic that selects which strategy to use
-     * at the beginning of a compression. However, if experimentation shows that
-     * Zstd is making poor choices, it is possible to override that choice with
-     * this enum.
+     * Zstd 有一个简单的内部启发式方法，可以选择在压缩开始时使用哪种策略
+     * 但是，如果实验表明 Zstd 的选择不对，可以用这个枚举覆盖这个选择
      */<b>
-    ZSTD_dictDefaultAttach = 0, </b>/* Use the default heuristic. */<b>
-    ZSTD_dictForceAttach   = 1, </b>/* Never copy the dictionary. */<b>
-    ZSTD_dictForceCopy     = 2, </b>/* Always copy the dictionary. */<b>
-    ZSTD_dictForceLoad     = 3  </b>/* Always reload the dictionary */<b>
+    ZSTD_dictDefaultAttach = 0, </b>/* 使用默认的启发式 */<b>
+    ZSTD_dictForceAttach   = 1, </b>/* 从不复制字典 */<b>
+    ZSTD_dictForceCopy     = 2, </b>/* 总是复制字典 */<b>
+    ZSTD_dictForceLoad     = 3  </b>/* 总是重载字典 */<b>
 } ZSTD_dictAttachPref_e;
 </b></pre><BR>
 <pre><b>typedef enum {
-  ZSTD_lcm_auto = 0,          </b>/**< Automatically determine the compression mode based on the compression level.
-                               *   Negative compression levels will be uncompressed, and positive compression
-                               *   levels will be compressed. */<b>
-  ZSTD_lcm_huffman = 1,       </b>/**< Always attempt Huffman compression. Uncompressed literals will still be
-                               *   emitted if Huffman compression is not profitable. */<b>
-  ZSTD_lcm_uncompressed = 2   </b>/**< Always emit uncompressed literals. */<b>
+  ZSTD_lcm_auto = 0,          </b>/**< 根据压缩等级自动确定压缩模式，负的压缩级别将不被压缩，正的压缩级别将被压缩 */<b>
+  ZSTD_lcm_huffman = 1,       </b>/**< 总是尝试 Huffman 压缩，如果 Huffman 压缩无利可图，仍会发出未压缩的文字 */<b>
+  ZSTD_lcm_uncompressed = 2   </b>/**< 总是发出未压缩的文字 */<b>
 } ZSTD_literalCompressionMode_e;
 </b></pre><BR>
 <a name="Chapter15"></a><h2>帧大小函数</h2><pre></pre>
 
 <pre><b>unsigned long long ZSTD_findDecompressedSize(const void* src, size_t srcSize);
-</b><p>  `src` should point to the start of a series of ZSTD encoded and/or skippable frames
-  `srcSize` must be the _exact_ size of this series
-       (i.e. there should be a frame boundary at `src + srcSize`)
-  @return : - decompressed size of all data in all successive frames
-            - if the decompressed size cannot be determined: ZSTD_CONTENTSIZE_UNKNOWN
-            - if an error occurred: ZSTD_CONTENTSIZE_ERROR
+</b><p>  `src` 应指向一系列 ZSTD 编码和/或可跳过的帧的开始
+  `srcSize` 必须是这个系列的精确大小
+       (即在 `src + srcSize` 处应该有一个帧边界)
+  @return : - 所有连续帧中所有数据的解压缩大小
+            - 如果不能确定解压后的大小，则使用 ZSTD_CONTENTSIZE_UNKNOWN
+            - 如果发生了错误，那么 ZSTD_CONTENTSIZE_ERROR
 
-   note 1 : decompressed size is an optional field, that may not be present, especially in streaming mode.
-            When `return==ZSTD_CONTENTSIZE_UNKNOWN`, data to decompress could be any size.
-            In which case, it's necessary to use streaming mode to decompress data.
-   note 2 : decompressed size is always present when compression is done with ZSTD_compress()
-   note 3 : decompressed size can be very large (64-bits value),
-            potentially larger than what local system can handle as a single memory segment.
-            In which case, it's necessary to use streaming mode to decompress data.
-   note 4 : If source is untrusted, decompressed size could be wrong or intentionally modified.
-            Always ensure result fits within application's authorized limits.
-            Each application can set its own limits.
-   note 5 : ZSTD_findDecompressedSize handles multiple frames, and so it must traverse the input to
-            read each contained frame header.  This is fast as most of the data is skipped,
-            however it does mean that all frame data must be present and valid.
+   注意1 ： 解压大小是一个可选的字段，可能不存在，特别是在数据流模式下
+           当 `return== ZSTD_CONTENTSIZE_UNKNOWN` 时，要解压的数据可以是任何大小
+           在这种情况下，就需要使用数据流模式来解压数据
+   注意2 ： 当使用 ZSTD_compress() 进行压缩时，解压后的大小总是存在的
+   注意3 ： 解压后的大小可以很大（64-bits值）
+           潜在地大于本地系统所能处理的单个内存段
+           在这种情况下，就需要使用数据流模式来解压数据
+   注意4 ： 如果源是不受信任的，解压大小可能是错误的或故意修改的
+           始终确保结果符合应用程序的授权限制
+           每个应用程序可以设置自己的限制
+   注意5 ： ZSTD_findDecompressedSize 处理多个帧
+           因此它必须遍历输入到 读取每个包含的帧头，这样做的速度很快，因为大部分数据被跳过
+           然而，这确实意味着所有的帧数据必须存在且有效
 </p></pre><BR>
 
 <pre><b>unsigned long long ZSTD_decompressBound(const void* src, size_t srcSize);
-</b><p>  `src` should point to the start of a series of ZSTD encoded and/or skippable frames
-  `srcSize` must be the _exact_ size of this series
-       (i.e. there should be a frame boundary at `src + srcSize`)
-  @return : - upper-bound for the decompressed size of all data in all successive frames
-            - if an error occured: ZSTD_CONTENTSIZE_ERROR
+</b><p>  `src` 应指向一系列 ZSTD 编码和/或可跳过的帧的开始
+  `srcSize`必须是这个系列的精确大小
+       (即`src + srcSize处应该有一个帧边界)
+  @return : - 所有连续帧中所有数据的解压缩大小的上限
+            - 如果发生了错误：ZSTD_CONTENTSIZE_ERROR
 
-  note 1  : an error can occur if `src` contains an invalid or incorrectly formatted frame.
-  note 2  : the upper-bound is exact when the decompressed size field is available in every ZSTD encoded frame of `src`.
-            in this case, `ZSTD_findDecompressedSize` and `ZSTD_decompressBound` return the same value.
-  note 3  : when the decompressed size field isn't available, the upper-bound for that frame is calculated by:
+  注意1：如果`src`包含一个无效的或格式不正确的帧，就会发生错误。
+  注意2：当`src`的每个ZSTD编码帧中都有解压大小字段时，上界是准确的
+            在这种情况下，`ZSTD_findDecompressedSize` 和 `ZSTD_decompressBound` 返回相同的值
+  注意3：当解压大小字段不可用时，该帧的上界由以下方法计算
               upper-bound = # blocks * min(128 KB, Window_Size)
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_frameHeaderSize(const void* src, size_t srcSize);
-</b><p>  srcSize must be >= ZSTD_FRAMEHEADERSIZE_PREFIX.
- @return : size of the Frame Header,
-           or an error code (if srcSize is too small)
+</b><p>  srcSize 必须 >=  ZSTD_FRAMEHEADERSIZE_PREFIX
+ @return : 帧头的大小
+           或一个错误代码（如果srcSize太小）
 </p></pre><BR>
 
 <pre><b>typedef enum {
-  ZSTD_sf_noBlockDelimiters = 0,         </b>/* Representation of ZSTD_Sequence has no block delimiters, sequences only */<b>
-  ZSTD_sf_explicitBlockDelimiters = 1    </b>/* Representation of ZSTD_Sequence contains explicit block delimiters */<b>
+  ZSTD_sf_noBlockDelimiters = 0,         </b>/* ZSTD_Sequence 的表示方式没有块定界符，只有序列 */<b>
+  ZSTD_sf_explicitBlockDelimiters = 1    </b>/* ZSTD_Sequence 的表示方式包含明确的区块定界符 */<b>
 } ZSTD_sequenceFormat_e;
 </b></pre><BR>
 <pre><b></b><p> Generate sequences using ZSTD_compress2, given a source buffer.
