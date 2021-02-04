@@ -190,144 +190,146 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 </b></pre><BR>
 <pre><b>typedef enum {
 
-    </b>/* compression ZSTD_compressionParameters
-     * Note: When compressing with a ZSTD_CDict these parameters are superseded
-     * by the parameters used to construct the ZSTD_CDict.
-     * See ZSTD_CCtx_refCDict() for more info (superseded-by-cdict). */<b>
-    ZSTD_c_compressionLevel=100, </b>/* Set compression parameters according to pre-defined cLevel table.
-                              * Note that exact compression parameters are dynamically determined,
-                              * depending on both compression level and srcSize (when known).
-                              * Default level is ZSTD_CLEVEL_DEFAULT==3.
-                              * Special: value 0 means default, which is controlled by ZSTD_CLEVEL_DEFAULT.
-                              * Note 1 : it's possible to pass a negative compression level.
-                              * Note 2 : setting a level does not automatically set all other compression parameters
-                              *   to default. Setting this will however eventually dynamically impact the compression
-                              *   parameters which have not been manually set. The manually set
-                              *   ones will 'stick'. */
-    /* Advanced compression parameters :
-     * It's possible to pin down compression parameters to some specific values.
-     * In which case, these values are no longer dynamically selected by the compressor */<b>
-    ZSTD_c_windowLog=101,    </b>/* Maximum allowed back-reference distance, expressed as power of 2.
-                              * This will set a memory budget for streaming decompression,
-                              * with larger values requiring more memory
-                              * and typically compressing more.
-                              * Must be clamped between ZSTD_WINDOWLOG_MIN and ZSTD_WINDOWLOG_MAX.
-                              * Special: value 0 means "use default windowLog".
-                              * Note: Using a windowLog greater than ZSTD_WINDOWLOG_LIMIT_DEFAULT
-                              *       requires explicitly allowing such size at streaming decompression stage. */<b>
-    ZSTD_c_hashLog=102,      </b>/* Size of the initial probe table, as a power of 2.
-                              * Resulting memory usage is (1 << (hashLog+2)).
-                              * Must be clamped between ZSTD_HASHLOG_MIN and ZSTD_HASHLOG_MAX.
-                              * Larger tables improve compression ratio of strategies <= dFast,
-                              * and improve speed of strategies > dFast.
-                              * Special: value 0 means "use default hashLog". */<b>
-    ZSTD_c_chainLog=103,     </b>/* Size of the multi-probe search table, as a power of 2.
-                              * Resulting memory usage is (1 << (chainLog+2)).
-                              * Must be clamped between ZSTD_CHAINLOG_MIN and ZSTD_CHAINLOG_MAX.
-                              * Larger tables result in better and slower compression.
-                              * This parameter is useless for "fast" strategy.
-                              * It's still useful when using "dfast" strategy,
-                              * in which case it defines a secondary probe table.
-                              * Special: value 0 means "use default chainLog". */<b>
-    ZSTD_c_searchLog=104,    </b>/* Number of search attempts, as a power of 2.
-                              * More attempts result in better and slower compression.
-                              * This parameter is useless for "fast" and "dFast" strategies.
-                              * Special: value 0 means "use default searchLog". */<b>
-    ZSTD_c_minMatch=105,     </b>/* Minimum size of searched matches.
-                              * Note that Zstandard can still find matches of smaller size,
-                              * it just tweaks its search algorithm to look for this size and larger.
-                              * Larger values increase compression and decompression speed, but decrease ratio.
-                              * Must be clamped between ZSTD_MINMATCH_MIN and ZSTD_MINMATCH_MAX.
-                              * Note that currently, for all strategies < btopt, effective minimum is 4.
-                              *                    , for all strategies > fast, effective maximum is 6.
-                              * Special: value 0 means "use default minMatchLength". */<b>
-    ZSTD_c_targetLength=106, </b>/* Impact of this field depends on strategy.
-                              * For strategies btopt, btultra & btultra2:
-                              *     Length of Match considered "good enough" to stop search.
-                              *     Larger values make compression stronger, and slower.
-                              * For strategy fast:
-                              *     Distance between match sampling.
-                              *     Larger values make compression faster, and weaker.
-                              * Special: value 0 means "use default targetLength". */<b>
-    ZSTD_c_strategy=107,     </b>/* See ZSTD_strategy enum definition.
-                              * The higher the value of selected strategy, the more complex it is,
-                              * resulting in stronger and slower compression.
-                              * Special: value 0 means "use default strategy". */<b>
+    </b>/* 压缩 ZSTD_compressionParameters (压缩参数)
+     * 注意：当使用 ZSTD_CDict 压缩时，这些参数将被取代
+     * 由用于构造 ZSTD_CDict 的参数决定
+     * 更多信息请参见 ZSTD_CCtx_refCDict() (superseded-by-cdict). */<b>
+    ZSTD_c_compressionLevel=100,</b>/* 根据预先定义的 cLevel 表设置压缩参数
+                                  * 注意，确切的压缩参数是动态确定的
+                                  * 取决于压缩级别和 srcSize（已知时）
+                                  * 默认级别是 ZSTD_CLEVEL_DEFAULT==3
+                                  * 特殊情况：值 0 表示默认，由 ZSTD_CLEVEL_DEFAULT 控制
+                                  * 注1 : 可以通过负压缩级别
+                                  * 注2 : 设置一个级别并不会自动设置所有其他压缩参数
+                                  *   设置为默认值。 但是，设置这个等级最终会动态地影响那些没有手动设置的压缩参数
+                                  *   手动设置的那些会 'stick' */
+    /* 高级压缩参数 :
+     * 可以将压缩参数固定为一些特定的值，在这种情况下，压缩器不再动态地选择这些值 */<b>
+    ZSTD_c_windowLog=101,   </b>/* 允许的最大反向参考距离，用2的幂表示
+                              * 这将设置数据流解压缩的内存预算,
+                              * 较大的数值需要更多的内存，而且通常压缩得更多
+                              * 必须控制在 ZSTD_WINDOWLOG_MIN 和ZSTD_WINDOWLOG_MAX 之间
+                              * 特殊：值 0 表示 "使用默认的 windowLog"
+                              * 注意：使用大于 ZSTD_WINDOWLOG_LIMIT_DEFAULT 的 windowLog
+                              *       需要在数据流解压缩阶段明确允许这种大小 */<b>
+    ZSTD_c_hashLog=102,
+                             </b>/* 初始探测表的大小，为2的幂
+                              * 结果内存使用量为 (1 << (hashLog+2))
+                              * 必须介于 ZSTD_HASHLOG_MIN 和 ZSTD_HASHLOG_MAX之间
+                              * 较大的表可以提高策略的压缩比 <= dFast,
+                              * 并提高策略的速度 > dFast
+                              * 特别：值 0 表示 "使用默认的 hashLog" */<b>
+    ZSTD_c_chainLog=103,    </b>/* 多探针搜索表的大小，2的幂。
+                              * 结果内存使用量为 (1 << (chainLog+2))
+                              * 必须介于 ZSTD_CHAINLOG_MIN 和ZSTD_CHAINLOG_MAX 之间
+                              * 表越大，压缩效果越好，速度越慢
+                              * 这个参数对于 "fast" 策略是没有用的
+                              * 当使用 "dfast" 策略时，这个参数仍然有用
+                              * 在这种情况下，它定义了一个二级探针表。
+                              * 特别：值 0 表示 "使用默认的 chainLog" */<b>
+    ZSTD_c_searchLog=104,   </b>/* 搜索尝试的次数，是2的幂
+                              * 尝试次数越多，压缩效果越好，速度越慢
+                              * 这个参数对于 "fast" 和 "dFast" 策略没有用
+                              * 特殊：值 0 表示 "使用默认的 searchLog" */<b>
+    ZSTD_c_minMatch=105,    </b>/* 搜索到的匹配项的最小尺寸
+                              * 注意，Zstandard 仍然可以找到较小尺寸的匹配
+                              * 它只是调整其搜索算法来寻找这个尺寸和更大的尺寸
+                              * 较大的值会增加压缩和解压速度，但会降低比率
+                              * 必须介于 ZSTD_MINMATCH_MIN 和ZSTD_MINMATCH_MAX 之间
+                              * 注意，目前对于所有策略 < btopt，有效最小值为 4
+                              * 对于所有 > fast 的策略，有效的最大值是 6
+                              * 特殊：值 0 表示 "使用默认的 minMatchLength" */<b>
+    ZSTD_c_targetLength=106,</b>/* 该字段的影响取决于策略
+                              * 对于策略 btop、btultra 和 btultra2：
+                              *     匹配的长度被认为 "足够好" 而停止搜索.
+                              *     值越大，压缩越强，速度越慢
+                              * 对于 fast 策略：
+                              *     匹配采样之间的距离
+                              *     值越大，压缩越快，比率越小
+                              * 特殊：值 0 表示 "使用默认的targetLength" */<b>
+    ZSTD_c_strategy=107,    </b>/* 参见 ZSTD_strategy 枚举定义
+                              * 所选策略的值越高，越复杂
+                              * 导致压缩更强，速度更慢
+                              * 特别：值 0 表示 "使用默认 strategy" */<b>
 
-    </b>/* LDM mode parameters */<b>
-    ZSTD_c_enableLongDistanceMatching=160, </b>/* Enable long distance matching.
-                                     * This parameter is designed to improve compression ratio
-                                     * for large inputs, by finding large matches at long distance.
-                                     * It increases memory usage and window size.
-                                     * Note: enabling this parameter increases default ZSTD_c_windowLog to 128 MB
-                                     * except when expressly set to a different value.
-                                     * Note: will be enabled by default if ZSTD_c_windowLog >= 128 MB and
-                                     * compression strategy >= ZSTD_btopt (== compression level 16+) */<b>
-    ZSTD_c_ldmHashLog=161,   </b>/* Size of the table for long distance matching, as a power of 2.
-                              * Larger values increase memory usage and compression ratio,
-                              * but decrease compression speed.
-                              * Must be clamped between ZSTD_HASHLOG_MIN and ZSTD_HASHLOG_MAX
-                              * default: windowlog - 7.
-                              * Special: value 0 means "automatically determine hashlog". */<b>
-    ZSTD_c_ldmMinMatch=162,  </b>/* Minimum match size for long distance matcher.
-                              * Larger/too small values usually decrease compression ratio.
-                              * Must be clamped between ZSTD_LDM_MINMATCH_MIN and ZSTD_LDM_MINMATCH_MAX.
-                              * Special: value 0 means "use default value" (default: 64). */<b>
-    ZSTD_c_ldmBucketSizeLog=163, </b>/* Log size of each bucket in the LDM hash table for collision resolution.
-                              * Larger values improve collision resolution but decrease compression speed.
-                              * The maximum value is ZSTD_LDM_BUCKETSIZELOG_MAX.
-                              * Special: value 0 means "use default value" (default: 3). */<b>
-    ZSTD_c_ldmHashRateLog=164, </b>/* Frequency of inserting/looking up entries into the LDM hash table.
-                              * Must be clamped between 0 and (ZSTD_WINDOWLOG_MAX - ZSTD_HASHLOG_MIN).
-                              * Default is MAX(0, (windowLog - ldmHashLog)), optimizing hash table usage.
-                              * Larger values improve compression speed.
-                              * Deviating far from default value will likely result in a compression ratio decrease.
-                              * Special: value 0 means "automatically determine hashRateLog". */<b>
+    </b>/* LDM 模式参数 */<b>
+    ZSTD_c_enableLongDistanceMatching=160,
+                             </b>/* 启用长距离匹配
+                              * 此参数是为了提高压缩比而设计的
+                              * 对于大的输入，通过在远距离寻找大的匹配
+                              * 它增加了内存使用和窗口大小
+                              * 注意：启用该参数会使默认的 ZSTD_c_windowLog 增加到128 MB
+                              * 除非明确设置了不同的值
+                              * 注意：如果 ZSTD_c_windowLog >= 128 MB 且
+                              * 压缩策略 >= ZSTD_btopt (压缩级别16+)，则默认启用 */<b>
+    ZSTD_c_ldmHashLog=161,  </b>/* 长距离匹配表的大小，为2的幂
+                              * 值越大，内存使用量和压缩比率越大
+                              * 但会降低压缩速度
+                              * 必须介于 ZSTD_HASHLOG_MIN和ZSTD_HASHLOG_MAX 之间
+                              * 默认：windowlog - 7。
+                              * 特殊：值 0 表示 "自动确定 hashlog" */<b>
+    ZSTD_c_ldmMinMatch=162, </b>/* 长距离匹配的最小匹配大小
+                              * 太大或太小的值通常会降低压缩比率
+                              * 必须介于 ZSTD_LDM_MINMATCH_MIN 和 ZSTD_LDM_MINMATCH_MAX 之间
+                              * 特殊：值 0 表示 "使用默认值"（默认值：64） */<b>
+    ZSTD_c_ldmBucketSizeLog=163,
+                             </b>/* LDM 哈希表中每个 Bucket 的对数大小，用于解决碰撞问题
+                              * 较大的值可以提高碰撞分辨率，但会降低压缩速度
+                              * 最大值是 ZSTD_LDM_BUCKETSIZELOG_MAX
+                              * 特殊：值 0 表示 "使用默认值"（默认值：3） */<b>
+    ZSTD_c_ldmHashRateLog=164,
+                             </b>/* 在 LDM 哈希表中插入 / 查找条目的频率
+                              * 必须介于 0 和 (ZSTD_WINDOWLOG_MAX - ZSTD_HASHLOG_MIN).
+                              * 默认值是 MAX(0, (windowLog - ldmHashLog))，优化哈希表的使用
+                              * 值越大，压缩速度越快
+                              * 如果远远偏离默认值，很可能会导致压缩率下降
+                              * 特殊：值 0 表示 "自动确定hashRateLog" */<b>
 
-    </b>/* frame parameters */<b>
-    ZSTD_c_contentSizeFlag=200, </b>/* Content size will be written into frame header _whenever known_ (default:1)
-                              * Content size must be known at the beginning of compression.
-                              * This is automatically the case when using ZSTD_compress2(),
-                              * For streaming scenarios, content size must be provided with ZSTD_CCtx_setPledgedSrcSize() */<b>
-    ZSTD_c_checksumFlag=201, </b>/* A 32-bits checksum of content is written at end of frame (default:0) */<b>
-    ZSTD_c_dictIDFlag=202,   </b>/* When applicable, dictionary's ID is written into frame header (default:1) */<b>
+    </b>/* 帧参数 */<b>
+    ZSTD_c_contentSizeFlag=200,
+                             </b>/* 内容大小将被写入帧头 _whenever known_ (默认:1)
+                              * 内容大小必须在压缩开始时就知道
+                              * 当使用 ZSTD_compress2() 时，会自动知道内容大小
+                              * 对于数据流方案，必须用ZSTD_CCtx_setPledgedSrcSize() 提供内容大小 */<b>
+    ZSTD_c_checksumFlag=201,</b>/* 32-bits 的内容校验和被写入到帧尾（默认：0） */<b>
+    ZSTD_c_dictIDFlag=202,  </b>/* 当适用时，字典的ID被写入帧头（默认：1） */<b>
 
-    </b>/* multi-threading parameters */<b>
-    </b>/* These parameters are only active if multi-threading is enabled (compiled with build macro ZSTD_MULTITHREAD).
-     * Otherwise, trying to set any other value than default (0) will be a no-op and return an error.
-     * In a situation where it's unknown if the linked library supports multi-threading or not,
-     * setting ZSTD_c_nbWorkers to any value >= 1 and consulting the return value provides a quick way to check this property.
+    </b>/* 多线程参数 */<b>
+    </b>/* 这些参数只有在启用多线程的情况下才会被激活（用编译宏 ZSTD_MULTITHREAD 编译）
+     * 否则，试图设置默认值 (0) 以外的任何其他值都是不可能的，并返回一个错误
+     * 在不知道链接库是否支持多线程的情况下
+     * 将 ZSTD_c_nbWorkers 设置为任何 >=1 的值，并查看返回值，可以快速检查该属性
      */<b>
-    ZSTD_c_nbWorkers=400,    </b>/* Select how many threads will be spawned to compress in parallel.
-                              * When nbWorkers >= 1, triggers asynchronous mode when invoking ZSTD_compressStream*() :
-                              * ZSTD_compressStream*() consumes input and flush output if possible, but immediately gives back control to caller,
-                              * while compression is performed in parallel, within worker thread(s).
-                              * (note : a strong exception to this rule is when first invocation of ZSTD_compressStream2() sets ZSTD_e_end :
-                              *  in which case, ZSTD_compressStream2() delegates to ZSTD_compress2(), which is always a blocking call).
-                              * More workers improve speed, but also increase memory usage.
-                              * Default value is `0`, aka "single-threaded mode" : no worker is spawned,
-                              * compression is performed inside Caller's thread, and all invocations are blocking */<b>
-    ZSTD_c_jobSize=401,      </b>/* Size of a compression job. This value is enforced only when nbWorkers >= 1.
-                              * Each compression job is completed in parallel, so this value can indirectly impact the nb of active threads.
-                              * 0 means default, which is dynamically determined based on compression parameters.
-                              * Job size must be a minimum of overlap size, or 1 MB, whichever is largest.
-                              * The minimum size is automatically and transparently enforced. */<b>
-    ZSTD_c_overlapLog=402,   </b>/* Control the overlap size, as a fraction of window size.
-                              * The overlap size is an amount of data reloaded from previous job at the beginning of a new job.
-                              * It helps preserve compression ratio, while each job is compressed in parallel.
-                              * This value is enforced only when nbWorkers >= 1.
-                              * Larger values increase compression ratio, but decrease speed.
-                              * Possible values range from 0 to 9 :
-                              * - 0 means "default" : value will be determined by the library, depending on strategy
-                              * - 1 means "no overlap"
-                              * - 9 means "full overlap", using a full window size.
-                              * Each intermediate rank increases/decreases load size by a factor 2 :
-                              * 9: full window;  8: w/2;  7: w/4;  6: w/8;  5:w/16;  4: w/32;  3:w/64;  2:w/128;  1:no overlap;  0:default
-                              * default value varies between 6 and 9, depending on strategy */<b>
+    ZSTD_c_nbWorkers=400,   </b>/* 选择产生多少个线程来并行压缩
+                              * 当 nbWorkers >= 1 时，当调用 ZSTD_compressStream*() 时触发异步模式
+                              * ZSTD_compressStream*() 会消耗输入并尽可能地刷新输出，但会立即将控制权还给调用者
+                              * 而压缩是在工作线程中并行进行的
+                              * (注意：这个规则的一个强烈的例外是当第一次调用ZSTD_compressStream2() 设置 ZSTD_e_end 时
+                              * 在这种情况下，ZSTD_compressStream2()  委托给 ZSTD_compress2()，而 ZSTD_compress2() 总是一个阻塞调用）
+                              * 更多的 workers 提高了速度，但也增加了内存使用量
+                              * 默认值是 `0`，也就是 "单线程模式"：不产生任何 worker
+                              * 压缩是在 Caller 的线程中进行的，所有的调用都是阻塞的 */<b>
+    ZSTD_c_jobSize=401,     </b>/* 压缩作业的大小，只有当 nbWorkers >= 1 时，这个值才会被强制执行
+                              * 每个压缩作业都是并行完成的，所以这个值会间接影响活动线程的数量。
+                              * 0 表示默认值，该值根据压缩参数动态确定
+                              * 作业大小必须是重叠大小的最小值，或 1MB，以最大值为准
+                              * 最小尺寸是自动透明地执行的 */<b>
+    ZSTD_c_overlapLog=402,  </b>/* 控制重叠大小，作为窗口大小的一部分
+                              * 重叠大小是指在新作业开始时，从上一个作业重新加载的数据量
+                              * 当每个作业被并行压缩时，它有助于保持压缩率
+                              * 该值仅在 nbWorkers >= 1 时执行
+                              * 该值越大，压缩比率越高，但速度越低
+                              * 可能的值范围是0到9：
+                              * - 0 表示 "默认值"：该值将由库决定，取决于策略
+                              * - 1 表示 "无重叠"。
+                              * - 9 表示 "完全重叠"，使用全窗口大小。
+                              * 每一个中间等级增加/减少一个系数2的负荷大小。
+                              * 9：全窗口；8：w/2；7：w/4；6：w/8；5：w/16；4：w/32；3：w/64；2：w/128；1：无重叠；0：默认
+                              * 默认值在6和9之间，取决于策略 */<b>
 
-    </b>/* note : additional experimental parameters are also available
-     * within the experimental section of the API.
-     * At the time of this writing, they include :
+    </b>/* 注意：也可提供其他实验参数
+     * 在API的实验部分
+     * 在编写本报告时，它们包括 :
      * ZSTD_c_rsyncable
      * ZSTD_c_format
      * ZSTD_c_forceMaxWindow
@@ -340,9 +342,9 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
      * ZSTD_c_stableOutBuffer
      * ZSTD_c_blockDelimiters
      * ZSTD_c_validateSequences
-     * Because they are not stable, it's necessary to define ZSTD_STATIC_LINKING_ONLY to access them.
-     * note : never ever use experimentalParam? names directly;
-     *        also, the enums values themselves are unstable and can still change.
+     * 因为它们不稳定，所以需要定义ZSTD_STATIC_LINKING_ONLY 来访问它们
+     * 注意：千万不要直接使用 experimentalParam 的名字
+     *      另外，枚举值本身也是不稳定的，仍然可能改变
      */<b>
      ZSTD_c_experimentalParam1=500,
      ZSTD_c_experimentalParam2=10,
@@ -365,41 +367,40 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 } ZSTD_bounds;
 </b></pre><BR>
 <pre><b>ZSTD_bounds ZSTD_cParam_getBounds(ZSTD_cParameter cParam);
-</b><p>  All parameters must belong to an interval with lower and upper bounds,
-  otherwise they will either trigger an error or be automatically clamped.
- @return : a structure, ZSTD_bounds, which contains
-         - an error status field, which must be tested using ZSTD_isError()
-         - lower and upper bounds, both inclusive
+</b><p>  所有参数必须属于一个有下限和上限的区间，否则它们会触发一个错误或被自动夹紧
+  @return : 一个 ZSTD_bounds 结构体，其中包含了
+         - 一个错误状态字段，必须使用 ZSTD_isError() 测试
+         - 下限和上限，包括在内
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_CCtx_setParameter(ZSTD_CCtx* cctx, ZSTD_cParameter param, int value);
-</b><p>  Set one compression parameter, selected by enum ZSTD_cParameter.
-  All parameters have valid bounds. Bounds can be queried using ZSTD_cParam_getBounds().
-  Providing a value beyond bound will either clamp it, or trigger an error (depending on parameter).
-  Setting a parameter is generally only possible during frame initialization (before starting compression).
-  Exception : when using multi-threading mode (nbWorkers >= 1),
-              the following parameters can be updated _during_ compression (within same frame):
-              => compressionLevel, hashLog, chainLog, searchLog, minMatch, targetLength and strategy.
-              new parameters will be active for next job only (after a flush()).
- @return : an error code (which can be tested using ZSTD_isError()).
+</b><p>  设置一个压缩参数，由 enum ZSTD_cParameter 选择
+  所有的参数都具有有效的边界，可以使用 ZSTD_cParam_getBounds() 查询边界
+  提供一个超出边界的值将会限制它，或者触发一个错误（取决于参数）
+  一般来说，只有在帧初始化的时候（开始压缩之前）才可以设置参数
+  例外情况：当使用多线程模式时（nbWorkers >= 1）
+              以下参数可以在压缩过程中更新（在同一帧内）
+              => 压缩级别、哈希值、链值、搜索值、minMatch、目标长度和策略
+              新的参数只在下一个作业中有效（在 flush() 之后）
+ @return : 一个错误代码 (可以使用 ZSTD_isError() 来测试)
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_CCtx_setPledgedSrcSize(ZSTD_CCtx* cctx, unsigned long long pledgedSrcSize);
-</b><p>  Total input data size to be compressed as a single frame.
-  Value will be written in frame header, unless if explicitly forbidden using ZSTD_c_contentSizeFlag.
-  This value will also be controlled at end of frame, and trigger an error if not respected.
- @result : 0, or an error code (which can be tested with ZSTD_isError()).
-  Note 1 : pledgedSrcSize==0 actually means zero, aka an empty frame.
-           In order to mean "unknown content size", pass constant ZSTD_CONTENTSIZE_UNKNOWN.
-           ZSTD_CONTENTSIZE_UNKNOWN is default value for any new frame.
-  Note 2 : pledgedSrcSize is only valid once, for the next frame.
-           It's discarded at the end of the frame, and replaced by ZSTD_CONTENTSIZE_UNKNOWN.
-  Note 3 : Whenever all input data is provided and consumed in a single round,
-           for example with ZSTD_compress2(),
-           or invoking immediately ZSTD_compressStream2(,,,ZSTD_e_end),
-           this value is automatically overridden by srcSize instead.
+</b><p>  要压缩成单帧的总输入数据大小
+  该值将被写入帧头，除非使用 ZSTD_c_contentSizeFlag 明确禁止
+  这个值也会在帧结束时被控制，如果不被遵守，会触发一个错误
+ @result : 0，或者一个错误代码 (可以用 ZSTD_isError() 测试)
+  注1 : pledgedSrcSize==0 实际上意味着 0，也就是一个空帧
+           为了表示 "未知内容大小"，传递常量 ZSTD_CONTENTSIZE_UNKNOWN
+           ZSTD_CONTENTSIZE_UNKNOWN 是任何新帧的默认值
+  注2 : pledgedSrcSize 只对下一帧有效一次
+           它在帧结束时被丢弃，并由 ZSTD_CONTENTSIZE_UNKNOWN 代替
+  注3 : 每当所有的输入数据在一个回合内提供和消耗时
+           例如使用 ZSTD_compress2()
+           或立即调用 ZSTD_compressStream2(,,ZSTD_e_end)。
+           这个值会自动被 srcSize 覆盖
 
 </p></pre><BR>
 
@@ -410,32 +411,33 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 } ZSTD_ResetDirective;
 </b></pre><BR>
 <pre><b>size_t ZSTD_CCtx_reset(ZSTD_CCtx* cctx, ZSTD_ResetDirective reset);
-</b><p>  There are 2 different things that can be reset, independently or jointly :
-  - The session : will stop compressing current frame, and make CCtx ready to start a new one.
-                  Useful after an error, or to interrupt any ongoing compression.
-                  Any internal data not yet flushed is cancelled.
-                  Compression parameters and dictionary remain unchanged.
-                  They will be used to compress next frame.
-                  Resetting session never fails.
-  - The parameters : changes all parameters back to "default".
-                  This removes any reference to any dictionary too.
-                  Parameters can only be changed between 2 sessions (i.e. no compression is currently ongoing)
-                  otherwise the reset fails, and function returns an error value (which can be tested using ZSTD_isError())
-  - Both : similar to resetting the session, followed by resetting parameters.
+</b><p>  有2种不同的东西可以被重置，独立或联合：
+  - 会话：将停止压缩当前帧，并使 CCtx 准备开始一个新的帧
+          在出错后很有用，或者中断任何正在进行的压缩
+          任何尚未刷新的内部数据都会被取消
+          压缩参数和字典保持不变
+          它们将被用于压缩下一帧
+          重置会话永远不会失败
+  - 参数：将所有参数恢复到 "默认值"
+          这也会删除对任何字典的引用
+          参数只能在两个会话之间更改（即当前没有进行压缩）
+          否则复位失败，函数返回一个错误值(可以使用 ZSTD_isError() 来测试)
+  - 两者：类似于重置会话，然后重置参数
+
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_compress2( ZSTD_CCtx* cctx,
                        void* dst, size_t dstCapacity,
                  const void* src, size_t srcSize);
-</b><p>  Behave the same as ZSTD_compressCCtx(), but compression parameters are set using the advanced API.
-  ZSTD_compress2() always starts a new frame.
-  Should cctx hold data from a previously unfinished frame, everything about it is forgotten.
-  - Compression parameters are pushed into CCtx before starting compression, using ZSTD_CCtx_set*()
-  - The function is always blocking, returns when compression is completed.
-  Hint : compression runs faster if `dstCapacity` >=  `ZSTD_compressBound(srcSize)`.
- @return : compressed size written into `dst` (<= `dstCapacity),
-           or an error code if it fails (which can be tested using ZSTD_isError()).
+</b><p>  与 ZSTD_compressCCtx() 的行为相同，但压缩参数是用高级API设置的
+  ZSTD_compress2() 总是开始一个新的帧
+  如果 cctx 保存了之前未完成的帧的数据，那么关于它的一切都会被遗忘
+  - 在开始压缩之前，压缩参数会被推送到 CCtx 中，使用ZSTD_CCtx_set*()
+  - 该函数始终处于阻塞状态，压缩完成后返回
+  提示：如果 `dstCapacity`>= `ZSTD_compressBound(srcSize)`，压缩运行更快
+ @return : 压缩后的大小写入`dst` (<= `dstCapacity)。
+           如果失败，则返回一个错误代码（可以使用ZSTD_isError() 来测试）
 
 </p></pre><BR>
 
@@ -443,21 +445,21 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 
 <pre><b>typedef enum {
 
-    ZSTD_d_windowLogMax=100, </b>/* Select a size limit (in power of 2) beyond which
-                              * the streaming API will refuse to allocate memory buffer
-                              * in order to protect the host from unreasonable memory requirements.
-                              * This parameter is only useful in streaming mode, since no internal buffer is allocated in single-pass mode.
-                              * By default, a decompression context accepts window sizes <= (1 << ZSTD_WINDOWLOG_LIMIT_DEFAULT).
-                              * Special: value 0 means "use default maximum windowLog". */<b>
+    ZSTD_d_windowLogMax=100,</b>/* 选择一个尺寸限制（以2的幂为单位），超过这个限制，则
+                              * 数据流 API 将拒绝分配内存缓冲区
+                              * 为了保护主机免受不合理的内存需求
+                              * 这个参数只有在数据流模式下才有用，因为在单程模式下没有分配内部缓冲区
+                              * 默认情况下，解压上下文接受的窗口大小 <= (1 << ZSTD_WINDOWLOG_LIMIT_DEFAULT)
+                              * 特殊：值 0 表示 "使用默认的最大windowLog" */<b>
 
-    </b>/* note : additional experimental parameters are also available
-     * within the experimental section of the API.
-     * At the time of this writing, they include :
+    </b>/* 注意：也可提供其他实验参数
+     * 在API的实验部分。
+     * 在编写本报告时，它们包括:
      * ZSTD_d_format
      * ZSTD_d_stableOutBuffer
      * ZSTD_d_forceIgnoreChecksum
-     * Because they are not stable, it's necessary to define ZSTD_STATIC_LINKING_ONLY to access them.
-     * note : never ever use experimentalParam? names directly
+     * 因为它们不稳定，所以需要定义ZSTD_STATIC_LINKING_ONLY 来访问它们
+     * 注意：永远不要直接使用 experimentalParam 的名字
      */<b>
      ZSTD_d_experimentalParam1=1000,
      ZSTD_d_experimentalParam2=1001,
@@ -466,106 +468,100 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 } ZSTD_dParameter;
 </b></pre><BR>
 <pre><b>ZSTD_bounds ZSTD_dParam_getBounds(ZSTD_dParameter dParam);
-</b><p>  All parameters must belong to an interval with lower and upper bounds,
-  otherwise they will either trigger an error or be automatically clamped.
- @return : a structure, ZSTD_bounds, which contains
-         - an error status field, which must be tested using ZSTD_isError()
-         - both lower and upper bounds, inclusive
+</b><p>  所有参数必须属于一个有下限和上限的区间
+  否则它们会触发一个错误或被自动夹紧
+ @return : 一个 ZSTD_bounds 结构体，其中包含了
+         - 一个错误状态字段，必须使用 ZSTD_isError() 进行测试
+         - 上下限
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_DCtx_setParameter(ZSTD_DCtx* dctx, ZSTD_dParameter param, int value);
-</b><p>  Set one compression parameter, selected by enum ZSTD_dParameter.
-  All parameters have valid bounds. Bounds can be queried using ZSTD_dParam_getBounds().
-  Providing a value beyond bound will either clamp it, or trigger an error (depending on parameter).
-  Setting a parameter is only possible during frame initialization (before starting decompression).
- @return : 0, or an error code (which can be tested using ZSTD_isError()).
+</b><p>  设置一个压缩参数，由 enum ZSTD_dParameter 选择
+  所有的参数都有有效的边界，可以使用ZSTD_dParam_getBounds() 查询边界
+  提供一个超出边界的值将会限制它，或者触发一个错误（取决于参数）
+  只有在帧初始化时(在开始解压之前)才可以设置一个参数
+ 返回 : 0，或者一个错误代码(可以用 ZSTD_isError() 来测试)
 
 </p></pre><BR>
 
 <pre><b>size_t ZSTD_DCtx_reset(ZSTD_DCtx* dctx, ZSTD_ResetDirective reset);
-</b><p>  Return a DCtx to clean state.
-  Session and parameters can be reset jointly or separately.
-  Parameters can only be reset when no active frame is being decompressed.
- @return : 0, or an error code, which can be tested with ZSTD_isError()
+</b><p>  重置 DCtx 到干净状态
+  会话和参数可以联合或单独复位
+  只有当没有活动帧被解压时，参数才能被重置
+ 返回 : 0，或者一个错误代码，可以用 ZSTD_isError() 测试
 
 </p></pre><BR>
 
 <a name="Chapter7"></a><h2>数据流</h2><pre></pre>
 
 <pre><b>typedef struct ZSTD_inBuffer_s {
-  const void* src;    </b>/**< start of input buffer */<b>
-  size_t size;        </b>/**< size of input buffer */<b>
-  size_t pos;         </b>/**< position where reading stopped. Will be updated. Necessarily 0 <= pos <= size */<b>
+  const void* src;    </b>/**< 输入缓冲区的开始 */<b>
+  size_t size;        </b>/**< 输入缓冲区的大小 */<b>
+  size_t pos;         </b>/**< 读取停止的位置，会被更新。必然是 0 <= pos <= size */<b>
 } ZSTD_inBuffer;
 </b></pre><BR>
 <pre><b>typedef struct ZSTD_outBuffer_s {
-  void*  dst;         </b>/**< start of output buffer */<b>
-  size_t size;        </b>/**< size of output buffer */<b>
-  size_t pos;         </b>/**< position where writing stopped. Will be updated. Necessarily 0 <= pos <= size */<b>
+  void*  dst;         </b>/**< 输出缓冲区的开始 */<b>
+  size_t size;        </b>/**< 输出缓冲区的大小 */<b>
+  size_t pos;         </b>/**< 写入停止的位置，会被更新。必然是 0 <= pos <= size */<b>
 } ZSTD_outBuffer;
 </b></pre><BR>
 <a name="Chapter8"></a><h2>数据流压缩 - HowTo</h2><pre>
-  A ZSTD_CStream object is required to track streaming operation.
-  Use ZSTD_createCStream() and ZSTD_freeCStream() to create/release resources.
-  ZSTD_CStream objects can be reused multiple times on consecutive compression operations.
-  It is recommended to re-use ZSTD_CStream since it will play nicer with system's memory, by re-using already allocated memory.
+  需要一个 ZSTD_CStream 对象来跟踪数据流操作
+  使用 ZSTD_createCStream() 和 ZSTD_freeCStream() 来创建/释放资源
+  ZSTD_CStream 对象可以在连续的压缩操作中重复使用多次
+  建议重复使用 ZSTD_CStream，因为它可以重复使用已经分配的内存，从而更好地利用系统的内存
 
-  For parallel execution, use one separate ZSTD_CStream per thread.
+  对于并行执行，每个线程使用一个单独的ZSTD_CStream
 
-  note : since v1.3.0, ZSTD_CStream and ZSTD_CCtx are the same thing.
+  注意：从v1.3.0开始，ZSTD_CStream 和 ZSTD_CCtx 是一回事
 
-  Parameters are sticky : when starting a new compression on the same context,
-  it will re-use the same sticky parameters as previous compression session.
-  When in doubt, it's recommended to fully initialize the context before usage.
-  Use ZSTD_CCtx_reset() to reset the context and ZSTD_CCtx_setParameter(),
-  ZSTD_CCtx_setPledgedSrcSize(), or ZSTD_CCtx_loadDictionary() and friends to
-  set more specific parameters, the pledged source size, or load a dictionary.
+  参数是粘性的：当在同一上下文上启动新的压缩时
+  它将重新使用与之前压缩会话相同的粘性参数
+  当有疑问时，建议在使用前完全初始化上下文
+  使用 ZSTD_CCtx_reset() 和 ZSTD_CCtx_setParameter() 来重置上下文
+  ZSTD_CCtx_setPledgedSrcSize()，或 ZSTD_CCtx_loadDictionary()
+  和其他函数设置更具体的参数，保证源大小，或者加载字典
 
-  Use ZSTD_compressStream2() with ZSTD_e_continue as many times as necessary to
-  consume input stream. The function will automatically update both `pos`
-  fields within `input` and `output`.
-  Note that the function may not consume the entire input, for example, because
-  the output buffer is already full, in which case `input.pos < input.size`.
-  The caller must check if input has been entirely consumed.
-  If not, the caller must make some room to receive more compressed data,
-  and then present again remaining input data.
-  note: ZSTD_e_continue is guaranteed to make some forward progress when called,
-        but doesn't guarantee maximal forward progress. This is especially relevant
-        when compressing with multiple threads. The call won't block if it can
-        consume some input, but if it can't it will wait for some, but not all,
-        output to be flushed.
- @return : provides a minimum amount of data remaining to be flushed from internal buffers
-           or an error code, which can be tested using ZSTD_isError().
+  使用 ZSTD_compressStream2() 与 ZSTD_e_continue 进行必要的多次操作，以达到以下目的
+  消耗输入流，该函数将自动更新 "pos" 和 "input" 和 "output" 中的字段
+  请注意，该函数可能不会消耗整个输入，例如：
+  因输出缓冲区已经满了，在这种情况下，`input.pos < input.size`
+  调用者必须检查输入是否已经全部消耗完毕
+  如果没有，调用者必须腾出一些空间来接收更多的压缩数据
+  然后再呈现剩余的输入数据
+   注意：ZSTD_e_continue 被调用时，保证会有一定的前进速度
+        但并不能保证最大限度的向前发展，这一点尤为重要
+        这一点在使用多个线程进行压缩时尤为重要
+        如果能消耗一些输入，调用不会阻塞
+        但如果不能，它将等待一些（但不是全部）输出被刷新
+  @return : 提供了从内部缓冲区刷新数据的最小剩余量，
+           或错误代码，可以使用 ZSTD_isError() 进行测试
 
-  At any moment, it's possible to flush whatever data might remain stuck within internal buffer,
-  using ZSTD_compressStream2() with ZSTD_e_flush. `output->pos` will be updated.
-  Note that, if `output->size` is too small, a single invocation with ZSTD_e_flush might not be enough (return code > 0).
-  In which case, make some room to receive more compressed data, and call again ZSTD_compressStream2() with ZSTD_e_flush.
-  You must continue calling ZSTD_compressStream2() with ZSTD_e_flush until it returns 0, at which point you can change the
-  operation.
-  note: ZSTD_e_flush will flush as much output as possible, meaning when compressing with multiple threads, it will
-        block until the flush is complete or the output buffer is full.
-  @return : 0 if internal buffers are entirely flushed,
-            >0 if some data still present within internal buffer (the value is minimal estimation of remaining size),
-            or an error code, which can be tested using ZSTD_isError().
+  在任何时候，它都有可能冲洗任何可能停留在内部缓冲区的数据
+  使用 ZSTD_compressStream2() 和 ZSTD_e_flush`output->pos`将被更新
+  注意，如果 `output->size` 太小，用 ZSTD_e_flush 调用一次可能就不够了(返回代码>0)
+  在这种情况下，腾出一些空间来接收更多的压缩数据，然后用 ZSTD_e_flush 再次调用 ZSTD_compressStream2()
+  你必须继续用 ZSTD_e_flush 调用ZSTD_compressStream2()，直到它返回 0，这时你可以改变运作
+  注意：ZSTD_e_flush 会尽可能多地刷新输出，这意味着当使用多线程压缩时，它会阻塞，直到刷新完成或输出缓冲区满为止
+  @return : 如果内部缓冲区完全刷新，则为 0
+            >0，如果一些数据仍然存在于内部缓冲区中（该值是剩余大小的最小估计值）
+            或错误代码，可以使用 ZSTD_isError() 进行测试
 
-  Calling ZSTD_compressStream2() with ZSTD_e_end instructs to finish a frame.
-  It will perform a flush and write frame epilogue.
-  The epilogue is required for decoders to consider a frame completed.
-  flush operation is the same, and follows same rules as calling ZSTD_compressStream2() with ZSTD_e_flush.
-  You must continue calling ZSTD_compressStream2() with ZSTD_e_end until it returns 0, at which point you are free to
-  start a new frame.
-  note: ZSTD_e_end will flush as much output as possible, meaning when compressing with multiple threads, it will
-        block until the flush is complete or the output buffer is full.
-  @return : 0 if frame fully completed and fully flushed,
-            >0 if some data still present within internal buffer (the value is minimal estimation of remaining size),
-            or an error code, which can be tested using ZSTD_isError().
+  用 ZSTD_e_end 调用 ZSTD_compressStream2() 指示完成一帧
+  它将执行刷新并写入帧尾，这是解码器认为一帧完成所必须的
+  flush 操作与调用 ZSTD_compressStream2() 和 ZSTD_e_flush 的规则是一样的
+  你必须继续用ZSTD_e_end 调用 ZSTD_compressStream2()，直到它返回0，这时你可以自由地开始一个新的帧
+  注意 : ZSTD_e_end 会尽可能多地刷新输出，这意味着当使用多线程压缩时，它会阻塞，直到刷新完成或输出缓冲区满为止
+  @return : 如果帧完全完成并完全刷新，则返回 0
+            >0，如果一些数据仍然存在于内部缓冲区中（该值是剩余大小的最小估计值）
+            或错误代码，可以使用 ZSTD_isError() 进行测试.
 
 
 <BR></pre>
 
-<pre><b>typedef ZSTD_CCtx ZSTD_CStream;  </b>/**< CCtx and CStream are now effectively same object (>= v1.3.0) */<b>
+<pre><b>typedef ZSTD_CCtx ZSTD_CStream;  </b>/**< CCtx 和 CStream 现在实际上是同一个对象 (>= v1.3.0) */<b>
 </b></pre><BR>
 <h3>ZSTD_CStream 管理函数</h3><pre></pre><b><pre>ZSTD_CStream* ZSTD_createCStream(void);
 size_t ZSTD_freeCStream(ZSTD_CStream* zcs);
@@ -1795,7 +1791,7 @@ size_t ZSTD_decodingBufferSize_min(unsigned long long windowSize, unsigned long 
 <h3>原始的 zstd 块函数</h3><pre></pre><b><pre>size_t ZSTD_getBlockSize   (const ZSTD_CCtx* cctx);
 size_t ZSTD_compressBlock  (ZSTD_CCtx* cctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
 size_t ZSTD_decompressBlock(ZSTD_DCtx* dctx, void* dst, size_t dstCapacity, const void* src, size_t srcSize);
-size_t ZSTD_insertBlock    (ZSTD_DCtx* dctx, const void* blockStart, size_t blockSize);  </b>/**< insert uncompressed block into `dctx` history. Useful for multi-blocks decompression. */<b>
+size_t ZSTD_insertBlock    (ZSTD_DCtx* dctx, const void* blockStart, size_t blockSize);  </b>/**< 将未压缩的块插入到 `dctx` 历史中，对多块解压有用 */<b>
 </pre></b><BR>
 </html>
 </body>
