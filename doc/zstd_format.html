@@ -1,0 +1,1202 @@
+<!doctype html>
+<html style='font-size:12px !important'>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>Zstandard 压缩格式</title><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; --title-bar-height:20px; }
+.mac-os-11 { --title-bar-height:28px; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; tab-size: 4; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; overflow-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 36px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+.typora-export .task-list-item input { pointer-events: none; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror-linenumber { user-select: none; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li blockquote { margin: 1rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  .typora-export #write { break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+.MathJax_ref { fill: currentcolor; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none 0s ease 0s; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+mark { background: rgb(255, 255, 0); color: rgb(0, 0, 0); }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+mark .md-meta { color: rgb(0, 0, 0); opacity: 0.3 !important; }
+@media print {
+  .typora-export h1, .typora-export h2, .typora-export h3, .typora-export h4, .typora-export h5, .typora-export h6 { break-inside: avoid; }
+}
+.md-diagram-panel .messageText { stroke: none !important; }
+.md-diagram-panel .start-state { fill: var(--node-fill); }
+.md-diagram-panel .edgeLabel rect { opacity: 1 !important; }
+.md-require-zoom-fix foreignobject { font-size: var(--mermaid-font-zoom); }
+
+
+.CodeMirror { height: auto; }
+.CodeMirror.cm-s-inner { background: inherit; }
+.CodeMirror-scroll { overflow: auto hidden; z-index: 3; }
+.CodeMirror-gutter-filler, .CodeMirror-scrollbar-filler { background-color: rgb(255, 255, 255); }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); background: inherit; white-space: nowrap; }
+.CodeMirror-linenumber { padding: 0px 3px 0px 5px; text-align: right; color: rgb(153, 153, 153); }
+.cm-s-inner .cm-keyword { color: rgb(119, 0, 136); }
+.cm-s-inner .cm-atom, .cm-s-inner.cm-atom { color: rgb(34, 17, 153); }
+.cm-s-inner .cm-number { color: rgb(17, 102, 68); }
+.cm-s-inner .cm-def { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-variable { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-variable-2 { color: rgb(0, 85, 170); }
+.cm-s-inner .cm-variable-3 { color: rgb(0, 136, 85); }
+.cm-s-inner .cm-string { color: rgb(170, 17, 17); }
+.cm-s-inner .cm-property { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-operator { color: rgb(152, 26, 26); }
+.cm-s-inner .cm-comment, .cm-s-inner.cm-comment { color: rgb(170, 85, 0); }
+.cm-s-inner .cm-string-2 { color: rgb(255, 85, 0); }
+.cm-s-inner .cm-meta { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-qualifier { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-builtin { color: rgb(51, 0, 170); }
+.cm-s-inner .cm-bracket { color: rgb(153, 153, 119); }
+.cm-s-inner .cm-tag { color: rgb(17, 119, 0); }
+.cm-s-inner .cm-attribute { color: rgb(0, 0, 204); }
+.cm-s-inner .cm-header, .cm-s-inner.cm-header { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-quote, .cm-s-inner.cm-quote { color: rgb(0, 153, 0); }
+.cm-s-inner .cm-hr, .cm-s-inner.cm-hr { color: rgb(153, 153, 153); }
+.cm-s-inner .cm-link, .cm-s-inner.cm-link { color: rgb(0, 0, 204); }
+.cm-negative { color: rgb(221, 68, 68); }
+.cm-positive { color: rgb(34, 153, 34); }
+.cm-header, .cm-strong { font-weight: 700; }
+.cm-del { text-decoration: line-through; }
+.cm-em { font-style: italic; }
+.cm-link { text-decoration: underline; }
+.cm-error { color: red; }
+.cm-invalidchar { color: red; }
+.cm-constant { color: rgb(38, 139, 210); }
+.cm-defined { color: rgb(181, 137, 0); }
+div.CodeMirror span.CodeMirror-matchingbracket { color: rgb(0, 255, 0); }
+div.CodeMirror span.CodeMirror-nonmatchingbracket { color: rgb(255, 34, 34); }
+.cm-s-inner .CodeMirror-activeline-background { background: inherit; }
+.CodeMirror { position: relative; overflow: hidden; }
+.CodeMirror-scroll { height: 100%; outline: 0px; position: relative; box-sizing: content-box; background: inherit; }
+.CodeMirror-sizer { position: relative; }
+.CodeMirror-gutter-filler, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-vscrollbar { position: absolute; z-index: 6; display: none; }
+.CodeMirror-vscrollbar { right: 0px; top: 0px; overflow: hidden; }
+.CodeMirror-hscrollbar { bottom: 0px; left: 0px; overflow: hidden; }
+.CodeMirror-scrollbar-filler { right: 0px; bottom: 0px; }
+.CodeMirror-gutter-filler { left: 0px; bottom: 0px; }
+.CodeMirror-gutters { position: absolute; left: 0px; top: 0px; padding-bottom: 30px; z-index: 3; }
+.CodeMirror-gutter { white-space: normal; height: 100%; box-sizing: content-box; padding-bottom: 30px; margin-bottom: -32px; display: inline-block; }
+.CodeMirror-gutter-wrapper { position: absolute; z-index: 4; background: 0px 0px !important; border: none !important; }
+.CodeMirror-gutter-background { position: absolute; top: 0px; bottom: 0px; z-index: 4; }
+.CodeMirror-gutter-elt { position: absolute; cursor: default; z-index: 4; }
+.CodeMirror-lines { cursor: text; }
+.CodeMirror pre { border-radius: 0px; border-width: 0px; background: 0px 0px; font-family: inherit; font-size: inherit; margin: 0px; white-space: pre; overflow-wrap: normal; color: inherit; z-index: 2; position: relative; overflow: visible; }
+.CodeMirror-wrap pre { overflow-wrap: break-word; white-space: pre-wrap; word-break: normal; }
+.CodeMirror-code pre { border-right: 30px solid transparent; width: fit-content; }
+.CodeMirror-wrap .CodeMirror-code pre { border-right: none; width: auto; }
+.CodeMirror-linebackground { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 0; }
+.CodeMirror-linewidget { position: relative; z-index: 2; overflow: auto; }
+.CodeMirror-wrap .CodeMirror-scroll { overflow-x: hidden; }
+.CodeMirror-measure { position: absolute; width: 100%; height: 0px; overflow: hidden; visibility: hidden; }
+.CodeMirror-measure pre { position: static; }
+.CodeMirror div.CodeMirror-cursor { position: absolute; visibility: hidden; border-right: none; width: 0px; }
+.CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+.CodeMirror-focused div.CodeMirror-cursor { visibility: inherit; }
+.cm-searching { background: rgba(255, 255, 0, 0.4); }
+@media print {
+  .CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+}
+
+
+/* cyrillic-ext */
+/* cyrillic */
+/* greek-ext */
+/* greek */
+/* vietnamese */
+/* latin-ext */
+/* latin */
+/* cyrillic-ext */
+/* cyrillic */
+/* greek-ext */
+/* greek */
+/* vietnamese */
+/* latin-ext */
+/* latin */
+/* cyrillic-ext */
+/* cyrillic */
+/* greek-ext */
+/* greek */
+/* vietnamese */
+/* latin-ext */
+/* latin */
+/* cyrillic-ext */
+/* cyrillic */
+/* greek-ext */
+/* greek */
+/* vietnamese */
+/* latin-ext */
+/* latin */
+@font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url('file:///C://Users//SUIANX//AppData//Roaming//Typora/themes/vue/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdu.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}@import '';
+
+:root {
+    --side-bar-bg-color: #fff;
+    --control-text-color: #777;
+    --font-sans-serif: 'Ubuntu', 'Source Sans Pro', sans-serif !important;
+    --font-monospace: 'Cascadia Code PL', 'Fira Code', 'Roboto Mono', monospace !important;
+}
+
+@media print {
+  h1 {
+    page-break-before: always;
+  }
+  h1:first-of-type {
+    page-break-before: avoid;
+  }
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-sans-serif);
+    color: #34495e;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6rem;
+    letter-spacing: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+#write {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 30px 100px;
+}
+
+#write p {
+    line-height: 1.6rem;
+    word-spacing: .05rem;
+}
+
+#write ol li {
+    padding-left: 0.5rem;
+}
+
+#write > ul:first-child,
+#write > ol:first-child {
+    margin-top: 30px;
+}
+
+body > *:first-child {
+    margin-top: 0 !important;
+}
+
+body > *:last-child {
+    margin-bottom: 0 !important;
+}
+
+a {
+    color: #42b983;
+    font-weight: 600;
+    padding: 0 2px;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+
+h1 tt,
+h1 code {
+    font-size: inherit !important;
+}
+
+h2 tt,
+h2 code {
+    font-size: inherit !important;
+}
+
+h3 tt,
+h3 code {
+    font-size: inherit !important;
+}
+
+h4 tt,
+h4 code {
+    font-size: inherit !important;
+}
+
+h5 tt,
+h5 code {
+    font-size: inherit !important;
+}
+
+h6 tt,
+h6 code {
+    font-size: inherit !important;
+}
+
+h2 a,
+h3 a {
+    color: #34495e;
+}
+
+h1 {
+    padding-bottom: .4rem;
+    font-size: 2.2rem;
+    line-height: 1.3;
+}
+
+h2 {
+    font-size: 1.75rem;
+    line-height: 1.225;
+    margin: 35px 0 15px;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #ddd;
+}
+
+h3 {
+    font-size: 1.4rem;
+    line-height: 1.43;
+    margin: 20px 0 7px;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+h6 {
+    font-size: 1rem;
+    color: #777;
+}
+
+p,
+blockquote,
+ul,
+ol,
+dl,
+table {
+    margin: 0.8em 0;
+}
+
+li > ol,
+li > ul {
+    margin: 0 0;
+}
+
+hr {
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+body > h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body > h1:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body > h3:first-child,
+body > h4:first-child,
+body > h5:first-child,
+body > h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+a:first-child h1,
+a:first-child h2,
+a:first-child h3,
+a:first-child h4,
+a:first-child h5,
+a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+h1 p,
+h2 p,
+h3 p,
+h4 p,
+h5 p,
+h6 p {
+    margin-top: 0;
+}
+
+li p.first {
+    display: inline-block;
+}
+
+ul,
+ol {
+    padding-left: 30px;
+}
+
+ul:first-child,
+ol:first-child {
+    margin-top: 0;
+}
+
+ul:last-child,
+ol:last-child {
+    margin-bottom: 0;
+}
+
+blockquote {
+    border-left: 4px solid #42b983;
+    padding: 10px 15px;
+    color: #777;
+    background-color: rgba(66, 185, 131, .1);
+}
+
+table {
+    padding: 0;
+    word-break: initial;
+}
+
+table tr {
+    border-top: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+}
+
+table tr:nth-child(2n),
+thead {
+    background-color: #fafafa;
+}
+
+table tr th {
+    font-weight: bold;
+    border: 1px solid #dfe2e5;
+    border-bottom: 0;
+    text-align: left;
+    margin: 0;
+    padding: 6px 10px;
+}
+
+table tr td {
+    border: 1px solid #dfe2e5;
+    text-align: left;
+    margin: 0;
+    padding: 6px 13px;
+}
+
+table tr th:first-child,
+table tr td:first-child {
+    margin-top: 0;
+}
+
+table tr th:last-child,
+table tr td:last-child {
+    margin-bottom: 0;
+}
+
+#write strong {
+    padding: 0 1px;
+}
+
+#write em {
+    padding: 0 5px 0 2px;
+}
+
+#write table thead th {
+    background-color: #f2f2f2;
+}
+
+#write .CodeMirror-gutters {
+    border-right: none;
+}
+
+#write .md-fences {
+    border: 1px solid #F4F4F4;
+    -webkit-font-smoothing: initial;
+    margin: 0.8rem 0 !important;
+    padding: 0.3rem 0 !important;
+    line-height: 1.43rem;
+    background-color: #F8F8F8 !important;
+    border-radius: 2px;
+    font-family: var(--font-monospace);
+    font-size: 0.85rem;
+    word-wrap: normal;
+}
+
+#write .CodeMirror-wrap .CodeMirror-code pre {
+    padding-left: 12px;
+}
+
+#write code, tt {
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-family: var(--font-monospace);
+    font-size: 0.92rem;
+    color: #e96900;
+    background-color: #f8f8f8;
+}
+
+tt {
+    margin: 0 2px;
+}
+
+#write .md-footnote {
+    background-color: #f8f8f8;
+    color: #e96900;
+}
+
+/* heighlight. */
+#write mark {
+    background-color: #EBFFEB;
+    border-radius: 2px;
+    padding: 2px 4px;
+    margin: 0 2px;
+    color: #222;
+    font-weight: 500;
+}
+
+#write del {
+    padding: 1px 2px;
+}
+
+.cm-s-inner .cm-link,
+.cm-s-inner.cm-link {
+    color: #22a2c9;
+}
+
+.cm-s-inner .cm-string {
+    color: #22a2c9;
+}
+
+.md-task-list-item > input {
+    margin-left: -1.3em;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+
+    pre {
+        word-wrap: break-word;
+    }
+}
+
+.md-fences {
+    background-color: #f8f8f8;
+}
+
+#write pre.md-meta-block {
+    padding: 1rem;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 3px;
+    color: #777777;
+    margin-top: 0 !important;
+}
+
+.mathjax-block > .code-tooltip {
+    bottom: .375rem;
+}
+
+#write > h3.md-focus:before {
+    left: -1.5625rem;
+    top: .375rem;
+}
+
+#write > h4.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+#write > h5.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+#write > h6.md-focus:before {
+    left: -1.5625rem;
+    top: .285714286rem;
+}
+
+.md-image > .md-meta {
+    border-radius: 3px;
+    font-family: var(--font-monospace);
+    padding: 2px 0 0 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+.md-tag {
+    color: inherit;
+}
+
+.md-toc {
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.sidebar-tabs {
+    border-bottom: none;
+}
+
+#typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+#typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#md-notification:before {
+    top: 10px;
+}
+
+/** focus mode */
+
+.on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+header,
+.context-menu,
+.megamenu-content,
+footer {
+    font-family: var(--font-sans-serif);
+}
+
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state {
+    visibility: visible;
+}
+
+.mac-seamless-mode #typora-sidebar {
+    background-color: var(--side-bar-bg-color);
+}
+
+.md-lang {
+    color: #b4654d;
+}
+
+.html-for-mac .context-menu {
+    --item-hover-bg-color: #E6F0FE;
+}
+
+#write .CodeMirror-wrap .CodeMirror-code pre {
+    font-family: Cascadia Code PL
+}
+
+</style>
+</head>
+<body class='typora-export os-windows monocolor-emoji'>
+<div id='write'  class=''><h1><a name="zstandard-压缩格式" class="md-header-anchor"></a><span>Zstandard 压缩格式</span></h1><h3><a name="通告" class="md-header-anchor"></a><span>通告</span></h3><p><span>Copyright (c) 2016-2021 Yann Collet, Facebook, Inc.</span></p><p><span>允许为任何目的免费复制和分发本文件。</span>
+<span>包括翻译成其他语言并纳入汇编，但必须保留版权声明和本声明。</span>
+<span>并明确标明对原文的任何实质性修改或删除。</span>
+<span>本文件的分发不受限制。</span></p><h3><a name="版本" class="md-header-anchor"></a><span>版本</span></h3><p><span>0.3.7 (2020-12-09)</span></p><h2><a name="简介" class="md-header-anchor"></a><span>简介</span></h2><p><span>本文档的目的是定义一种无损压缩数据格式，是与CPU类型、操作系统无关的，</span>
+<span>文件系统和字符集，适用于文件压缩、管道和流媒体压缩，使用</span><a href='http://www.zstandard.org'><span>Zstandard 算法</span></a><span>。</span>
+<span>该规范的文本假设在比特和其他原始数据表示的层面上具有编程的基本背景。</span></p><p><span>数据可以被生产或消费，即使是对于一个任意长的顺序呈现的输入数据流，</span>
+<span>只使用一个先验约束的中间存储量，因此可用于数据通信中。</span></p><p><span>该格式使用 Zstandard 压缩方法，和可选的 </span><a href='http://www.xxhash.org'><span>xxHash-64校验方法</span></a><span>，用于检测数据损坏。</span></p><p><span>本规范定义的数据格式不允许试图随机访问压缩数据。</span></p><p><span>除非下面另有说明，符合要求的压缩器必须产生符合这里所介绍的规格的数据集。</span>
+<span>不过它不需要支持所有的选项。</span></p><p><span>合规的解压器必须能够解压至少一个符合这里所介绍的规格的工作参数集。</span>
+<span>它也可以忽略信息字段，如校验和。</span>
+<span>每当它不支持压缩流中定义的参数时，它必须产生一个非明确的错误代码和相关的错误信息，</span>
+<span>解释哪个参数不被支持。</span></p><p><span>本规范供软件实施者使用，以便将数据压缩成 Zstandard 格式或从 Zstandard 格式解压数据。</span>
+<span>Zstandard 格式由一个用可移植C语言编写的开放源码参考实现所支持，</span>
+<span>可在以下网站获得：</span><a href='https://github.com/facebook/zstd' target='_blank' class='url'>https://github.com/facebook/zstd</a><span>。</span></p><h3><a name="约定" class="md-header-anchor"></a><span>约定</span></h3><p><span>在本文件中：</span></p><ul><li><span>方括号，即</span><code>[</code><span>和</span><code>]</code><span>用于表示可选字段或参数。</span></li><li><span>标识符的命名惯例是 </span><code>Mixed_Case_With_Underscores</code></li></ul><h3><a name="定义" class="md-header-anchor"></a><span>定义</span></h3><p><span>被 Zstandard 压缩的内容被转化为一个 Zstandard </span><strong><span>frame</span></strong><span>。</span>
+<span>多个帧可以附加到一个文件或流中。一个帧是完全独立的，</span>
+<span>有一个定义的开头和结尾，还有一组参数，告诉解码器如何解压它。</span></p><p><span>一个帧封装了一个或多个</span><strong><span>blocks</span></strong><span>。</span>
+<span>每个块都包含任意的内容，这些内容由它的头描述，并且有一个保证的最大内容大小，它取决于帧参数。</span>
+<span>与帧不同的是，每一个块都依赖于前一个块才能正确解码。</span>
+<span>然而，每个块可以被解压而不需要等待它的后继者，从而允许进行流式操作。</span></p><h2><a name="概述" class="md-header-anchor"></a><span>概述</span></h2><ul><li><p><a href='#帧'><span>帧</span></a></p><ul><li><p><a href='#zstd-帧'><span>ZSTD 帧</span></a></p><ul><li><p><a href='#块'><span>块</span></a></p><ul><li><a href='#字符部分'><span>字符部分</span></a></li><li><a href='#序列部分'><span>序列部分</span></a></li><li><a href='#序列执行'><span>序列执行</span></a></li></ul></li></ul></li><li><p><a href='#可跳过帧'><span>可跳过帧</span></a></p></li></ul></li><li><p><a href='#熵编码'><span>熵编码</span></a></p><ul><li><a href='#fse-序列'><span>FSE 序列</span></a></li><li><a href='#哈夫曼编码'><span>哈夫曼编码</span></a></li></ul></li><li><p><a href='#字典格式'><span>字典格式</span></a></p></li></ul><h2><a name="帧" class="md-header-anchor"></a><span>帧</span></h2><p><span>Zstandard 压缩数据是由一个或多个 </span><strong><span>帧</span></strong><span> 组成的。</span>
+<span>每一帧是独立的，可以独立于其他帧进行解压。</span>
+<span>多个并联帧的解压内容是每个帧解压内容的并联。</span></p><p><span>Zstandard 定义的帧格式有两种：Zstandard 帧和可跳转帧</span>
+<span>Zstandard帧包含压缩数据，而可跳过帧包含自定义的用户元数据</span></p><h2><a name="zstd-帧" class="md-header-anchor"></a><span>ZSTD 帧</span></h2><p><span>单个 Zstandard 帧的结构如下：</span></p><figure><table><thead><tr><th style='text-align:center;' ><code>Magic_Number</code></th><th style='text-align:center;' ><code>Frame_Header</code></th><th style='text-align:center;' ><code>Data_Block</code></th><th><span>[More data blocks]</span></th><th style='text-align:center;' ><span>[</span><code>Content_Checksum</code><span>]</span></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>4 bytes</span></td><td style='text-align:center;' ><span>2-14 bytes</span></td><td style='text-align:center;' ><span>n bytes</span></td><td>&nbsp;</td><td style='text-align:center;' ><span>0-4 bytes</span></td></tr></tbody></table></figure><p><strong><code>Magic_Number</code></strong></p><p><span>4 Bytes，</span><em><span>小端</span></em><span> 格式。</span>
+<span>值：0xFD2FB528</span>
+<span>注：选择这个值是为了在一些随机文件的开头找到的可能性较小。</span>
+<span>它避免了琐碎的模式（0x00，0xFF，重复的字节，增加的字节等）。</span>
+<span>包含ASCII范围外的字节值。</span>
+<span>并且不映射到UTF8空间。</span>
+<span>它减少了文本文件意外表示这个值的机会。</span></p><p><strong><code>Frame_Header</code></strong></p><p><span>2 to 14 Bytes，详见 </span><a href='#frame_header'><code>Frame_Header</code></a><span>。</span></p><p><strong><code>Data_Block</code></strong></p><p><span>详见 </span><a href='#blocks'><code>Blocks</code></a><span>。</span>
+<span>这就是压缩数据的存储位置。</span></p><p><strong><code>Content_Checksum</code></strong></p><p><span>一个可选的 32-bit 校验和，只有当</span>
+<code>Content_Checksum_flag</code><span>被设置时才会出现。</span>
+<span>内容校验和的结果是 </span><a href='http://www.xxhash.org'><span>xxh64() 哈希函数</span></a>
+<span>消化原始（解码）数据作为输入，种子为零。</span>
+<span>校验和的低位 4 bytes 以</span><strong><span>小端</span></strong><span>格式存储。</span></p><h3><a name="帧头部" class="md-header-anchor"></a><span>帧头部</span></h3><p><code>Frame_Header</code><span> 的大小是可变的，</span>
+<span>最小为2个字节，最大为14个字节，具体取决于可选参数。</span></p><p><code>Frame_Header</code><span> 的结构如下：</span></p><figure><table><thead><tr><th><code>Frame_Header_Descriptor</code></th><th><span>[</span><code>Window_Descriptor</code><span>]</span></th><th><span>[</span><code>Dictionary_ID</code><span>]</span></th><th><span>[</span><code>Frame_Content_Size</code><span>]</span></th></tr></thead><tbody><tr><td><span>1 byte</span></td><td><span>0-1 byte</span></td><td><span>0-4 bytes</span></td><td><span>0-8 bytes</span></td></tr></tbody></table></figure><h4><a name="frameheaderdescriptor" class="md-header-anchor"></a><code>Frame_Header_Descriptor</code></h4><p><span>第一个头的字节称为 </span><code>Frame_Header_Descriptor</code><span>。</span>
+<span>它描述了还有哪些字段存在。</span>
+<span>解码这个字节就可以知道 </span><code>Frame_Header</code><span> 的大小。</span></p><figure><table><thead><tr><th><span>Bit number</span></th><th><span>Field name</span></th></tr></thead><tbody><tr><td><span>7-6</span></td><td><code>Frame_Content_Size_flag</code></td></tr><tr><td><span>5</span></td><td><code>Single_Segment_flag</code></td></tr><tr><td><span>4</span></td><td><code>Unused_bit</code></td></tr><tr><td><span>3</span></td><td><code>Reserved_bit</code></td></tr><tr><td><span>2</span></td><td><code>Content_Checksum_flag</code></td></tr><tr><td><span>1-0</span></td><td><code>Dictionary_ID_flag</code></td></tr></tbody></table></figure><p><span>在此表中，位7是最高位，而位0是最低位。</span></p><p><strong><code>Frame_Content_Size_flag</code></strong></p><p><span>这是一个 2-bits 标志 (</span><code>= Frame_Header_Descriptor &gt;&gt; 6</code><span>)，</span>
+<span>指定是否在头中提供 </span><code>Frame_Content_Size</code><span>（解压数据大小）。</span>
+<code>Flag_Value</code><span> 提供了 </span><code>FCS_Field_Size</code><span>，也就是</span><code>Frame_Content_Size</code><span> 根据下表所使用的字节数：</span></p><figure><table><thead><tr><th><code>Flag_Value</code></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th></tr></thead><tbody><tr><td><code>FCS_Field_Size</code></td><td><span>0 or 1</span></td><td><span>2</span></td><td><span>4</span></td><td><span>8</span></td></tr></tbody></table></figure><p><span>当</span><code>Flag_Value</code><span>为</span><code>0</code><span>时，</span><code>FCS_Field_Size</code><span>取决于</span><code>Single_Segment_flag</code><span>：</span>
+<span>如果</span><code>Single_Segment_flag</code><span>被设置，</span><code>FCS_Field_Size</code><span>为 1。</span>
+<span>否则，</span><code>FCS_Field_Size</code><span>为 0 ：不提供</span><code>Frame_Content_Size</code><span>。</span></p><p><strong><code>Single_Segment_flag</code></strong></p><p><span>如果设置该标志，数据必须在一个连续的内存段内再生。</span></p><p><span>在这种情况下，</span><code>Window_Descriptor</code><span> 字节被跳过，但 </span><code>Frame_Content_Size</code><span> 必须存在。</span>
+<span>因此，解码器必须分配一个大小等于或大于 </span><code>Frame_Content_Size</code><span> 的内存段。</span></p><p><span>为了保护解码器免受不合理的内存需求，允许解码器拒绝一个压缩帧</span>
+<span>要求的内存大小超出解码器的授权范围。</span></p><p><span>为了实现更广泛的兼容性，建议解码器支持至少8 MB的内存大小，这只是一个建议，</span>
+<span>每个解码器都可以支持更高或更低的限制，这取决于当地的限制。</span>
+<span>这只是一个建议，每个解码器可以根据当地的限制，自由支持更高或更低的限制。</span></p><p><strong><code>Unused_bit</code></strong></p><p><span>符合本规范版本的解码器不应解释该位。</span>
+<span>在未来的任何版本中，它可能会被用于发出一个透明的属性信号，以正确解码帧。</span>
+<span>符合本规范版本的编码器必须将此位设置为零。</span></p><p><strong><code>Reserved_bit</code></strong></p><p><span>该位是为将来的某些功能保留的。</span>
+<span>其值</span><em><span>必须为零</span></em><span>。</span>
+<span>符合本规范版本的解码器必须确保它不被设置。</span>
+<span>该位可以在未来的修订版中使用，以表示必须被解释为正确解码帧的功能。</span></p><p><strong><code>Content_Checksum_flag</code></strong></p><p><span>如果设置了这个标志，32-bits 的 </span><code>Content_Checksum</code><span> 将出现在帧的末端。</span>
+<span>参见 </span><code>Content_Checksum</code><span> 段落。</span></p><p><strong><code>Dictionary_ID_flag</code></strong></p><p><span>这是一个 2-bits 标志（</span><code>= FHD &amp; 3</code><span>），</span>
+<span>告诉是否在头中提供了一个字典ID。</span>
+<span>它还指定该字段的大小为 </span><code>DID_Field_Size</code><span>。</span></p><figure><table><thead><tr><th><code>Flag_Value</code></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th></tr></thead><tbody><tr><td><code>DID_Field_Size</code></td><td><span>0</span></td><td><span>1</span></td><td><span>2</span></td><td><span>4</span></td></tr></tbody></table></figure><h4><a name="windowdescriptor" class="md-header-anchor"></a><code>Window_Descriptor</code></h4><p><span>提供解压一帧所需的最小内存缓冲区的保证。</span>
+<span>这个信息对解码器分配足够的内存很重要。</span></p><p><code>Window_Descriptor</code><span> 字节是可选的。</span>
+<span>当 </span><code>Single_Segment_flag</code><span> 被设置时，</span><code>Window_Descriptor</code><span>不存在。</span>
+<span>在这种情况下，</span><code>Window_Size</code><span>是</span><code>Frame_Content_Size</code><span>，它可以是 0 到 2^64-1 字节 (16 ExaBytes)的任意值。</span></p><figure><table><thead><tr><th><span>Bit numbers</span></th><th><span>7-3</span></th><th><span>2-0</span></th></tr></thead><tbody><tr><td><span>Field name</span></td><td><code>Exponent</code></td><td><code>Mantissa</code></td></tr></tbody></table></figure><p><span>最小的内存缓冲区大小称为 </span><code>Window_Size</code><span>。</span>
+<span>它由以下公式描述：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">windowLog = 10 + Exponent;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">windowBase = 1 &lt;&lt; windowLog;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">3</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">windowAdd = (windowBase / 8) * Mantissa;</span></pre></div><div style="position: relative;" class=""><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">4</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">Window_Size = windowBase + windowAdd;</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 67px;"></div><div class="CodeMirror-gutters" style="height: 67px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>最小 </span><code>Window_Size</code><span> 为1 KB。</span>
+<span>最大 </span><code>Window_Size</code><span> 是 </span><code>(1&lt;&lt;41)+7*(1&lt;&lt;38)</code><span>字节，即 3.75TB。</span></p><p><span>一般来说，</span><code>Window_Size</code><span> 越大，压缩率越高， 但以内存使用为代价。</span></p><p><span>为了正确解码压缩数据， 解码器将需要分配一个至少为 </span><code>Window_Size</code><span> 字节的缓冲区。</span></p><p><span>为了保护解码器不被不合理的内存需求，</span>
+<span>允许解码器拒绝一个压缩帧。请求超出解码器授权范围的内存大小。</span></p><p><span>为了提高互操作性。建议解码器支持最大 8MB的 </span><code>Window_Size</code><span> 。</span></p><p><span>并且建议编码器不要生成需要 </span><code>Window_Size</code><span> 大于8MB的帧。</span>
+<span>不过这只是一个建议。解码器可自由支持更大或更低的限制，根据当地的限制。</span></p><h4><a name="dictionaryid" class="md-header-anchor"></a><code>Dictionary_ID</code></h4><p><span>这是一个可变大小的字段，其中包含 正确解码该帧所需的字典的ID。</span>
+<code>Dictionary_ID</code><span> 字段是可选的。</span>
+<span>当它不存在时，这取决于解码器是否知道要使用哪个字典。</span></p><p><code>Dictionary_ID</code><span> 字段大小由 </span><code>DID_Field_Size</code><span> 提供。</span>
+<code>DID_Field_Size</code><span> 直接从 </span><code>Dictionary_ID_flag</code><span> 的值导出。</span>
+<span>1 byte 可以代表一个 ID 0-255。</span>
+<span>2 byte 可以代表一个 ID 0-65535。</span>
+<span>4 byte 可以代表一个 ID 0-4294967295。</span>
+<span>格式为</span><strong><span>小端</span></strong><span>。</span></p><p><span>它允许 用一个大的 4-bytes 的字典 ID 表示一个小的 ID（例如</span><code>13</code><span>），</span>
+<span>即使它的效率较低。</span></p><p><span>值 </span><code>0</code><span> 与没有 </span><code>Dictionary_ID</code><span> 的意义相同，在这种情况下，</span>
+<span>该帧可能需也可能不需要字典来解码， 而这种字典的 ID 没有被指定。</span>
+<span>解码器必须通过其他方式了解这一信息。</span></p><h4><a name="framecontentsize" class="md-header-anchor"></a><code>Frame_Content_Size</code></h4><p><span>这是原始的（未压缩）大小，这个信息是可选的。</span>
+<code>Frame_Content_Size</code><span>使用一个可变的字节数，由</span><code>FCS_Field_Size</code><span>提供。</span>
+<code>FCS_Field_Size</code><span>由</span><code>Frame_Content_Size_flag</code><span>的值提供。</span>
+<code>FCS_Field_Size</code><span>可以等于0（不存在）、1、2、4 或 8 bytes 。</span></p><figure><table><thead><tr><th><code>FCS_Field_Size</code></th><th><span>Range</span></th></tr></thead><tbody><tr><td><span>0</span></td><td><span>unknown</span></td></tr><tr><td><span>1</span></td><td><span>0 - 255</span></td></tr><tr><td><span>2</span></td><td><span>256 - 65791</span></td></tr><tr><td><span>4</span></td><td><span>0 - 2^32-1</span></td></tr><tr><td><span>8</span></td><td><span>0 - 2^64-1</span></td></tr></tbody></table></figure><p><code>Frame_Content_Size</code><span>格式为</span><strong><span>小端</span></strong><span>。</span>
+<span>当</span><code>FCS_Field_Size</code><span>为1、4 或 8 bytes时，直接读取该值。</span>
+<span>当</span><code>FCS_Field_Size</code><span>为2时，</span><em><span>加 256 的偏移量</span></em><span>。</span>
+<span>允许使用任何兼容的变体来表示小尺寸（例如</span><code>18</code><span>）。</span></p><h2><a name="块" class="md-header-anchor"></a><span>块</span></h2><p><span>在 </span><code>Magic_Number</code><span> 和 </span><code>Frame_Header</code><span> 之后，有一些块的数量。</span>
+<span>每一帧至少要有一个块，但每帧的块数没有上限。</span></p><p><span>一个块的结构如下：</span></p><figure><table><thead><tr><th style='text-align:center;' ><code>Block_Header</code></th><th style='text-align:center;' ><code>Block_Content</code></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>3 bytes</span></td><td style='text-align:center;' ><span>n bytes</span></td></tr></tbody></table></figure><p><strong><code>Block_Header</code></strong></p><p><code>Block_Header</code><span> 使用3个字节，使用</span><strong><span>小端</span></strong><span>惯例书写。</span>
+<span>它包含3个字段：</span></p><figure><table><thead><tr><th style='text-align:center;' ><code>Last_Block</code></th><th style='text-align:center;' ><code>Block_Type</code></th><th style='text-align:center;' ><code>Block_Size</code></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>bit 0</span></td><td style='text-align:center;' ><span>bits 1-2</span></td><td style='text-align:center;' ><span>bits 3-23</span></td></tr></tbody></table></figure><p><strong><code>Last_Block</code></strong></p><p><span>最低位信号，如果这是最后一块。</span>
+<span>该帧将在最后一个块之后结束。</span>
+<span>后面可能有一个可选的 </span><code>Content_Checksum</code><span>。</span>
+<span>(详见 </span><a href='#zstd-帧'><span>ZSTD 帧</span></a><span>)。</span></p><p><strong><code>Block_Type</code></strong></p><p><span>后面的 2 bits 代表</span><code>Block_Type</code>
+<code>Block_Type</code><span> 影响 </span><code>Block_Size</code><span> 的含义</span>
+<span>有4种块类型：</span></p><figure><table><thead><tr><th><span>Value</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th></tr></thead><tbody><tr><td><code>Block_Type</code></td><td><code>Raw_Block</code></td><td><code>RLE_Block</code></td><td><code>Compressed_Block</code></td><td><code>Reserved</code></td></tr></tbody></table></figure><ul><li><code>Raw_Block</code><span> - 这是一个未压缩的块。</span>
+<code>Block_Content</code><span>含有</span><code>Block_Size</code><span> 字节。</span></li><li><code>RLE_Block</code><span> - 这是一个单字节，重复</span><code>Block_Size</code><span>次。</span>
+<code>Block_Content</code><span> 由一个单字节组成。</span>
+<span>在解压端，这个字节必须重复</span><code>Block_Size</code><span>次。</span></li><li><code>Compressed_Block</code><span> - 这是一个 </span><a href='#压缩块'><span>压缩块</span></a><span>，后面会解释。</span>
+<code>Block_Size</code><span>是压缩数据</span><code>Block_Content</code><span>的长度。</span>
+<span>解压后的大小是不知道的，但其最大可能值是有保证的（见下文）。</span></li><li><code>Reserved</code><span> - 这不是一个块。</span>
+<span>此值不能用于本规范的当前版本。</span>
+<span>如果存在这样的值，则认为是损坏的数据。</span></li></ul><p><strong><code>Block_Size</code></strong></p><p><code>Block_Header</code><span> 的上21位代表 </span><code>Block_Size</code><span>。</span></p><p><span>当</span><code>Block_Type</code><span>为</span><code>Compressed_Block</code><span>或 </span><code>Raw_Block</code><span>时，</span>
+<code>Block_Size</code><span>为</span><code>Block_Content</code><span>的大小（因此不包括</span><code>Block_Header</code><span>）。</span></p><p><span>当 </span><code>Block_Type</code><span> 为 </span><code>RLE_Block</code><span>时， 因为</span><code>Block_Content</code><span>的大小总是 1，</span>
+<code>Block_Size</code><span> 表示这个字节必须重复的次数。</span></p><p><code>Block_Size</code><span> 受 </span><code>Block_Maximum_Size</code><span> 限制（见下文）。</span></p><p><strong><code>Block_Content</code></strong><span> 和 </span><strong><code>Block_Maximum_Size</code></strong></p><p><code>Block_Content</code><span> 的大小受 </span><code>Block_Maximum_Size</code><span> 限制，</span>
+<span>其中最小的：</span></p><ul><li><code>Window_Size</code></li><li><span>128 KB</span></li></ul><p><code>Block_Maximum_Size</code><span> 对于一个给定的帧来说是常数。</span>
+<span>这个最大尺寸既适用于解压尺寸，也适用于帧中任何块的压缩尺寸。</span></p><p><span>这个限制的理由是，解码器可以在一帧开始时读取这个信息，并利用它来分配缓冲区。</span>
+<span>对块大小的保证，保证了缓冲区对有效帧的任何后续块都有足够的容量。</span></p><h2><a name="压缩块" class="md-header-anchor"></a><span>压缩块</span></h2><p><span>要解压一个压缩块，必须在 </span><code>Block_Header</code><span> 中的 </span><code>Block_Size</code><span> 字段提供压缩大小。</span></p><p><span>一个压缩块由2个部分组成：</span></p><ul><li><a href='#字符部分'><span>字符部分</span></a></li><li><a href='#序列部分'><span>序列部分</span></a></li></ul><p><span>然后将两部分的结果结合起来，在</span><a href='#序列执行'><span>序列执行</span></a><span>中产生解压数据。</span></p><h4><a name="前提条件" class="md-header-anchor"></a><span>前提条件</span></h4><p><span>要对压缩块进行解码，需要以下元素：</span></p><ul><li><span>前一个解码数据，最远距离为 </span><code>Window_Size</code><span>，</span>
+<span>或帧的开始，以较小者为准。</span></li><li><span>前一个</span><code>Compressed_Block</code><span>的 &quot;最近偏移量&quot; 列表。</span></li><li><span>前面的哈夫曼树，是</span><code>Treeless_Literals_Block</code><span>类型所要求的。</span></li><li><span>以前的 FSE 解码表，由</span><code>Repeat_Mode</code><span>为每个符号类型所要求的(字长、匹配长度、偏移量)</span></li></ul><p><span>请注意，解码表并不总是来自之前的</span><code>Compressed_Block</code><span>。</span></p><ul><li><span>每个解码表都可以来自字典。</span></li><li><span>哈夫曼树来自于前面的 </span><code>Compressed_Literals_Block</code><span>。</span></li></ul><h2><a name="字符部分" class="md-header-anchor"></a><span>字符部分</span></h2><p><span>所有的字元都在块的第一部分重新组合。</span>
+<span>它们可以先被解码，然后在[序列执行]期间被复制，或者它们可以在[序列执行]期间在流程中被解码。</span></p><p><span>字符可以未压缩存储，也可以使用哈夫曼前缀代码进行压缩。</span>
+<span>当压缩时，可以存在一个可选的树状描述，后面是 1或 4个流。</span></p><figure><table><thead><tr><th><code>Literals_Section_Header</code></th><th><span>[</span><code>Huffman_Tree_Description</code><span>]</span></th><th><span>[jumpTable]</span></th><th><span>Stream1</span></th><th><span>[Stream2]</span></th><th><span>[Stream3]</span></th><th><span>[Stream4]</span></th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure><h3><a name="字符部分头部" class="md-header-anchor"></a><span>字符部分头部</span></h3><p><span>Header 负责描述如何包装文字。</span>
+<span>它是一个字节对齐的可变大小的位域，范围从 1 到 5 个字节，使用 </span><strong><span>小端</span></strong><span>约定。</span></p><figure><table><thead><tr><th><code>Literals_Block_Type</code></th><th><code>Size_Format</code></th><th><code>Regenerated_Size</code></th><th><span>[</span><code>Compressed_Size</code><span>]</span></th></tr></thead><tbody><tr><td><span>2 bits</span></td><td><span>1 - 2 bits</span></td><td><span>5 - 20 bits</span></td><td><span>0 - 18 bits</span></td></tr></tbody></table></figure><p><span>在这种表示方法中，左边的位是最低位。</span></p><p><strong><code>Literals_Block_Type</code></strong></p><p><span>该字段使用第一个字节的最低2位，描述4种不同的块类型。</span></p><figure><table><thead><tr><th><code>Literals_Block_Type</code></th><th><span>Value</span></th></tr></thead><tbody><tr><td><code>Raw_Literals_Block</code></td><td><span>0</span></td></tr><tr><td><code>RLE_Literals_Block</code></td><td><span>1</span></td></tr><tr><td><code>Compressed_Literals_Block</code></td><td><span>2</span></td></tr><tr><td><code>Treeless_Literals_Block</code></td><td><span>3</span></td></tr></tbody></table></figure><ul><li><p><code>Raw_Literals_Block</code><span> - 字符是未压缩存储的。</span></p></li><li><p><code>RLE_Literals_Block</code><span> - 字符由一个单一的字节值组成， 重复</span><code>Regenerated_Size</code><span>次。</span></p></li><li><p><code>Compressed_Literals_Block</code><span> - 这是一个标准的哈夫曼压缩块，</span></p><p><span>从哈夫曼树描述开始，详情见下文。</span></p></li><li><p><code>Treeless_Literals_Block</code><span> - 这是一个哈夫曼压缩块，</span>
+<span>使用哈夫曼树</span><em><span>从以前的哈夫曼压缩字符块</span></em><span>。</span>
+<code>Huffman_Tree_Description</code><span> 将被跳过。</span>
+<span>注意：如果该模式被触发，而帧中没有任何先前的哈夫曼表（或</span><a href='#字典格式'><span>字典</span></a><span>），</span>
+<span>这应该被视为数据损坏。</span></p></li></ul><p><strong><code>Size_Format</code></strong></p><p><code>Size_Format</code><span>分为2个家族：</span></p><ul><li><p><span>对于 </span><code>Raw_Literals_Block</code><span>和 </span><code>RLE_Literals_Block</code><span>，</span></p><p><span>只需要对 </span><code>Regenerated_Size</code><span>进行解码。</span>
+<span>没有 </span><code>Compressed_Size</code><span> 字段。</span></p></li><li><p><span>对于 </span><code>Compressed_Block</code><span> 和 </span><code>Treeless_Literals_Block</code><span>，</span></p><p><span>需要对 </span><code>Compressed_Size</code><span> 和 </span><code>Regenerated_Size</code><span>（解压后的大小）进行解码。</span>
+<span>还需要解码流的数量（1或4）。</span></p></li></ul><p><span>对于跨越几个字节的值，惯例是</span><strong><span>小端</span></strong><span>。</span></p><p><strong><code>Raw_Literals_Block</code><span> 和 </span><code>RLE_Literals_Block</code><span> 的  </span><code>Size_Format</code></strong><span> :</span></p><p><code>Size_Format</code><span> 使用 1 </span><em><span>或</span></em><span> 2 bits.</span>
+<span>其值为： </span><code>Size_Format = (Literals_Section_Header[0]&gt;&gt;2) &amp; 3</code></p><ul><li><code>Size_Format</code><span> == 00 或 10 : </span><code>Size_Format</code><span> 使用 1 bit.</span>
+<span>    </span><code>Regenerated_Size</code><span> 使用5 bits (0-31).</span>
+<span>    </span><code>Literals_Section_Header</code><span> 使用 1 byte.</span>
+<span>    </span><code>Regenerated_Size = Literals_Section_Header[0]&gt;&gt;3</code></li><li><code>Size_Format</code><span> == 01 : </span><code>Size_Format</code><span> 使用 2 bits.</span>
+<span>    </span><code>Regenerated_Size</code><span> 使用 12 bits (0-4095).</span>
+<span>    </span><code>Literals_Section_Header</code><span> 使用 2 bytes.</span>
+<span>    </span><code>Regenerated_Size = (Literals_Section_Header[0]&gt;&gt;4) + (Literals_Section_Header[1]&lt;&lt;4)</code></li><li><code>Size_Format</code><span> == 11 : </span><code>Size_Format</code><span> 使用 2 bits.</span>
+<span>    </span><code>Regenerated_Size</code><span> 使用 20 bits (0-1048575).</span>
+<span>    </span><code>Literals_Section_Header</code><span> 使用 3 bytes.</span>
+<span>    </span><code>Regenerated_Size = (Literals_Section_Header[0]&gt;&gt;4) + (Literals_Section_Header[1]&lt;&lt;4) + (Literals_Section_Header[2]&lt;&lt;12)</code></li></ul><p><span>对于这些情况，只有 Stream1 存在。</span>
+<span>注意：允许使用长格式来表示一个短值（例如</span><code>13</code><span>），</span>
+<span>即使它的效率较低。</span></p><p><strong><code>Compressed_Literals_Block</code><span> 和 </span><code>Treeless_Literals_Block</code><span> 的 </span><code>Size_Format</code><span> </span></strong><span> :</span></p><p><code>Size_Format</code><span> 总是使用 2 bits.</span></p><ul><li><code>Size_Format</code><span> == 00 : </span><em><span>一个单一的流</span></em><span>。</span>
+<span>    </span><code>Regenerated_Size</code><span> 和 </span><code>Compressed_Size</code><span> 两者使用 10 bits (0-1023).</span>
+<span>   </span><code>Literals_Section_Header</code><span> 使用 3 bytes.</span></li><li><code>Size_Format</code><span> == 01 : 4 streams.</span>
+<span>    </span><code>Regenerated_Size</code><span> 和 </span><code>Compressed_Size</code><span> 使用 10 bits (0-1023).</span>
+<span>     </span><code>Literals_Section_Header</code><span> 使用 3 bytes.</span></li><li><code>Size_Format</code><span> == 10 : 4 streams.</span>
+<span>    </span><code>Regenerated_Size</code><span> 和 </span><code>Compressed_Size</code><span> 两者使用14 bits (0-16383).</span>
+<span>   </span><code>Literals_Section_Header</code><span> 使用 4 bytes.</span></li><li><code>Size_Format</code><span> == 11 : 4 streams.</span>
+<span>    </span><code>Regenerated_Size</code><span> 和 </span><code>Compressed_Size</code><span>两者使用 18 bits (0-262143).</span>
+<span>    </span><code>Literals_Section_Header</code><span> 使用 5 bytes.</span></li></ul><p><span> </span><code>Compressed_Size</code><span> 和 </span><code>Regenerated_Size</code><span> 两个字段均遵循</span><strong><span>小端</span></strong><span>惯例。</span>
+<span>注意：</span><code>Compressed_Size</code><span> </span><strong><span>包含</span></strong><span>了哈夫曼树描述的大小，</span><em><span>当它存在时</span></em><span>。</span></p><h4><a name="raw-literals-block" class="md-header-anchor"></a><span>Raw Literals Block</span></h4><p><span>Stream1 中的数据是 </span><code>Regenerated_Size</code><span> 字节长。</span>
+<span>它包含了[序列执行]时要使用的原始文字数据。</span></p><h4><a name="rle-literals-block" class="md-header-anchor"></a><span>RLE Literals Block</span></h4><p><span>Stream1 由一个单一的字节组成，应该重复</span><code>Regenerated_Size</code><span> 次来生成解码的字符。</span></p><h4><a name="compressed-literals-block-和-treeless-literals-block" class="md-header-anchor"></a><span>Compressed Literals Block 和 Treeless Literals Block</span></h4><p><span>这两种模式都包含哈夫曼编码的数据。</span></p><p><span>对于 </span><code>Treeless_Literals_Block</code><span>，哈夫曼表来自于先前压缩过的字符块，或来自于一个字典。</span></p><h3><a name="哈夫曼树描述" class="md-header-anchor"></a><span>哈夫曼树描述</span></h3><p><span>本节仅在 </span><code>Literals_Block_Type</code><span> 类型为</span><code>Compressed_Literals_Block</code><span>(</span><code>2</code><span>) 时出现。</span>
+<span>赫夫曼树描述的格式可以在</span><a href='#哈夫曼树描述哈夫曼树描述'><span>哈夫曼树描述</span></a><span>中找到。</span>
+<code>Huffman_Tree_Description</code><span> 的大小在解码过程中决定。</span>
+<span>必须用它来确定流的起点。</span>
+<code>Total_Streams_Size = Compressed_Size - Huffman_Tree_Description_Size</code><span>.</span></p><h3><a name="跳转表" class="md-header-anchor"></a><span>跳转表</span></h3><p><span>当仅有4个哈夫曼编码的流时，跳转表才会出现。</span></p><p><span>提醒 : 哈夫曼压缩数据由1个或4个哈夫曼编码流组成。</span></p><p><span>如果仅有一个流，它是一个单一的比特流，</span>
+<span>占据了整个剩余的字元块部分，如</span><a href='#哈夫曼编码流'><span>哈夫曼编码流</span></a><span>中所述的编码。</span></p><p><span>如果有四个流，</span><code>Literals_Section_Header</code><span> 只提供了足够的信息来知道所有四个流的解压和压缩大小</span><em><span>合计</span></em><span>。</span>
+<span>每个流的解压大小等于</span><code>(Regenerated_Size+3)/4</code><span>，除了最后一个流可以小3个字节，</span>
+<span>达到 </span><code>Regenerated_Size</code><span> 中规定的总解压大小。</span></p><p><span>每个流的压缩大小是在跳转表中明确提供的。</span>
+<span>跳跃表长6字节，由三个2字节的</span><strong><span>小端</span></strong><span>字段组成，</span>
+<span>描述前三个流的压缩大小。</span>
+<code>Stream4_Size</code><span> 是由 </span><code>Total_Streams_Size</code><span> 减去其他流的大小计算出来的。</span></p><p><code>Stream4_Size = Total_Streams_Size - 6 - Stream1_Size - Stream2_Size - Stream3_Size</code><span>.</span></p><p><span>注意：</span><code>Stream1_Size + Stream2_Size + Stream3_Size &gt; Total_Streams_Size</code><span>，</span>
+<span>数据被认为是损坏的。</span></p><p><span>这4个比特流中的每一个都会被独立解码为哈夫曼编码流，如</span><a href='#哈夫曼编码流'><span>哈夫曼编码流</span></a><span>所述。</span></p><h2><a name="序列部分" class="md-header-anchor"></a><span>序列部分</span></h2><p><span>一个压缩块是一个连续的</span><em><span>序列</span></em><span>。</span>
+<span>一个序列是一个字符复制命令，然后是一个匹配复制命令。</span>
+<span>字符复制命令指定了一个长度。</span>
+<span>它是要从字面部分复制（或提取）的字节数。</span>
+<span>匹配复制命令指定一个偏移量和一个长度。</span></p><p><span>当所有</span><em><span>序列</span></em><span>都被解码后，</span>
+<span>如果在</span><em><span>字符部分</span></em><span>还有字数，</span>
+<span>这些字节被添加在块的最后。</span></p><p><span>在</span><a href='#序列执行'><span>序列执行</span></a><span>中有更详细的描述。</span></p><p><code>Sequences_Section</code><span> 将解码命令所需的所有符号重新组合。</span>
+<span>有3种符号类型：字长、偏移量和匹配长度。</span>
+<span>它们一起编码，交错在一个单一的</span><em><span>比特流</span></em><span>中。</span></p><p><code>Sequences_Section</code><span> 首先是一个头，</span>
+<span>然后是每个符号类型的可选概率表，</span>
+<span>接着是比特流。</span></p><figure><table><thead><tr><th><code>Sequences_Section_Header</code></th><th><span>[</span><code>Literals_Length_Table</code><span>]</span></th><th><span>[</span><code>Offset_Table</code><span>]</span></th><th><span>[</span><code>Match_Length_Table</code><span>]</span></th><th><span>bitStream</span></th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure><p><span>要对 </span><code>Sequences_Section</code><span> 进行解码，需要知道其大小。</span>
+<span>它的大小是由 </span><code>Literals_Section</code><span> 的大小推导出来的。</span>
+<code>Sequences_Section_Size = Block_Size -Literals_Section_Size</code><span>。</span></p><h4><a name="序列部分头部" class="md-header-anchor"></a><span>序列部分头部</span></h4><p><span>由 2 项组成：</span></p><ul><li><code>Number_of_Sequences</code></li><li><span>Symbol compression modes</span></li></ul><p><strong><code>Number_of_Sequences</code></strong></p><p><span>这是一个大小可变的字段，使用1到3个字节。</span>
+<span>让我们称它的第一个字节为 </span><code>byte0</code><span>。</span></p><ul><li><code>if (byte0 == 0)</code><span> :没有任何序列。</span>
+<span>    序列部分到此为止。</span>
+<span>    解压后的内容完全被定义为</span><strong><span>字符部分</span></strong><span>内容。</span>
+<span>    </span><code>Repeat_Mode</code><span> 中使用的 FSE 表不更新。</span></li><li><code>if (byte0 &lt; 128)</code><span> : </span><code>Number_of_Sequences = byte0</code><span> . 使用 1 byte.</span></li><li><code>if (byte0 &lt; 255)</code><span> : </span><code>Number_of_Sequences = ((byte0-128) &lt;&lt; 8) + byte1</code><span> . 使用 2 bytes.</span></li><li><code>if (byte0 == 255)</code><span>: </span><code>Number_of_Sequences = byte1 + (byte2&lt;&lt;8) + 0x7F00</code><span> . 使用 3 bytes.</span></li></ul><p><strong><span>符号压缩模式</span></strong></p><p><span>这是一个单字节，定义了每个符号类型的压缩模式。</span></p><figure><table><thead><tr><th><span>Bit number</span></th><th><span>7-6</span></th><th><span>5-4</span></th><th><span>3-2</span></th><th><span>1-0</span></th></tr></thead><tbody><tr><td><span>Field name</span></td><td><code>Literals_Lengths_Mode</code></td><td><code>Offsets_Mode</code></td><td><code>Match_Lengths_Mode</code></td><td><code>Reserved</code></td></tr></tbody></table></figure><p><span>最后一个字段 </span><code>Reserved</code><span>，必须全是 0。</span></p><p><code>Literals_Lengths_Mode</code><span>, </span><code>Offsets_Mode</code><span> 和 </span><code>Match_Lengths_Mode</code><span> </span>
+<span>分别定义了字面长度、偏移量和匹配长度符号的 </span><code>Compression_Mode</code><span>。</span></p><p><span>它们遵循相同的枚举法。</span></p><figure><table><thead><tr><th><span>Value</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th></tr></thead><tbody><tr><td><code>Compression_Mode</code></td><td><code>Predefined_Mode</code></td><td><code>RLE_Mode</code></td><td><code>FSE_Compressed_Mode</code></td><td><code>Repeat_Mode</code></td></tr></tbody></table></figure><ul><li><p><code>Predefined_Mode</code><span> : 使用了一个预定义的 FSE 分布表，定义在 </span><a href='#默认分布'><span>默认分布</span></a><span>。</span>
+<span>    不会出现分配表。</span></p></li><li><p><code>RLE_Mode</code><span> : 表的描述由一个单字节组成，其中包含符号的值。</span>
+<span>    这个符号将用于所有序列。</span></p></li><li><p><code>FSE_Compressed_Mode</code><span> : 标准的 FSE 压缩。 会有一个分布表。</span>
+<span>    这个分布表的格式在</span><a href='#fse-table-description'><span>FSE 表说明</span></a><span>中描述。</span>
+<span>    注意，字长和匹配长度表的最大允许精度对数为9，</span>
+<span>    而偏移表的最大精度对数为8。  </span></p><p><span>    </span><code>FSE_Compressed_Mode</code><span> 当只有一个符号时不能使用,</span>
+<span>​    </span><code>RLE_Mode</code><span> 应该使用（尽管任何其他模式都可以）。</span></p></li><li><p><code>Repeat_Mode</code><span>：将再次使用之前 </span><code>Compressed_Block</code><span> 中使用的</span><code>Number_of_Sequences&gt;0</code><span> 的表格，</span>
+<span>    或如果这是第一个块，将使用字典中的表。</span>
+<span>    请注意，这包括 </span><code>RLE_mode</code><span>，所以如果 </span><code>Repeat_Mode</code><span> 在</span><code>RLE_Mode</code><span> 之后，同样的符号将被重复。</span>
+<span>    它还包括 </span><code>Predefined_Mode</code><span>，在这种情况下，</span><code>Repeat_Mode</code><span>的结果将与</span><code>Predefined_Mode</code><span>相同。</span>
+<span>    不会出现分配表。如果在帧中没有任何先前的序列表的情况下使用该模式，则会出现以下情况</span>
+<span>    (也不是</span><a href='#字典格式'><span>字典</span></a><span>)来重复，这应按腐蚀处理。</span></p></li></ul><h4><a name="字符长度匹配长度偏移代码" class="md-header-anchor"></a><span>字符长度、匹配长度、偏移代码</span></h4><p><span>每一个符号在其自身的背景下都是一个</span><em><span>代码</span></em><span>,</span>
+<span>其中指定了要添加的 </span><code>Baseline</code><span> 和 </span><code>Number_of_Bits</code><span> 。</span>
+<em><span>代码</span></em><span>是经过 FSE 压缩的，</span>
+<span>并与同一比特流中的原始附加位交织在一起。</span></p><h5><a name="字符长度代码" class="md-header-anchor"></a><span>字符长度代码</span></h5><p><span>字符长度代码是包括 </span><code>0</code><span> 至 </span><code>35</code><span> 的数值。</span>
+<span>它们定义的长度从 0到 131071字节。</span>
+<span>字符长度等于解码后的 </span><code>Baseline</code><span>  加上从比特流中读取 </span><code>Number_of_Bits</code><span> 的结果，</span>
+<span>作为一个</span><strong><span>小端</span></strong><span>值。</span></p><figure><table><thead><tr><th><code>Literals_Length_Code</code></th><th><span>0-15</span></th></tr></thead><tbody><tr><td><span>length</span></td><td><code>Literals_Length_Code</code></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>0</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Literals_Length_Code</code></th><th><span>16</span></th><th><span>17</span></th><th><span>18</span></th><th><span>19</span></th><th><span>20</span></th><th><span>21</span></th><th><span>22</span></th><th><span>23</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>16</span></td><td><span>18</span></td><td><span>20</span></td><td><span>22</span></td><td><span>24</span></td><td><span>28</span></td><td><span>32</span></td><td><span>40</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>1</span></td><td><span>1</span></td><td><span>1</span></td><td><span>1</span></td><td><span>2</span></td><td><span>2</span></td><td><span>3</span></td><td><span>3</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Literals_Length_Code</code></th><th><span>24</span></th><th><span>25</span></th><th><span>26</span></th><th><span>27</span></th><th><span>28</span></th><th><span>29</span></th><th><span>30</span></th><th><span>31</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>48</span></td><td><span>64</span></td><td><span>128</span></td><td><span>256</span></td><td><span>512</span></td><td><span>1024</span></td><td><span>2048</span></td><td><span>4096</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>4</span></td><td><span>6</span></td><td><span>7</span></td><td><span>8</span></td><td><span>9</span></td><td><span>10</span></td><td><span>11</span></td><td><span>12</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Literals_Length_Code</code></th><th><span>32</span></th><th><span>33</span></th><th><span>34</span></th><th><span>35</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>8192</span></td><td><span>16384</span></td><td><span>32768</span></td><td><span>65536</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>13</span></td><td><span>14</span></td><td><span>15</span></td><td><span>16</span></td></tr></tbody></table></figure><h5><a name="匹配长度代码" class="md-header-anchor"></a><span>匹配长度代码</span></h5><p><span>匹配长度代码是包括 </span><code>0</code><span> 至 </span><code>52</code><span> 的数值。</span>
+<span>它们定义的长度为 3至 131074字节。</span>
+<span>匹配长度等于解码后的 </span><code>Baseline</code><span> 再加上从比特流中读取</span><code>Number_of_Bits</code><span> 位的结果，</span>
+<span>作为一个</span><strong><span>小端</span></strong><span>值。</span></p><figure><table><thead><tr><th><code>Match_Length_Code</code></th><th><span>0-31</span></th></tr></thead><tbody><tr><td><span>value</span></td><td><code>Match_Length_Code</code><span> + 3</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>0</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Match_Length_Code</code></th><th><span>32</span></th><th><span>33</span></th><th><span>34</span></th><th><span>35</span></th><th><span>36</span></th><th><span>37</span></th><th><span>38</span></th><th><span>39</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>35</span></td><td><span>37</span></td><td><span>39</span></td><td><span>41</span></td><td><span>43</span></td><td><span>47</span></td><td><span>51</span></td><td><span>59</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>1</span></td><td><span>1</span></td><td><span>1</span></td><td><span>1</span></td><td><span>2</span></td><td><span>2</span></td><td><span>3</span></td><td><span>3</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Match_Length_Code</code></th><th><span>40</span></th><th><span>41</span></th><th><span>42</span></th><th><span>43</span></th><th><span>44</span></th><th><span>45</span></th><th><span>46</span></th><th><span>47</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>67</span></td><td><span>83</span></td><td><span>99</span></td><td><span>131</span></td><td><span>259</span></td><td><span>515</span></td><td><span>1027</span></td><td><span>2051</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>4</span></td><td><span>4</span></td><td><span>5</span></td><td><span>7</span></td><td><span>8</span></td><td><span>9</span></td><td><span>10</span></td><td><span>11</span></td></tr></tbody></table></figure><figure><table><thead><tr><th><code>Match_Length_Code</code></th><th><span>48</span></th><th><span>49</span></th><th><span>50</span></th><th><span>51</span></th><th><span>52</span></th></tr></thead><tbody><tr><td><code>Baseline</code></td><td><span>4099</span></td><td><span>8195</span></td><td><span>16387</span></td><td><span>32771</span></td><td><span>65539</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>12</span></td><td><span>13</span></td><td><span>14</span></td><td><span>15</span></td><td><span>16</span></td></tr></tbody></table></figure><h5><a name="偏移代码" class="md-header-anchor"></a><span>偏移代码</span></h5><p><span>偏移代码的数值范围从</span><code>0</code><span>到</span><code>N</code><span>。</span></p><p><span>解码器可自由限制其支持的最大</span><code>N</code><span>值。</span>
+<span>建议至少支持到</span><code>22</code><span>。</span>
+<span>为了解情况，在撰写本文时。</span>
+<span>参考解码器支持的最大</span><code>N</code><span>值为</span><code>31</code><span>。</span></p><p><span>偏移码也是以</span><strong><span>小端</span></strong><span>方式读取的附加位数。</span>
+<span>并可使用以下公式将其转化为 </span><code>Offset_Value</code><span> 。</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>2</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">Offset_Value = (1 &lt;&lt; offsetCode) + readNBits(offsetCode);</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">if (Offset_Value &gt; 3) offset = Offset_Value - 3;</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 33px;"></div><div class="CodeMirror-gutters" style="height: 33px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>这意味着最大的 </span><code>Offset_Value</code><span> 是 </span><code>(2^(N+1))-1</code><span>。</span>
+<span>支持最大 </span><code>(2^(N+1))-4</code><span> 的反向参考距离。</span>
+<span>但受到</span><a href='#windowdescriptor'><span>最大反向参考距离</span></a><span>的限制。</span></p><p><code>Offset_Value</code><span> 从 1到 3是特殊的：它们定义了 &quot;重复代码&quot;。</span>
+<span>这在</span><a href='#重复偏移'><span>重复偏移</span></a><span>中有更详细的描述。</span></p><h4><a name="解码序列" class="md-header-anchor"></a><span>解码序列</span></h4><p><span>FSE 位流的读取方向与写入方向相反。在 zstd 中</span>
+<span>压缩器将位向前写入块中，而解压器则将位向前写入块中。</span>
+<span>必须</span><em><span>反向</span></em><span>读取比特流。</span></p><p><span>因此，要找到比特流的起始点，就需要</span>
+<span>知道块的最后一个字节的偏移量，可以找到</span>
+<span>通过计算块头后的</span><code>Block_Size</code><span>字节。</span></p><p><span>在写完包含信息的最后一位后，压缩器写一个</span><code>1</code><span>位，</span>
+<span>然后用 0-7</span><code>0</code><span>位填充字节。为此，</span>
+<span>压缩后的比特流的最后一个字节不能是</span><code>0</code><span>。</span></p><p><span>解压时，最后一个包含填充的字节是第一个要读取的字节。</span>
+<span>解压器需要跳过 0-7 个初始 </span><code>0</code><span> 位和出现的第一个</span><code>1</code><span>位。</span>
+<span>之后，比特流有用的部分才开始。</span></p><p><span>FSE 解码需要一个 &quot;状态 &quot;从符号到符号。</span>
+<span>关于 FSE 解码的更多解释，请参见</span><a href='#fse-序列'><span>FSE 序列</span></a><span>。</span></p><p><span>对于序列解码，一个单独的状态会跟踪每个字面长度、</span>
+<span>偏移量和匹配长度符号。还使用了一些 FSE 基元。</span>
+<span>有关这些基元操作的更多详情，请参见 </span><a href='#fse-序列'><span>FSE 序列</span></a><span>.</span></p><h5><a name="起始状态" class="md-header-anchor"></a><span>起始状态</span></h5><p><span>比特流从初始的 FSE 状态值开始，从其归一化分布中解码之前，</span>
+<span>每个状态值都使用各自的 </span><em><span>精度</span></em><span>所需的比特数。</span></p><p><span>首先是 </span><code>Literals_Length_State</code><span>,</span>
+<span>其次是 </span><code>Offset_State</code><span>,</span>
+<span>最后是 </span><code>Match_Length_State</code><span>.</span></p><p><span>提醒：请记住，所有的值都是向后读的，</span>
+<span>所以比特流的 &quot;开始 &quot;是在内存中的最高位置，</span>
+<span>紧靠最后的 </span><code>1</code><span> 位之前。</span></p><p><span>在对起始状态进行解码后，单个序列被解码</span>
+<code>Number_Of_Sequences</code><span> 次。这些序列按从头到尾的顺序进行解码。</span>
+<span>由于压缩器在前进方向上写入比特流，这意味着压缩器必须从最后一个</span>
+<span>序列开始编码，从第一个序列结束。</span></p><h5><a name="解码序列-n703" class="md-header-anchor"></a><span>解码序列</span></h5><p><span>对于每一种符号类型，可以使用 FSE 状态来确定适当的代码。</span>
+<span>然后，该代码定义了每种类型要读取的 </span><code>Baseline</code><span> 和 </span><code>Number_of_Bits</code><span> 。</span>
+<span>关于如何确定这些值，请参见</span><a href='#字符长度匹配长度偏移代码'><span>代码描述</span></a><span>。</span></p><p><span>解码首先读取解码 </span><code>Offset</code><span> 所需的 </span><code>Number_of_Bits</code><span>，</span>
+<span>然后对</span><code>Match_Length</code><span> 和 </span><code>Literals_Length</code><span> 进行同样的操作。</span>
+<span>这个序列就会被用于</span><a href='#序列执行'><span>序列执行</span></a><span>。</span></p><p><span>如果它不是块中的最后一个序列，下一个操作是更新状态。</span>
+<span>利用解码表中预先计算好的规则，</span><code>Literals_Length_State</code><span> 已更新，</span>
+<span>后面是  </span><code>Match_Length_State</code><span> 和 </span><code>Offset_State</code><span>。</span>
+<span>关于如何从位流中更新状态，请参见</span><a href='#fse-序列'><span>FSE 序列</span></a><span>。</span></p><p><span>这个操作将重复 </span><code>Number_of_Sequences</code><span> 次。</span>
+<span>最后，比特流将被全部消耗掉。</span>
+<span>否则，比特流将被视为损坏。</span></p><h4><a name="默认分布" class="md-header-anchor"></a><span>默认分布</span></h4><p><span>如果为某一符号类型选择了 </span><code>Predefined_Mode</code><span> 。</span>
+<span>其 FSE  解码表是由这里定义的预定义分布表生成的。</span>
+<span>关于如何将该分布表转换为解码表的详细信息，请参见 </span><a href='#从归一化分布到解码表'><span>FSE 部分</span></a><span>.</span></p><h5><a name="字符长度" class="md-header-anchor"></a><span>字符长度</span></h5><p><span>解码表使用 6bits 精度的日志（64个状态）</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>4</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">short literalsLength_defaultDistribution[36] =</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  { 4, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">3</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;  2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 1, 1, 1, 1, 1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">4</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; -1,-1,-1,-1 };</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 67px;"></div><div class="CodeMirror-gutters" style="height: 67px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><h5><a name="匹配长度" class="md-header-anchor"></a><span>匹配长度</span></h5><p><span>解码表使用 6bits 精度的日志（64个状态）</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>5</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation" style=""><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">short matchLengths_defaultDistribution[53] =</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  { 1, 4, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">3</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">4</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,-1,-1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">5</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; -1,-1,-1,-1,-1 };</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 83px;"></div><div class="CodeMirror-gutters" style="height: 83px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><h5><a name="偏移代码-n718" class="md-header-anchor"></a><span>偏移代码</span></h5><p><span>解码表使用 5 bits 精度的日志（32个状态），</span>
+<span>并支持最大 </span><code>N</code><span> 值为 28，允许偏移值达到 536,870,908。</span></p><p><span>如果压缩块中的任何序列需要比这更大的偏移量，</span>
+<span>不可能用默认的分布来表示。</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>3</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">short offsetCodes_defaultDistribution[29] =</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  { 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1,</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">3</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;  1, 1, 1, 1, 1, 1, 1, 1,-1,-1,-1,-1,-1 };</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 50px;"></div><div class="CodeMirror-gutters" style="height: 50px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><h2><a name="序列执行" class="md-header-anchor"></a><span>序列执行</span></h2><p><span>一旦字符和序列被解码，</span>
+<span>它们组合在一起，产生一个块的解码内容。</span></p><p><span>每个序列都由一个元组组成（</span><code>literals_length</code><span>、</span><code>offset_value</code><span>、</span><code>match_length</code><span>），</span>
+<span>按照</span><a href='#序列部分'><span>序列部分</span></a><span>中的描述进行解码。</span>
+<span>要执行一个序列，首先要从解码后的字符拷贝</span><code>literals_length</code><span>字节到输出中。</span></p><p><span>然后，</span><code>match_length</code><span> 字节从之前的解码数据中复制出来。</span>
+<span>复制的偏移量由</span><code>offset_value</code><span>决定：</span>
+<span>如果</span><code>offset_value&gt;3</code><span>，则偏移量为</span><code>offset_value - 3</code><span>。</span>
+<span>如果</span><code>offset_value</code><span>是 1-3，则偏移量是一个特殊的重复偏移值。</span>
+<span>关于这种情况下如何确定偏移量，请参见</span><a href='#重复偏移'><span>重复偏移</span></a><span>部分。</span></p><p><span>偏移量定义为从当前位置开始，所以偏移量为6，匹配长度为3 意味着应该从 6个字节复制 3个字节回来。</span>
+<span>请注意，所有的偏移量都会导致之前解码的数据。</span>
+<span>必须小于在</span><code>Frame_Header_Descriptor</code><span>中定义的</span><code>Window_Size</code><span>。</span></p><h4><a name="重复偏移" class="md-header-anchor"></a><span>重复偏移</span></h4><p><span>请参见 </span><a href='#序列执行'><span>序列执行</span></a><span>，</span>
+<span>前 3个值定义了一个重复的偏移量，我们称它们为</span>
+<span> </span><code>Repeated_Offset1</code><span>、</span><code>Repeated_Offset2</code><span> 和 </span><code>Repeated_Offset3</code><span>。</span>
+<span>它们按时间顺序排列，</span><code>Repeated_Offset1</code><span> 表示  &quot;最近的一个&quot;。</span></p><p><span>如果 </span><code>offset_value ==1</code><span>，那么使用的偏移量就是</span><code>Repeated_Offset1</code><span> etc.</span></p><p><span>但也有例外，在当前序列 </span><code>literals_length = 0</code><span>时。</span>
+<span>在这种情况下，重复偏移量会被移位1，</span>
+<span>所以 </span><code>offset_value</code><span> 为 1，意味着</span><code>Repeated_Offset2</code><span>，</span>
+<code>offset_value</code><span> 为 2， 表示</span><code>Repeated_Offset3</code><span>，</span>
+<span>而  </span><code>offset_value</code><span> 为3，则表示 </span><code>Repeated_Offset1 - 1_byte</code><span>。</span></p><p><span>对于第一块，开始的偏移历史被填充为以下值：</span>
+<code>Repeated_Offset1</code><span>=1，</span><code>Repeated_Offset2</code><span>=4，</span><code>Repeated_Offset3</code><span>=8，</span>
+<span>除非使用了字典，在这种情况下，它们来自字典。</span></p><p><span>然后，每个块从最近的 </span><code>Compressed_Block</code><span> 的结束值中获得它的起始偏移历史。</span>
+<span>注意，不是 </span><code>Compressed_Block</code><span> 的块会被跳过，它们不会对偏移历史做出贡献。</span></p><h6><a name="偏移更新规则" class="md-header-anchor"></a><span>偏移更新规则</span></h6><p><span>在执行 </span><code>Compressed_Block</code><span> 序列的过程中，</span><code>Repeated_Offsets</code><span> 的值是最新的，</span>
+<span>因此它们总是代表三个最近使用的偏移量。</span>
+<span>为此，在执行每个序列后，以下列方式更新这些值：</span></p><p><span>当序列的 </span><code>offset_value</code><span> 不指向 </span><code>Repeated_Offsets</code><span> 之一时</span>
+<span>-- 当它的值大于3，或者当它的值为3，而序列</span><code>literals_length</code><span> 为零时</span>
+<span>--</span><code>Repeated_Offsets</code><span>的值都向后移动一个，</span>
+<span>而</span><code>Repeated_Offset1</code><span>则采用刚刚使用的偏移值。</span></p><p><span>否则，当序列的 </span><code>offset_value</code><span> 指的是 &quot;Repeated_Offsets &quot;中的一个</span>
+<span>-- 当它的值为 1或 2时，或当它的值为 3且序列的</span><code>literals_length</code><span> 是非零时；</span>
+<span>-- </span><code>Repeated_Offset</code><span> 重新排序，使</span><code>Repeated_Offset1</code><span>采用所使用的 Repeated_Offset 的值。</span>
+<span>并将现有的值从第一个 </span><code>Repeated_Offset</code><span>推回到由 </span><code>offset_value</code><span> 选择的 </span><code>Repeated_Offset</code><span>。</span>
+<span>这就有效地对这些偏移量的值进行了单步包络旋转。 以便它们的顺序再次反映出它们的使用频率。</span></p><p><span>下表显示了 </span><code>Repeated_Offsets</code><span> 的值，因为对它们应用了一系列序列：</span></p><figure><table><thead><tr><th style='text-align:center;' ><code>offset_value</code></th><th style='text-align:center;' ><code>literals_length</code></th><th style='text-align:center;' ><code>Repeated_Offset1</code></th><th style='text-align:center;' ><code>Repeated_Offset2</code></th><th style='text-align:center;' ><code>Repeated_Offset3</code></th><th style='text-align:center;' ><span>Comment</span></th></tr></thead><tbody><tr><td style='text-align:center;' >&nbsp;</td><td style='text-align:center;' >&nbsp;</td><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>4</span></td><td style='text-align:center;' ><span>8</span></td><td style='text-align:center;' ><span>starting values</span></td></tr><tr><td style='text-align:center;' ><span>1114</span></td><td style='text-align:center;' ><span>11</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>4</span></td><td style='text-align:center;' ><span>non-repeat</span></td></tr><tr><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>22</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>4</span></td><td style='text-align:center;' ><span>repeat 1; no change</span></td></tr><tr><td style='text-align:center;' ><span>2225</span></td><td style='text-align:center;' ><span>22</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>non-repeat</span></td></tr><tr><td style='text-align:center;' ><span>1114</span></td><td style='text-align:center;' ><span>111</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>non-repeat</span></td></tr><tr><td style='text-align:center;' ><span>3336</span></td><td style='text-align:center;' ><span>33</span></td><td style='text-align:center;' ><span>3333</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>non-repeat</span></td></tr><tr><td style='text-align:center;' ><span>2</span></td><td style='text-align:center;' ><span>22</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>3333</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>repeat 2; swap 1 &amp; 2</span></td></tr><tr><td style='text-align:center;' ><span>3</span></td><td style='text-align:center;' ><span>33</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>3333</span></td><td style='text-align:center;' ><span>repeat 3; rotate 3 to 1</span></td></tr><tr><td style='text-align:center;' ><span>3</span></td><td style='text-align:center;' ><span>0</span></td><td style='text-align:center;' ><span>2221</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>1111</span></td><td style='text-align:center;' ><span>insert resolved offset</span></td></tr><tr><td style='text-align:center;' ><span>1</span></td><td style='text-align:center;' ><span>0</span></td><td style='text-align:center;' ><span>2222</span></td><td style='text-align:center;' ><span>2221</span></td><td style='text-align:center;' ><span>3333</span></td><td style='text-align:center;' ><span>repeat 2</span></td></tr></tbody></table></figure><h2><a name="可跳过帧" class="md-header-anchor"></a><span>可跳过帧</span></h2><figure><table><thead><tr><th style='text-align:center;' ><code>Magic_Number</code></th><th style='text-align:center;' ><code>Frame_Size</code></th><th style='text-align:center;' ><code>User_Data</code></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>4 bytes</span></td><td style='text-align:center;' ><span>4 bytes</span></td><td style='text-align:center;' ><span>n bytes</span></td></tr></tbody></table></figure><p><span>可跳过帧允许将用户定义的元数据插入到一个连贯的帧流中。</span>
+<span>本规范中定义的可跳帧与</span><a href='#http://www.lz4.org'><span>LZ4</span></a><span>帧兼容。</span></p><p><span>从兼容解码器的角度来看，可跳过的帧只需要跳过，</span>
+<span>而忽略其内容，在可跳过的帧之后恢复解码。</span></p><p><span>可以注意到，一个可跳过的帧可以被用来给嵌入任何类型的</span>
+<span>跟踪信息为连续的帧流打水印（甚至只是一个UUID）。</span>
+<span>对这种可能性保持警惕的用户应扫描连贯帧流，</span>
+<span>试图检测到这种帧，以便分析或删除。</span></p><p><strong><code>Magic_Number</code></strong></p><p><span>4 Bytes, </span><strong><span>小端</span></strong><span> 格式。</span>
+<span>值: 0x184D2A5?, 这意味着从 0x184D2A50 到 0x184D2A5F 的任何值。</span>
+<span>所有16个值都是有效的，可以识别一个可跳过的帧。</span>
+<span>本规范没有详细说明可跳转帧的具体标记。</span></p><p><strong><code>Frame_Size</code></strong></p><p><span>这是以下 </span><code>User_Data</code><span> 的大小，以字节为单位。</span>
+<span>(不包括魔数或大小字段本身)。</span>
+<span>这个字段使用4个字节，</span><strong><span>小端</span></strong><span>格式，无符号32位来表示。</span>
+<span>这意味着</span><code>User_Data</code><span>不能大于(2^32-1)个字节。</span></p><p><strong><code>User_Data</code></strong></p><p><code>User_Data</code><span>可以是任何东西。数据将被解码器跳过。</span></p><p>&nbsp;</p><h2><a name="熵编码" class="md-header-anchor"></a><span>熵编码</span></h2><p><span>Zstandard 格式使用两种熵编码：FSE 和哈夫曼编码。</span>
+<span>哈夫曼用于压缩字符，而 FSE 用于所有其他符号</span>
+<span>（</span><code>Literals_Length_Code</code><span>、</span><code>Match_Length_Code</code><span>、偏移代码）</span>
+<span>和压缩哈夫曼头部。</span></p><h2><a name="fse-序列" class="md-header-anchor"></a><span>FSE 序列</span></h2><p><span>FSE 是有限状态熵的简称，是一种基于</span><a href='#https://en.wikipedia.org/wiki/Asymmetric_Numeral_Systems'><span>ANS</span></a><span>的熵编解码器。</span></p><p><span>FSE 编码/解码 涉及到符号之间的状态。</span>
+<span>所以解码必须以与编码相反的方向进行。</span>
+<span>因此，所有的 FSE 位流都是从头到尾读的。</span>
+<span>请注意，比特流中的比特顺序不会颠倒。</span>
+<span>我们只需将元素的书写顺序反过来读取即可。</span></p><p><span>关于 FSE 的更多细节，请参见</span><a href='https://github.com/Cyan4973/FiniteStateEntropy/'><span>有限状态熵</span></a><span>。</span></p><p><span>FSE 解码涉及一个解码表，该表的大小为2的幂，包含三个元素：</span>
+<code>Symbol</code><span>, </span><code>Num_Bits</code><span>，和 </span><code>Baseline</code><span>.</span>
+<span>表大小的 </span><code>log2</code><span> 就是它的 </span><code>Accuracy_Log</code><span>。</span>
+<span>FSE 状态值代表该表的一个索引。</span></p><p><span>为了获得初始状态值，从流中消耗 </span><code>Accuracy_Log</code><span> 位作为一个</span><strong><span>小端</span></strong><span>值。</span>
+<span>流中的下一个符号是该状态的表中指示的</span><code>符号</code><span>。</span>
+<span>为了获得下一个状态值，解码器应该从流中消耗</span><code>Num_Bits</code><span>位作为一个</span><strong><span>小端</span></strong><span>值，</span>
+<span>并将其加到 </span><code>Baseline</code><span> 中。</span></p><h3><a name="fse-表描述" class="md-header-anchor"></a><span>FSE 表描述</span></h3><p><span>要对 FSE 流进行解码，需要构建解码表。</span>
+<span>Zstandard 格式对 FSE 表的描述编码如下：</span></p><p><span>FSE 分布表描述了从 </span><code>0</code><span> 到最后一个符号(包括在内)的所有符号的概率，</span>
+<span>归一化尺度为 </span><code>1 &lt;&lt; Accuracy_Log</code><span>。</span>
+<span>注意，必须有两个或两个以上的符号的概率非零。</span></p><p><span>这是一个位流，它是以</span><strong><span>小端</span></strong><span>的方式向前读取的。</span>
+<span>它不需要知道比特流的确切大小，它将被解码过程发现并报告。</span></p><p><span>比特流首先报告它在哪个尺度上运行。</span>
+<span>让 </span><code>low4Bits</code><span> 指定第一个字节的最低4位：</span>
+<code>Accuracy_Log = low4bits + 5</code><span>.</span></p><p><span>然后是每个符号值，从</span><code>0</code><span> 到最后一个。</span>
+<span>每个字段使用的位数是可变的。</span>
+<span>它取决于：</span></p><ul><li><span>剩余概率 + 1 :</span>
+<strong><span>示例</span></strong><span> :假设 </span><code>Accuracy_Log</code><span> 为 8。</span>
+<span>并假设已经分布了100个概率点。</span>
+<span>解码器可以读取从</span><code>0</code><span>到</span><code>256-100+1=157</code><span>(含)的任何值。</span>
+<span>因此，它必须读取</span><code>log2sup(157) == 8</code><span>位。</span></li><li><span>值解码：小值少用1位：</span>
+<strong><span>示例</span></strong><span> ：假设数值从 0到 157（含）都有可能。</span>
+<span>255-157 = 98 剩余的值在8位字段中</span>
+<span>它们是这样使用的：</span>
+<span>前 98 个值（因为从 0 到 97）只使用7位。</span>
+<span>从 98 到157 的值使用8位。</span>
+<span>这是通过这个方案实现的：</span></li></ul><figure><table><thead><tr><th><span>Value read</span></th><th><span>Value decoded</span></th><th><span>Number of bits used</span></th></tr></thead><tbody><tr><td><span>0 -  97</span></td><td><span>0 -  97</span></td><td><span>7</span></td></tr><tr><td><span>98 - 127</span></td><td><span>98 - 127</span></td><td><span>8</span></td></tr><tr><td><span>128 - 225</span></td><td><span>0 -  97</span></td><td><span>7</span></td></tr><tr><td><span>226 - 255</span></td><td><span>128 - 157</span></td><td><span>8</span></td></tr></tbody></table></figure><p><span>符号概率按顺序逐一读出。</span></p><p><span>概率由以下公式解码的值获得：</span>
+<code>Proba = value - 1</code></p><p><span>这意味着值 </span><code>0</code><span> 变成负概率 </span><code>-1</code><span>。</span>
+<code>-1</code><span> 是一个特殊概率，意思是 &quot;小于1&quot;。</span>
+<span>它对分配表的影响在</span><a href='#从归一化分布到解码表'><span>下一节</span></a><span>中描述。</span>
+<span>为了计算总的分配概率点，它算作一个。</span></p><p><span>当一个符号的</span><strong><span>概率</span></strong><span>为 </span><code>0</code><span> 时，</span>
+<span>后面是一个 2位 的重复标志。</span>
+<span>这个重复标志告诉我们当前的 0 后面有多少个概率，</span>
+<span>它提供了一个从 0 到 3 的数字。</span>
+<span>如果是 3，则后面还有一个 2位的重复标志，以此类推。</span></p><p><span>当最后一个符号累计达到</span><code>1 &lt;&lt; Accuracy_Log</code><span>时，解码完成。</span>
+<span>如果最后一个符号使累计总数超过</span><code>1 &lt;&lt; Accuracy_Log</code><span>，则认为分布被破坏。</span></p><p><span>那么解码器就可以知道这个过程中使用了多少个字节，</span>
+<span>有多少个符号。</span>
+<span>比特流消耗的字节数是整数。</span>
+<span>最后一个字节内的任何剩余位都是未使用的。</span></p><h4><a name="从归一化分布到解码表" class="md-header-anchor"></a><span>从归一化分布到解码表</span></h4><p><span>归一化概率的分布足以建立一个独特的解码表。</span></p><p><span>它遵循以下构建规则：</span></p><p><span>该表的大小为</span><code>Table_Size = 1 &lt;&lt; Accuracy_Log</code><span>。</span>
+<span>每个单元描述了解码的符号，以及获得下一个状态的指令（</span><code>Number_of_Bits</code><span>和</span><code>Baseline</code><span>）。</span></p><p><span>符号按其自然顺序扫描 &quot;小于1&quot; 的概率。</span>
+<span>具有这种概率的符号被赋予一个单一的单元格，从表的末尾开始，然后撤退。</span>
+<span>这些符号定义了一个完整的状态复位，读取</span><code>Accuracy_Log</code><span>位。</span></p><p><span>然后，按自然顺序排列的所有剩余符号被分配到单元格。</span>
+<span>从符号</span><code>0</code><span>(如果存在)和表位</span><code>0</code><span>开始，每个符号被分配到与其概率相同的单元格。</span>
+<span>单元分配是分散的，不是线性的：</span>
+<span>每个后续位置都遵循这一规则：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>2</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">position += (tableSize&gt;&gt;1) + (tableSize&gt;&gt;3) + 3;</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">position &amp;= tableSize-1;</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 33px;"></div><div class="CodeMirror-gutters" style="height: 33px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>如果一个位置已经被一个 &quot;小于1&quot; 的概率符号占用，则跳过该位置。</span>
+<code>position</code><span> 在符号之间不重设，它只是遍历表中的每一个位置，</span>
+<span>当前位置已经分配到足够的状态时，切换到下一个符号。</span></p><p><span>这个过程保证了表的全部填充。</span>
+<span>每个单元格对应一个状态值，其中包含被解码的符号。</span></p><p><span>要添加检索下一个状态所需的</span><code>Number_of_Bits</code><span>和</span><code>Baseline</code><span>，</span>
+<span>首先需要按状态顺序对每个符号的所有出现进行排序。</span>
+<span>较低的状态比较高的状态多需要1位。</span>
+<span>对每个符号重复这个过程。</span></p><p><strong><span>示例</span></strong><span> :</span>
+<span>假设一个符号的概率为 5，</span>
+<span>它就会收到 5个单元，对应 5个状态值。</span>
+<span>然后将这些状态值按自然顺序进行排序。</span></p><p><span>5之后的 2的次幂是 8。</span>
+<span>概率空间必须分成 8等份。</span>
+<span>假设</span><code>Accuracy_Log</code><span>是 7，则定义了 128个状态的空间。</span>
+<span>除以 8，每份就是 16。</span></p><p><span>为了达到 8个份额，8-5=3 个最低的状态会算 &quot;双倍&quot;，</span>
+<span>使其份额增加一倍（宽度为32），因此需要多一个位。</span></p><p><span>基线从较高的状态开始分配，使用较少的位数，</span>
+<span>在每个状态下增加，然后在第一个状态下恢复，</span>
+<span>每个状态都从基线中获得分配的宽度。</span></p><p><span>| state value      |   1   |  39   |   77   |  84  |  122   |</span></p><figure><table><thead><tr><th><span>state order</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th><th><span>4</span></th></tr></thead><tbody><tr><td><span>width</span></td><td><span>32</span></td><td><span>32</span></td><td><span>32</span></td><td><span>16</span></td><td><span>16</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>5</span></td><td><span>5</span></td><td><span>5</span></td><td><span>4</span></td><td><span>4</span></td></tr><tr><td><span>range number</span></td><td><span>2</span></td><td><span>4</span></td><td><span>6</span></td><td><span>0</span></td><td><span>1</span></td></tr><tr><td><code>Baseline</code></td><td><span>32</span></td><td><span>64</span></td><td><span>96</span></td><td><span>0</span></td><td><span>16</span></td></tr><tr><td><span>range</span></td><td><span>32-63</span></td><td><span>64-95</span></td><td><span>96-127</span></td><td><span>0-15</span></td><td><span>16-31</span></td></tr></tbody></table></figure><p><span>在解码过程中，通过读取所需的 </span><code>Number_of_Bits</code><span>，</span>
+<span>再加上指定的 </span><code>Baseline</code><span>，从当前状态值中确定下一个状态值。</span></p><p><span>参见</span><a href='#附录a---预定义编码的解码表'><span>附录A</span></a><span>，该过程的结果适用于默认分布。</span></p><h2><a name="哈夫曼编码" class="md-header-anchor"></a><span>哈夫曼编码</span></h2><p><span>Zstandard 哈夫曼编码流是向后读的，</span>
+<span>类似于FSE的比特流，因此要找到比特流的开始，</span>
+<span>必须知道赫夫曼编码流最后一个字节的偏移量。</span></p><p><span>在写入包含信息的最后一个比特后，压缩器写入一个</span><code>1</code><span>位，</span>
+<span>然后用0-7</span><code>0</code><span>位的填充物填充该字节。</span>
+<span>为此，压缩后的比特流的最后一个字节不能是</span><code>0</code><span>。</span></p><p><span>解压时，最后一个包含填充的字节是第一个来读取。</span>
+<span>解压器需要跳过 0-7 个初始</span><code>0</code><span>位和它出现的第一个</span><code>1</code><span> 位。</span>
+<span>之后，比特流的有用部分开始。</span></p><p><span>比特流包含以</span><strong><span>小端</span></strong><span>为顺序的哈夫曼编码符号，</span>
+<span>其编码由下面的方法定义。</span></p><h3><a name="哈夫曼树描述-n958" class="md-header-anchor"></a><span>哈夫曼树描述</span></h3><p><span>前缀编码用位序列（码字）表示来自先验已知字母表的符号，</span>
+<span>每个符号一个码字，其方式是不同的符号可以用不同长度的位序列表示，</span>
+<span>但解析器总是可以逐个符号毫不含糊地解析一个编码字符串。</span></p><p><span>给定一个已知符号频率的字母表，哈夫曼算法允许使用该字母表的</span>
+<span>任何可能的前缀码中最少的比特来构建一个最佳前缀码。</span></p><p><span>前缀码不能超过最大码长。</span>
+<span>位数越多，精度越高，但要花费更多的头大小，</span>
+<span>并且需要更多的内存或更复杂的解码操作。</span>
+<span>本规范将最大码长限制为11位。</span></p><h4><a name="代表性" class="md-header-anchor"></a><span>代表性</span></h4><p><span>从 0（包括）到最后一个（不包括）的所有字符值都用 </span><code>Weight</code><span> 表示，</span>
+<span>其值从 </span><code>0</code><span> 到 </span><code>Max_Number_of_Bits</code><span>。</span>
+<span>从 </span><code>Weight</code><span> 到 </span><code>Number_of_Bits</code><span> 的转换遵循以下公式：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">Number_of_Bits = Weight ? (Max_Number_of_Bits + 1 - Weight) : 0</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 17px;"></div><div class="CodeMirror-gutters" style="height: 17px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>最后一个符号的 </span><code>Weight</code><span> 是从之前解码的符</span>
+<span>号中推导出来的，通过完成到最接近的 2次幂。</span>
+<span>这个 2的幂给了</span><code>Max_Number_of_Bits</code><span>，即当前树的深度。</span>
+<code>Max_Number_of_Bits</code><span> 必须 &lt;=11。</span>
+<span>否则会被认为是损坏的表示。</span></p><p><strong><span>示例</span></strong><span> :</span>
+<span>让我们假设必须描述以下的哈夫曼树：</span></p><figure><table><thead><tr><th><span>literal value</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th><th><span>4</span></th><th><span>5</span></th></tr></thead><tbody><tr><td><code>Number_of_Bits</code></td><td><span>1</span></td><td><span>2</span></td><td><span>3</span></td><td><span>0</span></td><td><span>4</span></td><td><span>4</span></td></tr></tbody></table></figure><p><span>树的深度为 4，因为其最长的元素使用了 4位</span>
+<span>(最长的元素是频率最小的元素)。</span>
+<code>5</code><span>的值不会被列出，因为它可以从 0-4 的值中确定，</span>
+<code>5</code><span>以上的值也不会被列出，因为它们都是0。</span>
+<span>从</span><code>0</code><span> 到 </span><code>4</code><span> 的值将用 </span><code>Weight</code><span> 而不是 </span><code>Number_of_Bits</code><span> 来列出。</span>
+<span>权重公式为：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">Weight = Number_of_Bits ? (Max_Number_of_Bits + 1 - Number_of_Bits) : 0</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 17px;"></div><div class="CodeMirror-gutters" style="height: 17px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>它给出了以下一系列的权重：</span></p><figure><table><thead><tr><th><span>literal value</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th><th><span>4</span></th></tr></thead><tbody><tr><td><code>Weight</code></td><td><span>4</span></td><td><span>3</span></td><td><span>2</span></td><td><span>0</span></td><td><span>1</span></td></tr></tbody></table></figure><p><span>解码器将进行逆运算：</span>
+<span>在收集了从 </span><code>0</code><span> 到 </span><code>4</code><span> 的文字符号的权重后，它知道最后</span>
+<span>一个文字符号</span><code>5</code><span>的 </span><code>Weight</code><span> 是非零的。</span><code>5</code><span>的 </span><code>Weight</code><span> 可以</span>
+<span>通过前进到 2的下一个幂来确定。</span><code>2^(Weight-1)</code><span>(不包括0) 的总和是：</span>
+<code>8 + 4 + 2 + 0 + 1 = 15</code><span>，最接近 2的大数幂的值是 16。</span>
+<span>因此，</span><code>Max_Number_of_Bits=4</code><span>，</span><code>Weight[5]=16-15=1</code><span>。</span></p><h4><a name="哈夫曼树头部" class="md-header-anchor"></a><span>哈夫曼树头部</span></h4><p><span>这是一个单字节值（0-255），</span>
+<span>它描述了如何对权重系列进行编码。</span></p><ul><li><p><span>如果 </span><code>headerByte</code><span> &lt; 128 :权重系列是用 FSE 压缩的（见下文）。</span>
+<span>FSE 压缩系列的长度等于</span><code>headerByte</code><span>（0-127）。</span></p></li><li><p><span>如果 </span><code>headerByte</code><span> &gt;= 128 :</span></p><ul><li><p><span>权重系列使用直接表示，</span>
+<span>其中每个 </span><code>Weight</code><span> 直接编码为一个4位字段（0-15）。</span></p></li><li><p><span>它们是正向编码，2个权重为一个字节，</span>
+<span>第 1 权重取前四位，第 2 权重取后四位。</span></p><ul><li><span>e.g. 以下操作可用于读取权重：</span>
+<code>Weight[0] = (Byte[0] &gt;&gt; 4), Weight[1] = (Byte[0] &amp; 0xf)</code><span>, etc.</span></li></ul></li><li><p><span>完整的表示方式占用 </span><code>Ceiling(Number_of_Weights/2)</code><span> 个字节，</span>
+<span>意味着即使 </span><code>Number_of_Weights</code><span> 是奇数，它也只使用完整的字节。</span></p></li><li><p><code>Number_of_Weights = headerByte - 127</code><span>.</span></p><ul><li><p><span>请注意，最大的 </span><code>Number_of_Weights</code><span> 是 255-127=128，</span>
+<span>因此，使用直接表示法只能对最多 128个</span><code>Weight</code><span>进行编码。</span></p></li><li><p><span>由于最后一个非零的 </span><code>Weight</code><span> 是</span><em><span>不编码</span></em><span>的，所以这个方案与最多</span></p><p><span>129个符号的字母大小兼容，因此包括字面符号128。</span></p></li><li><p><span>如果任何大于128的文字符号有一个非零的 </span><code>Weight</code><span>,</span>
+<span>直接表示是不可能的。</span>
+<span>在这种情况下，就需要使用 FSE 压缩。</span></p></li></ul></li></ul></li></ul><h4><a name="哈夫曼权重的有限状态熵fse）压缩" class="md-header-anchor"></a><span>哈夫曼权重的有限状态熵（FSE）压缩</span></h4><p><span>在这种情况下，哈夫曼权重的系列是使用 FSE 压缩的。</span>
+<span>这是一个具有 2 个交错状态的单比特流，共享一个分配表。</span></p><p><span>要解码一个 FSE 比特流，必须知道它的压缩大小，</span>
+<span>压缩大小由</span><code>headerByte</code><span> 提供。</span>
+<span>还需要知道它的</span><em><span>最大可能</span></em><span>的解压大小是</span><code>255</code><span>，</span>
+<span>因为字面值从</span><code>0</code><span>到</span><code>255</code><span>，而最后一个符号的 </span><code>Weight</code><span> 没有表示。</span></p><p><span>一个 FSE 比特流由一个描述概率分布的头开始，</span>
+<span>它将创建一个解码表。</span>
+<span>对于哈夫曼权重的列表，最大精度对数是6位。</span>
+<span>更多描述请参见 </span><a href='#fse-表描述'><span>FSE 表描述</span></a></p><p><span>哈夫曼头部压缩使用 2 种状态，</span>
+<span>它们共享同一个 FSE 分布表。</span>
+<span>第一个状态（</span><code>State1</code><span>）编码的是偶数索引符号，</span>
+<span>第二个状态（</span><code>State2</code><span>）编码的是奇数索引符号。</span>
+<code>State1</code><span> 首先被初始化，然后是</span><code>State2</code><span>，</span>
+<span>它们轮流使用，解码单个符号并更新其状态。</span>
+<span>关于这些FSE操作的更多细节，请参见</span><a href='#fse-序列'><span>FSE部分</span></a><span>。</span></p><p><span>解码的符号数量由跟踪比特流溢出条件决定：</span>
+<span>如果解码一个符号后更新状态所需的比特数</span>
+<span>超过了流中的剩余比特数，则假设额外的比特数为0。 </span>
+<span>然后，每个最终状态的符号被解码，这个过程就完成了。</span></p><h4><a name="从权重到哈夫曼前缀代码的转换" class="md-header-anchor"></a><span>从权重到哈夫曼前缀代码的转换</span></h4><p><span>现在所有的符号都有一个 </span><code>Weight</code><span> 值。</span>
+<span>可以将权重转化为 </span><code>Number_of_Bits</code><span>，使用这个公式：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">Number_of_Bits = (Weight&gt;0) ? Max_Number_of_Bits + 1 - Weight : 0</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 17px;"></div><div class="CodeMirror-gutters" style="height: 17px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>符号按 </span><code>Weight</code><span> 排序。</span>
+<span>在相同的 </span><code>Weight</code><span> 内，符号保持自然的顺序。</span>
+<code>Weight</code><span> 为零的符号将被删除，然后从最低的 </span><code>Weight</code><span> 开始，按顺序分配前缀码。</span>
+<span>然后，从最低的 </span><code>Weight</code><span> 开始，按顺序分配前缀码。</span></p><p><strong><span>示例</span></strong><span> :</span>
+<span>假设以下权重列表已被解码：</span></p><figure><table><thead><tr><th><span>Literal</span></th><th><span>0</span></th><th><span>1</span></th><th><span>2</span></th><th><span>3</span></th><th><span>4</span></th><th><span>5</span></th></tr></thead><tbody><tr><td><code>Weight</code></td><td><span>4</span></td><td><span>3</span></td><td><span>2</span></td><td><span>0</span></td><td><span>1</span></td><td><span>1</span></td></tr></tbody></table></figure><p><span>按权重排序，再按自然顺序排列，</span>
+<span>它给出了以下分布：</span></p><figure><table><thead><tr><th><span>Literal</span></th><th><span>3</span></th><th><span>4</span></th><th><span>5</span></th><th><span>2</span></th><th><span>1</span></th><th><span>0</span></th></tr></thead><tbody><tr><td><code>Weight</code></td><td><span>0</span></td><td><span>1</span></td><td><span>1</span></td><td><span>2</span></td><td><span>3</span></td><td><span>4</span></td></tr><tr><td><code>Number_of_Bits</code></td><td><span>0</span></td><td><span>4</span></td><td><span>4</span></td><td><span>3</span></td><td><span>2</span></td><td><span>1</span></td></tr><tr><td><span>prefix codes</span></td><td><span>N/A</span></td><td><span>0000</span></td><td><span>0001</span></td><td><span>001</span></td><td><span>01</span></td><td><span>1</span></td></tr></tbody></table></figure><h3><a name="哈夫曼编码流" class="md-header-anchor"></a><span>哈夫曼编码流</span></h3><p><span>给定一个哈夫曼解码表，</span>
+<span>可以对哈夫曼编码的流进行解码。</span></p><p><span>每个比特流都必须</span><em><span>向后</span></em><span>读取。</span>
+<span>即从末端开始到开头。</span>
+<span>因此，有必要知道每个比特流的大小。</span></p><p><span>还需要知道最后一个位是哪个位。</span>
+<span>这是由一个最终位标志来检测的：</span>
+<span>最后一个字节的最高位是一个最终位标志，</span>
+<span>因此，最后一个字节不可能是 是</span><code>0</code><span> 的。</span>
+<span>而且最终位标志本身不是有用比特流的一部分。</span>
+<span>因此，最后一个字节包含 0 到 7 个有用位。</span></p><p><span>从最后开始。</span>
+<span>可以用</span><strong><span>小端</span></strong><span>的方式读取比特流，</span>
+<span>跟踪已经使用的比特。由于比特流是反向编码的</span>
+<span>顺序，从尾部开始依次向前读出符号。</span></p><p><span>例如，如果字面序列 &quot;0145 &quot; 使用上述前缀代码进行编码，</span>
+<span>那么它将被编码为（按相反顺序）：</span></p><figure><table><thead><tr><th><span>Symbol</span></th><th><span>5</span></th><th><span>4</span></th><th><span>1</span></th><th><span>0</span></th><th><span>Padding</span></th></tr></thead><tbody><tr><td><span>Encoding</span></td><td><code>0000</code></td><td><code>0001</code></td><td><code>01</code></td><td><code>1</code></td><td><code>00001</code></td></tr></tbody></table></figure><p><span>结果是以下2个字节的比特流：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">00010000 00001101</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 17px;"></div><div class="CodeMirror-gutters" style="height: 17px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>面是另一种表示方法，符号代码用下划线分开：</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>1</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">0001_0000 00001_1_01</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 17px;"></div><div class="CodeMirror-gutters" style="height: 17px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>读取最高的 </span><code>Max_Number_of_Bits</code><span>，</span>
+<span>可以将提取的值与解码表进行比较，</span>
+<span>确定要解码的符号和要丢弃的位数。</span></p><p><span>这个过程一直持续到读取每个流所需的符号数。</span>
+<span>如果一个比特流没有被完全准确地消耗掉，</span>
+<span>因此没有准确地到达它的起始位置，</span>
+<span>消耗掉了所有的比特，那么解码过程被认为是错误的。</span></p><h2><a name="字典格式" class="md-header-anchor"></a><span>字典格式</span></h2><p><span>Zstandard 与 &quot;raw content&quot; 词典兼容，</span>
+<span>不受任何格式限制，但它们必须至少是8个字节。</span>
+<span>这些字典的功能就像它们只是格式化字典的 </span><code>Content</code><span> 部分一样。</span></p><p><span>但</span><code>zstd -train</code><span>创建的字典遵循一种格式，在此说明。</span></p><p><strong><span>前提条件</span></strong><span>：字典有大小。</span>
+<span>                     由缓冲区限制或文件大小定义。</span></p><figure><table><thead><tr><th><code>Magic_Number</code></th><th><code>Dictionary_ID</code></th><th><code>Entropy_Tables</code></th><th><code>Content</code></th></tr></thead><tbody><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure><p><strong><code>Magic_Number</code></strong><span> : 4 bytes ID, 值 0xEC30A437, </span><strong><span>小端</span></strong><span> 格式</span></p><p><strong><code>Dictionary_ID</code></strong><span> : 4 bytes, 储存于 </span><strong><span>小端</span></strong><span> 格式。</span>
+<span>              </span><code>Dictionary_ID</code><span> 可以是任何值，除了0（这意味着没有</span><code>Dictionary_ID</code><span>）。</span>
+<span>              它被解码器用来检查它们是否使用了正确的字典。</span></p><p><em><span>预留范围 ：</span></em>
+<span>如果字典要在公共环境中发布，那么</span><code>Dictionary_ID</code><span> </span>
+<span>的以下范围将保留给未来的一些注册商。</span>
+<span>且不得用于:</span></p><pre spellcheck="false" class="md-fences md-end-block md-fences-with-lineno ty-contain-cm modeLoaded" lang=""><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang=""><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 36px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 24px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre><div class="CodeMirror-linenumber CodeMirror-gutter-elt"><div>2</div></div></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: -24px; width: 24px;"></div><div class="CodeMirror-gutter-wrapper CodeMirror-activeline-gutter" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">1</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">- low range  : &lt;= 32767</span></pre></div><div style="position: relative;"><div class="CodeMirror-gutter-wrapper" style="left: -24px;"><div class="CodeMirror-linenumber CodeMirror-gutter-elt CodeMirror-linenumber-show" style="left: 0px; width: 16px;">2</div></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">- high range : &gt;= (2^31)</span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 33px;"></div><div class="CodeMirror-gutters" style="height: 33px;"><div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 24px;"></div></div></div></div></pre><p><span>在这些范围之外，</span><code>Dictionary_ID</code><span> 的任何值。</span>
+<code>&gt;= 32768</code><span> 和 </span><code>&lt; (1&lt;&lt;31)</code><span> 都可以自由使用，</span>
+<span>甚至在公共环境中。</span></p><p><strong><code>Entropy_Tables</code></strong><span>： 遵循与</span><strong><span>[压缩块]</span></strong><span>中表格相同的格式。</span>
+<span>              见相关 </span><a href='#fse-表描述'><span>FSE 表描述</span></a><span>和 </span><a href='#哈夫曼树描述哈夫曼树描述'><span>哈夫曼树描述</span></a><span> 如何对这些表格进行解码的章节。</span>
+<span>              它们按以下顺序存储：</span>
+<span>              哈夫曼表表示字数，FSE表表示偏移量，</span>
+<span>              匹配长度的 FSE 表和字数长度的 FSE 表。</span>
+<span>              这些表填充了重复统计的字数模式和</span>
+<span>              重复分布模式进行序列解码。</span>
+<span>              最后是 3个偏移值，填充最近的偏移值（而不是使用</span><code>{1,4,8}</code><span>）。</span>
+<span>              按顺序存储，每个</span><strong><span>小端</span></strong><span> 4字节，共12个字节。</span>
+<span>              每个最近的偏移量必须有一个 &lt;= 字典内容大小的值，并且不能等于 0。</span></p><p><strong><code>Content</code></strong><span>：剩下的字典就是其内容。</span>
+<span>              内容作为 &quot;过去&quot;，在数据面前进行压缩或解压。</span>
+<span>              所以它可以在序列命令中被引用。</span>
+<span>              只要该帧解码的数据量小于或等于</span>
+<span>              </span><code>Window_Size</code><span>，序列命令可以指定更长的偏移量。</span>
+<span>              比到目前为止解码输出的总长度还要长，以引用到</span>
+<span>              字典，甚至是偏移量大于 </span><code>Window_Size</code><span> 的部分。</span>
+<span>              但是，在总输出量超过 </span><code>Window_Size</code><span> 后，</span>
+<span>              这已经不被允许了，字典也不能再访问了。</span></p><p><span>如果字典是由外部来源提供的，</span>
+<span>应非常谨慎地加载，其内容被认为是不可信任的。</span></p><p>&nbsp;</p><h2><a name="附录a---预定义编码的解码表" class="md-header-anchor"></a><span>附录A - 预定义编码的解码表</span></h2><p><span>本附录包含 FSE 解码表</span>
+<span>为预定义的文字长度、匹配长度和偏移码。</span>
+<span>这些表是用上面 &quot;从归一化分布到解码表&quot; 一章中给出的算法构建的。</span>
+<span>这里的表可以作为例子来交叉检查一个实现是否正确地构建了它的解码表。</span></p><h4><a name="字符长度代码-n1148" class="md-header-anchor"></a><span>字符长度代码：</span></h4><figure><table><thead><tr><th><span>State</span></th><th><span>Symbol</span></th><th><span>Number_Of_Bits</span></th><th><span>Base</span></th></tr></thead><tbody><tr><td><span>0</span></td><td><span>0</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>1</span></td><td><span>0</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>2</span></td><td><span>1</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>3</span></td><td><span>3</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>4</span></td><td><span>4</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>5</span></td><td><span>6</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>6</span></td><td><span>7</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>7</span></td><td><span>9</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>8</span></td><td><span>10</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>9</span></td><td><span>12</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>10</span></td><td><span>14</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>11</span></td><td><span>16</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>12</span></td><td><span>18</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>13</span></td><td><span>19</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>14</span></td><td><span>21</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>15</span></td><td><span>22</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>16</span></td><td><span>24</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>17</span></td><td><span>25</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>18</span></td><td><span>26</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>19</span></td><td><span>27</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>20</span></td><td><span>29</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>21</span></td><td><span>31</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>22</span></td><td><span>0</span></td><td><span>4</span></td><td><span>32</span></td></tr><tr><td><span>23</span></td><td><span>1</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>24</span></td><td><span>2</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>25</span></td><td><span>4</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>26</span></td><td><span>5</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>27</span></td><td><span>7</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>28</span></td><td><span>8</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>29</span></td><td><span>10</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>30</span></td><td><span>11</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>31</span></td><td><span>13</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>32</span></td><td><span>16</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>33</span></td><td><span>17</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>34</span></td><td><span>19</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>35</span></td><td><span>20</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>36</span></td><td><span>22</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>37</span></td><td><span>23</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>38</span></td><td><span>25</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>39</span></td><td><span>25</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>40</span></td><td><span>26</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>41</span></td><td><span>28</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>42</span></td><td><span>30</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>43</span></td><td><span>0</span></td><td><span>4</span></td><td><span>48</span></td></tr><tr><td><span>44</span></td><td><span>1</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>45</span></td><td><span>2</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>46</span></td><td><span>3</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>47</span></td><td><span>5</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>48</span></td><td><span>6</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>49</span></td><td><span>8</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>50</span></td><td><span>9</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>51</span></td><td><span>11</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>52</span></td><td><span>12</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>53</span></td><td><span>15</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>54</span></td><td><span>17</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>55</span></td><td><span>18</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>56</span></td><td><span>20</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>57</span></td><td><span>21</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>58</span></td><td><span>23</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>59</span></td><td><span>24</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>60</span></td><td><span>35</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>61</span></td><td><span>34</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>62</span></td><td><span>33</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>63</span></td><td><span>32</span></td><td><span>6</span></td><td><span>0</span></td></tr></tbody></table></figure><h4><a name="匹配长度代码-n1475" class="md-header-anchor"></a><span>匹配长度代码：</span></h4><figure><table><thead><tr><th><span>State</span></th><th><span>Symbol</span></th><th><span>Number_Of_Bits</span></th><th><span>Base</span></th></tr></thead><tbody><tr><td><span>0</span></td><td><span>0</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>1</span></td><td><span>1</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>2</span></td><td><span>2</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>3</span></td><td><span>3</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>4</span></td><td><span>5</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>5</span></td><td><span>6</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>6</span></td><td><span>8</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>7</span></td><td><span>10</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>8</span></td><td><span>13</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>9</span></td><td><span>16</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>10</span></td><td><span>19</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>11</span></td><td><span>22</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>12</span></td><td><span>25</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>13</span></td><td><span>28</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>14</span></td><td><span>31</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>15</span></td><td><span>33</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>16</span></td><td><span>35</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>17</span></td><td><span>37</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>18</span></td><td><span>39</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>19</span></td><td><span>41</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>20</span></td><td><span>43</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>21</span></td><td><span>45</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>22</span></td><td><span>1</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>23</span></td><td><span>2</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>24</span></td><td><span>3</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>25</span></td><td><span>4</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>26</span></td><td><span>6</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>27</span></td><td><span>7</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>28</span></td><td><span>9</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>29</span></td><td><span>12</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>30</span></td><td><span>15</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>31</span></td><td><span>18</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>32</span></td><td><span>21</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>33</span></td><td><span>24</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>34</span></td><td><span>27</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>35</span></td><td><span>30</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>36</span></td><td><span>32</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>37</span></td><td><span>34</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>38</span></td><td><span>36</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>39</span></td><td><span>38</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>40</span></td><td><span>40</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>41</span></td><td><span>42</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>42</span></td><td><span>44</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>43</span></td><td><span>1</span></td><td><span>4</span></td><td><span>32</span></td></tr><tr><td><span>44</span></td><td><span>1</span></td><td><span>4</span></td><td><span>48</span></td></tr><tr><td><span>45</span></td><td><span>2</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>46</span></td><td><span>4</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>47</span></td><td><span>5</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>48</span></td><td><span>7</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>49</span></td><td><span>8</span></td><td><span>5</span></td><td><span>32</span></td></tr><tr><td><span>50</span></td><td><span>11</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>51</span></td><td><span>14</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>52</span></td><td><span>17</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>53</span></td><td><span>20</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>54</span></td><td><span>23</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>55</span></td><td><span>26</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>56</span></td><td><span>29</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>57</span></td><td><span>52</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>58</span></td><td><span>51</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>59</span></td><td><span>50</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>60</span></td><td><span>49</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>61</span></td><td><span>48</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>62</span></td><td><span>47</span></td><td><span>6</span></td><td><span>0</span></td></tr><tr><td><span>63</span></td><td><span>46</span></td><td><span>6</span></td><td><span>0</span></td></tr></tbody></table></figure><h4><a name="偏移代码-n1802" class="md-header-anchor"></a><span>偏移代码：</span></h4><figure><table><thead><tr><th><span>State</span></th><th><span>Symbol</span></th><th><span>Number_Of_Bits</span></th><th><span>Base</span></th></tr></thead><tbody><tr><td><span>0</span></td><td><span>0</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>1</span></td><td><span>6</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>2</span></td><td><span>9</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>3</span></td><td><span>15</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>4</span></td><td><span>21</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>5</span></td><td><span>3</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>6</span></td><td><span>7</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>7</span></td><td><span>12</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>8</span></td><td><span>18</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>9</span></td><td><span>23</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>10</span></td><td><span>5</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>11</span></td><td><span>8</span></td><td><span>4</span></td><td><span>0</span></td></tr><tr><td><span>12</span></td><td><span>14</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>13</span></td><td><span>20</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>14</span></td><td><span>2</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>15</span></td><td><span>7</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>16</span></td><td><span>11</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>17</span></td><td><span>17</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>18</span></td><td><span>22</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>19</span></td><td><span>4</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>20</span></td><td><span>8</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>21</span></td><td><span>13</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>22</span></td><td><span>19</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>23</span></td><td><span>1</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>24</span></td><td><span>6</span></td><td><span>4</span></td><td><span>16</span></td></tr><tr><td><span>25</span></td><td><span>10</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>26</span></td><td><span>16</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>27</span></td><td><span>28</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>28</span></td><td><span>27</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>29</span></td><td><span>26</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>30</span></td><td><span>25</span></td><td><span>5</span></td><td><span>0</span></td></tr><tr><td><span>31</span></td><td><span>24</span></td><td><span>5</span></td><td><span>0</span></td></tr></tbody></table></figure><p>&nbsp;</p><h2><a name="附录b---供开发者使用的资源" class="md-header-anchor"></a><span>附录B - 供开发者使用的资源</span></h2><p><span>一个开源的参考实现 :</span>
+<a href='https://github.com/facebook/zstd' target='_blank' class='url'>https://github.com/facebook/zstd</a></p><p><span>该项目包含一个帧生成器，称为[</span><strong><span>decodeCorpus</span></strong><span>]。</span>
+<span>可以被任何第三方实现使用。来验证经过测试的解码器是否符合规范。</span></p><p><code>decodeCorpus</code><span> 随机生成有效帧。</span>
+<span>合规的解码器应能对所有帧进行解码，或至少提供一个有意义的错误代码，解释为什么它不能</span>
+<span>例如内存限制）。</span></p><h2><a name="版本变更" class="md-header-anchor"></a><span>版本变更</span></h2><ul><li><span>0.3.7：对 Repeat_Offsets 的说明。</span></li><li><span>0.3.6：对 Dictionary_ID 的说明</span></li><li><span>0.3.5：对 Block_Maximum_Size 的说明。</span></li><li><span>0.3.4：对 FSE 解码表的说明</span></li><li><span>0.3.3：对字段 Block_Size 的说明。</span></li><li><span>0.3.2：取消对压缩块的额外块大小限制。</span></li><li><span>0.3.1：关于偏移历史更新规则的小幅澄清。</span></li><li><span>0.3.0：为符合 RFC8478 的要求而做了一些小的修改。</span></li><li><span>0.2.9：对哈夫曼权重直接表示的澄清，作者：Ulrich Kunitz。</span></li><li><span>0.2.8：对 IETF RFC 讨论的澄清。</span></li><li><span>0.2.7：IETF RFC 审查的澄清，作者 Vijay Gurbani和Nick Terrell。</span></li><li><span>0.2.6：修正了哈夫曼示例中的一个错误，作者 Ulrich Kunitz。</span></li><li><span>0.2.5：小的打字和澄清。</span></li><li><span>0.2.4：部分结构调整，Sean Purcell 撰写。</span></li><li><span>0.2.3：澄清了几个细节，作者：Sean Purcell。</span></li><li><span>0.2.2：增加了预定义代码，由 Johannes Rudolph 编写。</span></li><li><span>0.2.1：澄清字段名称，作者：Przemyslaw Skibinski；</span></li><li><span>0.2.0：为 zstd v0.8+ 做了许多格式调整。</span></li><li><span>0.1.2：限制哈夫曼树深度至11位</span></li><li><span>0.1.1：保留 dictID 范围。</span></li><li><span>0.1.0：初始版本</span></li></ul></div>
+</body>
+</html>

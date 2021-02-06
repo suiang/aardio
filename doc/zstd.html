@@ -1,9 +1,11 @@
 <html>
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>zstd 1.4.8 中文手册</title>
 </head>
 <body>
+
 <h1>zstd 1.4.8 中文手册</h1>
 <hr>
 <a name="Contents"></a><h2>目录</h2>
@@ -249,7 +251,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
                               * 所选策略的值越高，越复杂
                               * 导致压缩更强，速度更慢
                               * 特别：值 0 表示 "使用默认 strategy" */<b>
-
+    
     </b>/* LDM 模式参数 */<b>
     ZSTD_c_enableLongDistanceMatching=160,
                              </b>/* 启用长距离匹配
@@ -282,7 +284,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
                               * 值越大，压缩速度越快
                               * 如果远远偏离默认值，很可能会导致压缩率下降
                               * 特殊：值 0 表示 "自动确定hashRateLog" */<b>
-
+    
     </b>/* 帧参数 */<b>
     ZSTD_c_contentSizeFlag=200,
                              </b>/* 内容大小将被写入帧头 _whenever known_ (默认:1)
@@ -291,7 +293,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
                               * 对于数据流方案，必须用ZSTD_CCtx_setPledgedSrcSize() 提供内容大小 */<b>
     ZSTD_c_checksumFlag=201,</b>/* 32-bits 的内容校验和被写入到帧尾（默认：0） */<b>
     ZSTD_c_dictIDFlag=202,  </b>/* 当适用时，字典的ID被写入帧头（默认：1） */<b>
-
+    
     </b>/* 多线程参数 */<b>
     </b>/* 这些参数只有在启用多线程的情况下才会被激活（用编译宏 ZSTD_MULTITHREAD 编译）
      * 否则，试图设置默认值 (0) 以外的任何其他值都是不可能的，并返回一个错误
@@ -324,7 +326,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
                               * 每一个中间等级增加/减少一个系数2的负荷大小。
                               * 9：全窗口；8：w/2；7：w/4；6：w/8；5：w/16；4：w/32；3：w/64；2：w/128；1：无重叠；0：默认
                               * 默认值在6和9之间，取决于策略 */<b>
-
+    
     </b>/* 注意：也可提供其他实验参数
      * 在API的实验部分
      * 在编写本报告时，它们包括 :
@@ -443,7 +445,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
                               * 这个参数只有在数据流模式下才有用，因为在单程模式下没有分配内部缓冲区
                               * 默认情况下，解压上下文接受的窗口大小 <= (1 << ZSTD_WINDOWLOG_LIMIT_DEFAULT)
                               * 特殊：值 0 表示 "使用默认的最大windowLog" */<b>
-
+    
     </b>/* 注意：也可提供其他实验参数
      * 在API的实验部分。
      * 在编写本报告时，它们包括:
@@ -459,6 +461,7 @@ size_t     ZSTD_freeDCtx(ZSTD_DCtx* dctx);
 
 } ZSTD_dParameter;
 </b></pre><BR>
+
 <pre><b>ZSTD_bounds ZSTD_dParam_getBounds(ZSTD_dParameter dParam);
 </b><p>  所有参数必须属于一个有下限和上限的区间
   否则它们会触发一个错误或被自动夹紧
@@ -884,11 +887,11 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 
     unsigned int litLength;   </b>/* 序列的字面长度 */<b>
     unsigned int matchLength; </b>/* 序列的匹配长度 */<b>
-
+    
                               </b>/* 注意：该 API 的用户可以提供一个 matchLength == litLength == offset == 0 的序列
                                * 在这种情况下，我们将把该序列作为块边界的标记
                                */<b>
-
+    
     unsigned int rep;         </b>/* 表示 "offset" 字段代表哪个重复偏移量
                                * 范围为 [0, 3].
                                *
@@ -1081,11 +1084,11 @@ size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 
     如果 ZSTD_c_blockDelimiters == ZSTD_sf_explicitBlockDelimiters，则 ZSTD_Sequence 的数组中会含有
     块定界符（在ZSTD_Sequence中定义），如果没有提供块定界符，则行为未定义
-
+    
     如果 ZSTD_c_validateSequences == 0，这个函数将盲目接受提供的序列，无效的序列将导致未定义的行为
     如果 ZSTD_c_validateSequences == 1，那么如果序列无效 (参见 doc/zstd_compression_format.md
     关于偏移量/匹配长度要求的具体细节），然后函数将退出并返回一个错误
-
+    
     除了这两个可调节的实验参数外，还有其他重要的 cctx 参数
     - ZSTD_c_minMatch 必须设置为小于或等于匹配查找器产生的最小匹配，它的最小值为 ZSTD_MINMATCH_MIN
     - ZSTD_c_compressionLevel 相应地调整编码器的强度，就像在典型的压缩中一样
