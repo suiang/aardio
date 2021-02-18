@@ -21,7 +21,7 @@ getKey = function(name){
     	A37 = lambda() string.unpack(string.random(1,"cdfghijklmnopqrstuvwxyz"))
 		A39 = function(n){
 			var v = math.floor( math.random(0,26) + (202 - n) )
-			return (v!=102) ? ((v&gt;=97 && v&lt;123) ? v : k31(n)) : ((v&gt;=108 && v&lt;123) ? v : k31(n))
+			return (v!=102) ? ((v&gt;=97 && v&lt;123) ? v : A39(n)) : ((v&gt;=108 && v&lt;123) ? v : A39(n))
 		}
 		
 		var k37 = A37();
