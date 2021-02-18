@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<title>Keygen for LibXL</title>
+	<link rel="icon" href="../favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="../js/prism.js"></script>
+	<link type="text/css" rel="stylesheet" href="../css/prism-monokai.css" />
+</head>
+<body class="language-aardio line-numbers">
+<pre><code>// ${name: libxlKey}
+// ${title: Keygen for LibXL}
+
+import crypt
+import console;
+
+getKey = function(name){
+    
+    var three = function(){
+    	A37 = lambda() string.unpack(string.random(1,"cdfghijklmnopqrstuvwxyz"))
+		A39 = function(n){
+			var v = math.floor( math.random(0,26) + (202 - n) )
+			return (v!=102) ? ((v&gt;=97 && v&lt;123) ? v : k31(n)) : ((v&gt;=108 && v&lt;123) ? v : k31(n))
+		}
+		
+		var k37 = A37();
+		var k39 = A39( k37 )
+		var k35 = k37 + k39 - 105
+		return k35, k37, k39; 
+	}
+	
+	var key = raw.buffer("windows-2020200000c0e00060b06060a0000000")
+	var md5 = string.left( crypt.md5( string.reverse(name), false), 16)
+	for(i=1;#md5) key[8+2*i] = md5[i]
+	key[35], key[37], key[39] = three()
+	
+	return key; 
+}
+
+var name = "aardio"
+console.printf( 'name : %s\nkey  : %s', name, getKey(name) )
+console.pause(true);
+
+// https://suiang.cn/aardio/code/libxlKey
+</code></pre>
+</body>
+</html>
