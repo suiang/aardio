@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>LibXL: RichString class reference</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="RichString class reference. LibXL is a C++ library for direct reading and writing of Excel files (xls, xlsx).
+" />
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />  
+  <link rel="stylesheet" type="text/css" href="style.css" />  
+   </head>
+ <body>  
+  <table id="container" cellspacing="6">  
+   <tr>
+ <td id="header">
+  <a href="home.html" title="Home">  <img src="images/logo.png" style="float:left; margin-left:2em; border:none;" 
+       alt="LibXL - direct reading and writing Excel files" />
+  </a>  <div style="margin-left:13em; margin-top:2em">
+   <span id="title">LibXL</span>
+   <div id="subtitle">API 参考版本 3.9.1</div>
+  </div>
+ </td>
+</tr>
+   <tr>
+ <td valign="top" width="100%">
+  <div id="content">
+   <div>
+  <a href="index.html">Index</a>&nbsp;<a href="workbook.html">Book</a>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<a href="autoFilter.html">AutoFilter</a>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<b>RichString</b></div>
+
+<h3>RichString class reference</h3>
+
+<ul class="doc"> 
+ <li>
+  <a name="addFont"></a><a href="font.html">Font</a>* <span class="fname">addFont</span>(<a href="font.html">Font</a>* initFont = 0)  <div>为 RichString 添加一个新的 <a href="font.html">font</a>，供 <a href="richString.html#addText">RichString::addText()</a> 方法使用，初始参数可以从其他 <a href="font.html">font</a> 复制。</div>
+ </li> 
+ <li>
+  <a name="addText"></a><span class="keyword">void</span> <span class="fname">addText</span>(<span class="keyword">const wchar_t</span>* text, <a href="font.html">Font</a>* font = 0)  <div>将一段带有指定 <a href="font.html">font</a> 的文本(run) 添加到 RichString 中，以便在一个单元格中混合不同的字体。</div>
+ </li> 
+ <li>
+  <a name="getText"></a><span class="keyword">const wchar_t</span>* <span class="fname">getText</span>(<span class="keyword">int</span> index, <a href="font.html">Font</a>** font = 0)  <div>从 RichString 中返回一段文本（run）和 <a href="font.html">font</a> 的指定 <i>index</i>。</div>
+ </li> 
+ <li>
+  <a name="textSize"></a><span class="keyword">int</span> <span class="fname">textSize</span>() <span class="keyword">const</span>  <div>返回 RichString 中文本（run）的大小。</div>
+ </li> 
+</ul>
+
+<div class="blinks">
+  <a href="index.html">Index</a>&nbsp;<a href="workbook.html">Book</a>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<a href="autoFilter.html">AutoFilter</a>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<b>RichString</b></div>
+  </div>
+ </td>
+</tr>
+   <tr>
+ <td id="footer">&copy; 2008 - 2020 XLware. All rights reserved.</td>
+</tr>
+  </table>
+ </body>
+</html>

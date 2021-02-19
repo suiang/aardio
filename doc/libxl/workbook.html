@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head> 
+  <title>LibXL: Book class reference</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />  
+  <link rel="stylesheet" type="text/css" href="style.css" />  
+</head>
+<body>  
+  <table id="container" cellspacing="6">  
+  <tbody>
+  <tr>
+    <td id="header">
+      <a href="http://www.libxl.com" title="Home">
+        <img src="images/logo.png" style="border: medium none ; float: left; margin-left: 2em;" alt="LibXL - direct reading and writing Excel files" />
+      </a>
+      <div style="margin-left: 13em; margin-top: 2em;">
+        <span id="title">LibXL</span><br/> 
+        <div id="subtitle">API 参考版本 3.9.1</div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+<td valign="top" width="100%">
+  <div id="content">
+   <div>
+    <a href="index.html">Index</a>&nbsp;<b>Book</b>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<a href="autoFilter.html">AutoFilter</a>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<a href="richString.html">RichString</a></div>
+<h3>Book class reference</h3>
+
+<ul class="doc"> 
+ <li>
+  <a name="load"></a><span class="keyword">bool</span> <span class="fname">load</span>(<span class="keyword">const wchar_t</span>* filename, <span class="keyword">const wchar_t</span>* tempFile = 0)<br/>
+  <div>将整个文件加载到内存中。指定一个临时文件以减少内存消耗。如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+  <li>
+  <a name="load2"></a><span class="keyword">bool</span> <span class="fname">loadSheet</span>(<span class="keyword">const wchar_t</span>* filename, <span class="keyword">int</span> sheetIndex, <span class="keyword">const wchar_t</span>* tempFile = 0)<br/>
+  <div>只将文件指定索引的工作表加载到内存中。指定一个临时文件以减少内存消耗。如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>
+  <a name="load3"></a><span class="keyword">bool</span> <span class="fname">loadPartially</span>(<span class="keyword">const wchar_t</span>* filename, <span class="keyword">int</span> sheetIndex, <span class="keyword">int</span> firstRow, <span class="keyword">int</span> lastRow, <span class="keyword">const wchar_t</span>* tempFile = 0)<br/>
+  <div>只将文件指定索引的工作表和行范围载入内存。指定一个临时文件以减少内存消耗。如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+   <li>  
+  <a name="save"></a><span class="keyword">bool</span> <span class="fname">save</span>(<span class="keyword">const wchar_t</span>* filename, <span class="keyword">bool</span> useTempFile = <span class="keyword">false</span>)<br/>
+  <div>将当前工作簿保存到文件中。使用临时文件以减少内存消耗。如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li>          
+    <li>  
+  <a name="loadInfo"></a><span class="keyword">bool</span> <span class="fname">loadInfo</span>(<span class="keyword">const wchar_t</span>* filename)<br/>
+  <div>只加载工作表的信息。之后你可以调用 <a href="workbook.html#sheetCount">Book::sheetCount()</a> 和 <a href="workbook.html#getSheetName">Book::getSheetName()</a> 方法。 如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li>    
+       
+ <li>
+  <a name="loadRaw"></a><span class="keyword">bool</span> <span class="fname">loadRaw</span>(<span class="keyword">const char</span>* data, <span class="keyword">unsigned</span> size, <span class="keyword">int</span> sheetIndex = -1, <span class="keyword">int</span> firstRow = -1, <span class="keyword">int</span> lastRow = -1)<br/>
+  <div>从用户的内存缓冲区加载文件。参数：<br/>
+<i>data</i> -  缓冲区指针；<br/>
+<i>size</i> - 缓冲区中数据的大小；<br/>
+<i>sheetIndex</i> - 只加载文件中指定索引的工作表，-1加载所有工作表；<br/>
+<i>firstRow</i> - 加载范围的首行，-1加载所有行，直到 <i>lastRow</i>；<br/>
+<i>lastRow</i>  - 加载范围的尾行，-1加载 <i>firstRow</i> 之后的所有行。<br/>
+如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+   <li>  
+  <a name="saveRaw"></a><span class="keyword">bool</span> <span class="fname">saveRaw</span>(<span class="keyword">const char</span>** data, <span class="keyword">unsigned</span>* size)<br/>
+  <div>保存文件到内部内存缓冲区。参数：<br/>
+<i>data</i> - 缓冲区指针；<br/>
+<i>size</i> - 保存大小<br/>
+如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li>          
+ <li>  
+  <a name="addSheet"></a><a href="spreadsheet.html">Sheet</a>* <span class="fname">addSheet</span>(<span class="keyword">const wchar_t</span>* name, <a href="spreadsheet.html">Sheet</a>* initSheet = 0)<br/>
+  <div>添加一个新的 <a href="spreadsheet.html">sheet</a> 到工作簿， 返回工作表指针。如果要复制现有的工作表，请使用 initSheet 参数。注意 initSheet 必须只来自于本工作簿。工作表名称中不能使用以下字符：<br/>
+- 冒号(:)<br/>
+- 反斜杠(\)<br/>
+- 星号(*)<br/>
+- 问号(?)<br/>
+- 斜杠(/)<br/>
+- 开方括号([)<br/>
+- 闭方括号(])<br/>
+工作表名称不能以单引号（'）字符开头或结尾。 如果发生错误，返回 NULL。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+  <li>  
+  <a name="insertSheet"></a><a href="spreadsheet.html">Sheet</a>* <span class="fname">insertSheet</span>(<span class="keyword">int</span> index, <span class="keyword">const wchar_t</span>* name, <a href="spreadsheet.html">Sheet</a>* initSheet = 0)<br/>
+  <div>在 <i>index</i> 位置插入一个新的 <a href="spreadsheet.html">sheet</a> 到工作簿，返回工作表指针。如果你想复制一个现有的工作表，请使用 initSheet 参数。注意 initSheet 必须只来本工作簿。如果发生错误，返回NULL。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+  <li>  
+  <a name="getSheet"></a><a href="spreadsheet.html">Sheet</a>* <span class="fname">getSheet</span>(<span class="keyword">int</span> index) <span class="keyword">const</span><br/>
+  <div>获取指向 <a href="spreadsheet.html">sheet</a> 的指针。如果使用 <a href="workbook.html#load2">Book::loadSheet()</a> 或 <a href="workbook.html#load3">Book::loadPartially()</a> 方法，使用索引应小于 <a href="workbook.html#sheetCount">Book::sheetCount()</a> 方法的返回值。如果发生错误，返回NULL。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>方法取得错误信息。</div>
+ </li> 
+  <li>  
+  <a name="getSheetName"></a><span class="keyword">const wchar_t</span>* <span class="fname">getSheetName</span>(<span class="keyword">int</span> index) <span class="keyword">const</span><br/>
+  <div>返回指定索引的工作表名称。如果发生错误则返回 NULL。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+  <li>  
+  <a name="sheetType"></a>SheetType <span class="fname">sheetType</span>(<span class="keyword">int</span> index) <span class="keyword">const</span><br/>
+  <div>返回指定索引的工作表类型。<table class="helptable"> 
+    <thead>
+    <tr><td>工作表类型值</td><td width=140>描述</td></tr>
+    </thead>
+    <tr><td>SHEETTYPE_SHEET</td><td align=center>标准工作表</td></tr> 
+    <tr><td>SHEETTYPE_CHART</td><td align=center>图表工作表</td></tr> 
+    <tr><td>SHEETTYPE_UNKNOWN</td><td align=center>未知工作表</td></tr> 
+    </table>
+  </div>
+ </li> 
+ <li>  
+  <a name="moveSheet"></a><span class="keyword">bool</span> <span class="fname">moveSheet</span>(<span class="keyword">int</span> srcIndex, <span class="keyword">int</span> dstIndex)<br/>
+  <div>将索引 <i>srcIndex</i> 的工作表移动到索引 <i>dstIndex</i> 的工作表前面。如果发生错误，返回 false。使用<a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="delSheet"></a><span class="keyword">bool</span> <span class="fname">delSheet</span>(<span class="keyword">int</span> index)<br/>
+  <div>删除指定索引的 <a href="spreadsheet.html">sheet</a>。如果发生错误，返回 false。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="sheetCount"></a><span class="keyword">int</span> <span class="fname">sheetCount</span>() <span class="keyword">const</span><br/>
+  <div>返回工作簿中工作表的数目。</div>
+ </li>  
+ <li>  
+  <a name="addFormat"></a><a href="format.html">Format</a>* <span class="fname">addFormat</span>(<a href="format.html">Format</a>* initFormat = 0)<br/>
+  <div>添加新的 <a href="format.html">format</a> 到工作簿，初始参数可以从其他 <a href="format.html">format</a> 复制。如果发生错误，返回 NULL。请注意，在载入文件后，它会被移除。</div>
+ </li> 
+  <li>  
+  <a name="addFont"></a><a href="font.html">Font</a>* <span class="fname">addFont</span>(<a href="font.html">Font</a>* initFont = 0)<br/>
+  <div>添加新的 <a href="font.html">font</a> 到工作簿，初始参数可以从其他 <a href="format.html">font</a> 复制。如果发生错误，返回 NULL。</div>
+ </li> 
+  <li>  
+  <a name="addRichString"></a><a href="richString.html">RichString</a>* <span class="fname">addRichString</span>()
+<br/>
+  <div>在工作簿中添加一个新的 <a href="richString.html">rich string</a>，以便使用 <a href="spreadsheet.html#writeRichStr">Sheet::writeRichStr()</a> 方法在一个单元格中使用不同的字体。不要手动释放返回指针
+</div>
+ </li> 
+ <li>  
+  <a name="addCustomNumFormat"></a><span class="keyword">int</span> <span class="fname">addCustomNumFormat</span>(<span class="keyword">const wchar_t</span>* customNumFormat)<br/>
+  <div>向工作簿添加新的自定义数字格式。格式字符串 <i>customNumFormat</i> 表示如何格式化和呈现单元格的数值。请参阅 <a href="custom-format.html">自定义格式字符串指南</a>。
+返回自定义格式标识符。它将被 <a href="format.html#setNumFormat">Format::setNumFormat()</a> 使用。如果发生错误，返回 0。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="customNumFormat"></a><span class="keyword">const wchar_t</span>* <span class="fname">customNumFormat</span>(<span class="keyword">int</span> fmt) <span class="keyword">const</span><br/>
+  <div>返回指定自定义格式标识符 <i>fmt</i> 的自定义格式字符串。参见<a href="custom-format.html">自定义格式字符串指南</a>。如果发生错误，返回 NULL。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="format"></a><a href="format.html">Format</a>* <span class="fname">format</span>(<span class="keyword">int</span> index)<br/>
+  <div>返回一个带有定义索引的<a href="format.html">format</a>方法。索引必须小于 <a href="#formatSize">formatSize()</a> 方法的返回值。</div>
+ </li> 
+ <li>  
+  <a name="formatSize"></a><span class="keyword">int</span> <span class="fname">formatSize</span>()<br/>
+  <div>返回工作簿中格式大小。</div>
+ </li> 
+ <li>  
+  <a name="font"></a><a href="font.html">Font</a>* <span class="fname">font</span>(<span class="keyword">int</span> index)<br/>
+  <div>返回一个带有定义索引的 <a href="font.html">font</a> 方法。索引必须小于 <a href="#fontSize">fontSize()</a> 方法的返回值。</div>
+ </li> 
+ <li>  
+  <a name="fontSize"></a><span class="keyword">int</span> <span class="fname">fontSize</span>()<br/>
+  <div>返回工作簿中字体大小。</div>
+ </li> 
+ <li>  
+  <a name="datePack"></a><span class="keyword">double</span> <span class="fname">datePack</span>(<span class="keyword">int</span> year, <span class="keyword">int</span> month, <span class="keyword">int</span> day,
+<span class="keyword">int</span> hour = 0, <span class="keyword">int</span> min = 0, <span class="keyword">int</span> sec = 0, <span class="keyword">int</span> msec = 0)
+<br/>
+  <div>将日期和时间信息打包成 double 类型。</div>
+ </li> 
+   
+ <li>  
+  <a name="dateUnpack"></a><span class="keyword">bool</span> <span class="fname">dateUnpack</span>(<span class="keyword">double</span> value,
+<span class="keyword">int</span>* year, <span class="keyword">int</span>* month, <span class="keyword">int</span>* day,<br/>
+<span class="keyword">int</span>* hour = 0, <span class="keyword">int</span>* min = 0, <span class="keyword">int</span>* sec = 0, <span class="keyword">int</span>* msec = 0)<br/>
+  <div>解包 double 类型的日期和时间信息。如果发生错误，返回 false。</div>
+ </li> 
+   
+ <li>  
+  <a name="colorPack"></a><a href="colors.html">Color</a> <span class="fname">colorPack</span>(<span class="keyword">int</span> red, <span class="keyword">int</span> green, <span class="keyword">int</span> blue)
+<br/>
+  <div>打包红、绿、蓝三原色到 color 类型。</div>
+ </li> 
+ <li>  
+  <a name="colorUnpack"></a><span class="keyword">void</span> <span class="fname">colorUnpack</span>(<a href="colors.html">Color</a> color, <span class="keyword">int</span>* red, <span class="keyword">int</span>* green, <span class="keyword">int</span>* blue)<br/>
+  <div>解包 color 类型到红、绿、蓝三原色</div>
+ </li> 
+ <li>  
+  <a name="activeSheet"></a><span class="keyword">int</span> <span class="fname">activeSheet</span>() <span class="keyword">const</span><br/>
+  <div>返回此工作簿中的活动工作表索引。</div>
+ </li> 
+ <li>  
+  <a name="setActiveSheet"></a><span class="keyword">void</span> <span class="fname">setActiveSheet</span>(<span class="keyword">int</span> index)<br/>
+  <div>设置此工作簿中的活动工作表索引。</div>
+ </li> 
+ <li>  
+  <a name="pictureSize"></a><span class="keyword">int</span> <span class="fname">pictureSize</span>() <span class="keyword">const</span><br/>
+  <div>返回本工作簿中的图片数量。
+</div>
+ </li> 
+ <li>  
+  <a name="getPicture"></a>PictureType <span class="fname">getPicture</span>(<span class="keyword">int</span> index, <span class="keyword">const char</span>** data, <span class="keyword">unsigned</span>* size) <span class="keyword">const</span><br/>
+  <div>
+  返回内存缓冲区中 <i>index</i> 位置的图片。参数：<br/>
+  index - 在工作簿中的位置；<br/>
+  data - 对缓冲区的引用；<br/>
+  size - 对保存的尺寸的引用。<br/>
+  返回图片的类型：
+  <table class="helptable"> 
+   <thead>
+   <tr><td>图片类型值</td><td width=270>描述</td></tr>
+   </thead>
+   <tr><td>PICTURETYPE_PNG</td><td align=center>PNG 格式</td></tr> 
+   <tr><td>PICTURETYPE_JPEG</td><td align=center>JPEG 格式</td></tr>
+   <tr><td>PICTURETYPE_GIF</td><td align=center>GIF 格式</td></tr>  
+   <tr><td>PICTURETYPE_WMF</td><td align=center>WMF 格式</td></tr> 
+   <tr><td>PICTURETYPE_DIB</td><td align=center>DIB 格式</td></tr> 
+   <tr><td>PICTURETYPE_EMF</td><td align=center>EMF 格式</td></tr> 
+   <tr><td>PICTURETYPE_TIFF</td><td align=center>TIFF 格式</td></tr> 
+     
+   <tr><td>PICTURETYPE_ERROR</td><td align=center>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</td></tr> 
+     </table>
+  </div>
+ </li> 
+ <li>  
+  <a name="addPicture"></a><span class="keyword">int</span> <span class="fname">addPicture</span>(<span class="keyword">const wchar_t*</span> filename)<br/>
+  <div>添加一张图片到工作簿，返回一个图片标识符。支持BMP, DIB, PNG, JPG和WMF图片格式。图片标识符供 <a href="spreadsheet.html#setPicture">Sheet::setPicture()</a> 使用。如果发生错误，返回 -1。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="addPicture2"></a><span class="keyword">int</span> <span class="fname">addPicture2</span>(<span class="keyword">const char</span>* data, <span class="keyword">unsigned</span> size)<br/>
+  <div>从内存缓冲区向工作簿添加图片：<br/>
+<i>data</i> - 指向缓冲区的指针，包含图片数据（BMP、DIB、PNG、JPG或WMF格式）；<br/>
+<i>size</i> - 缓冲区中数据的大小。
+返回一个图片标识符。图片标识符供<a href="spreadsheet.html#setPicture">Sheet::setPicture()</a> 使用。如果发生错误，返回 -1。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a>获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="addPictureAsLink"></a><span class="keyword">int</span> <span class="fname">addPictureAsLink</span>(<span class="keyword">const wchar_t*</span> filename, <span class="keyword">bool</span> insert = <span class="keyword">false</span>)<br/>
+  <div>将图片作为链接添加到工作簿中（仅适用于xlsx文件）：<br/>
+<i>insert = false</i> - 只存储一个文件的链接；<br/>
+<i>insert = true</i> - 存储一张图片和一个文件的链接。<br/>
+返回一个图片标识符。支持BMP, DIB, PNG, JPG和WMF图片格式。图片标识符供 <a href="spreadsheet.html#setPicture">Sheet::setPicture()</a> 使用。如果发生错误，返回 -1。使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="defaultFont"></a><span class="keyword">const wchar_t</span>* <span class="fname">defaultFont</span>(<span class="keyword">int</span>* fontSize)<br/>
+  <div>返回此工作簿的默认字体名称和大小。如果发生错误则返回 0。<br/>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+ <li>  
+  <a name="setDefaultFont"></a><span class="keyword">void</span> <span class="fname">setDefaultFont</span>(<span class="keyword">const wchar_t</span>* fontName, <span class="keyword">int</span> fontSize)<br/>
+  <div>设置此工作簿的默认字体名称和大小。</div>
+ </li> 
+ <li>  
+  <a name="refR1C1"></a><span class="keyword">bool</span> <span class="fname">refR1C1</span>() <span class="keyword">const</span><br/>
+  <div>返回R1C1参考模式是否处于激活状态。</div>
+ </li> 
+   
+ <li>  
+  <a name="setRefR1C1"></a><span class="keyword">void</span> <span class="fname">setRefR1C1</span>(<span class="keyword">bool</span> refR1C1 = <span class="keyword">true</span>)<br/>
+  <div>设置R1C1参考模式。
+</div>
+ </li> 
+  <li>  
+  <a name="rgbMode"></a><span class="keyword">bool</span> <span class="fname">rgbMode</span>()<br/>
+  <div>返回RGB模式是否处于激活状态。</div>
+ </li> 
+   
+   <li>  
+    <a name="setRgbMode"></a><span class="keyword">void</span> <span class="fname">setRgbMode</span>(<span class="keyword">bool</span> rgbMode = <span class="keyword">true</span>)<br/>
+    <div>设置RGB模式：<br/>true - RGB模式；<br/>false - Index 模式（默认）。<br/>在RGB模式下，使用 <a href="#colorPack">colorPack()</a> 和 <a href="#colorUnpack">colorUnpack()</a> 方法来获取/设置颜色。</div>
+   </li> 
+  <li>  
+  <a name="calcMode"></a>CalcModeType <span class="fname">calcMode</span>() <span class="keyword">const</span><br/>
+  <div>返回工作簿的计算模式。</div>
+ </li> 
+   
+   <li>  
+    <a name="setCalcMode"></a><span class="keyword">void</span> <span class="fname">setCalcMode</span>(CalcModeType calcMode)<br/>
+    <div>
+    设置工作簿的计算模式：
+    <table class="helptable"> 
+     <thead>
+     <tr><td>计算模式值</td><td width=270>描述</td></tr>
+     </thead>
+     <tr><td>CALCMODE_MANUAL</td><td align=center>手动计算</td></tr> 
+     <tr><td>CALCMODE_AUTO</td><td align=center>自动计算</td></tr>
+     <tr><td>CALCMODE_AUTONOTABLE</td><td align=center>除数据表外自动</td></tr>  
+    </table>
+    </div>
+   </li> 
+  <li>  
+  <a name="biffVersion"></a><span class="keyword">int</span> <span class="fname">biffVersion</span>() <span class="keyword">const</span><br/>
+  <div>返回二进制文件的BIFF版本，仅用于xls格式。</div>
+ </li>
+ <li>  
+  <a name="isDate1904"></a><span class="keyword">bool</span> <span class="fname">isDate1904</span>() <span class="keyword">const</span><br/>
+  <div>返回 1904年的日期系统是否处于激活状态。</div>
+ </li> 
+   
+ <li>  
+  <a name="setDate1904"></a><span class="keyword">void</span> <span class="fname">setDate1904</span>(<span class="keyword">bool</span> date1904 = <span class="keyword">true</span>)<br/>
+  <div>设置日期系统模式：<br>true - 1904年日期系统；<br/>false - 1900年日期系统（默认）。<br/>
+在1900年的日期基数系统中，下限为1900年1月1日，其序列值为 1。<br/>
+在1904年的日期基数系统中，下限为1904年1月1日，其序列值为 0。
+</div>
+ </li> 
+  
+ <li>  
+  <a name="isTemplate"></a><span class="keyword">bool</span> <span class="fname">isTemplate</span>() <span class="keyword">const</span><br/>
+  <div>返回工作簿是否为模板。</div>
+ </li> 
+   
+ <li>  
+  <a name="setTemplate"></a><span class="keyword">void</span> <span class="fname">setTemplate</span>(<span class="keyword">bool</span> tmpl = <span class="keyword">true</span>)<br/>
+  <div>设置模板标志：<br>true - 工作簿是模板；<br>false - 工作簿不是模板（默认）。<br>
+它允许将文件类型从模板文件（xlt和xltx）改为常规文件（xls和xlsx），反之亦然。</div>
+ </li> 
+  
+ <li>  
+  <a name="setKey"></a><span class="keyword">void</span> <span class="fname">setKey</span>(<span class="keyword">const wchar_t</span>* name, <span class="keyword">const wchar_t</span>* key)<br/>
+  <div>设置客户的许可证密钥。</div>
+ </li> 
+   
+   <li>  
+    <a name="setLocale"></a><span class="keyword">bool</span> <span class="fname">setLocale</span>(<span class="keyword">const char</span>* locale)<br/>
+    <div>设置该库的语言环境。<br/>locale 参数与 C 运行时库中的 setlocale() 函数中的 locale 参数相同。<br/>
+例如，值 "en_US.UTF-8 " 允许在 Linux 或 Mac 中使用非 ascii字符。 <br/>
+它接受特殊值 "UTF-8"，以便在 Windows 和其他操作系统中使用 UTF-8 字符编码。<br/>
+它对具有宽字符串的 unicode 项目没有影响（使用 _UNICODE 预处理器变量）。<br/>
+如果给定了一个有效的 locale 参数，则返回 true。
+   </li> 
+   <li>  
+    <a name="errorMessage"></a><span class="keyword">const char</span>* <span class="fname">errorMessage</span>() <span class="keyword">const</span><br/>
+    <div>返回最后一条错误信息。</div>
+   </li> 
+     
+   <li>  
+    <a name="release"></a><span class="keyword">void</span> <span class="fname">release</span>()<br/>
+    <div>删除此对象并释放资源。</div>
+   </li>
+    </ul>
+
+<div class="blinks">
+   <a href="index.html">Index</a>&nbsp;<b>Book</b>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<a href="autoFilter.html">AutoFilter</a>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<a href="richString.html">RichString</a></div>       
+
+  </div>
+ </td>
+  </tr>
+  <tr>
+    <td id="footer">?2008 - 2020 XLware. All rights reserved.</td>
+  </tr>
+  </tbody>
+  </table>
+</body>
+</html>

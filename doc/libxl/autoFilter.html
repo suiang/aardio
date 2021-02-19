@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head> 
+  <title>LibXL: AutoFilter class reference</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />  
+  <link rel="stylesheet" type="text/css" href="style.css" />  
+</head>
+<body>  
+  <table id="container" cellspacing="6">
+  <tbody>
+  <tr>
+    <td id="header">
+      <a href="http://www.libxl.com" title="Home">
+        <img src="images/logo.png" style="border: medium none ; float: left; margin-left: 2em;" alt="LibXL - direct reading and writing Excel files" />
+      </a>
+      <div style="margin-left: 13em; margin-top: 2em;">
+        <span id="title">LibXL</span><br/> 
+        <div id="subtitle">API 参考版本 3.9.1</div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
+      <div id="content">
+        <div><a href="index.html">Index</a>&nbsp;<a href="workbook.html">Book</a>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<b>AutoFilter</b>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<a href="richString.html">RichString</a></div>
+<h3>AutoFilter class reference</h3>
+<ul class="doc"> 
+ <li>
+  <a name="getRef"></a><span class="keyword">bool</span> <span class="fname">getRef</span>(<span class="keyword">int</span>* rowFirst, <span class="keyword">int</span>* rowLast, <span class="keyword">int</span>* colFirst, <span class="keyword">int</span>* colLast)  <div>获取自动过滤的单元格范围。如果错误，返回 false。<br/>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+ <li>
+  <a name="setRef"></a><span class="keyword">void</span> <span class="fname">setRef</span>(<span class="keyword">int</span> rowFirst, <span class="keyword">int</span> rowLast, <span class="keyword">int</span> colFirst, <span class="keyword">int</span> colLast)  <div>设置自动过滤的单元格范围。</div>
+ </li> 
+ <li>
+  <a name="column"></a><a href="filterColumn.html">FilterColumn</a> <span class="fname">column</span>(<span class="keyword">int</span> colId)  <div>通过零基索引返回自动过滤列。如果它不存在，则创建它。</div>
+ </li> 
+ <li>
+  <a name="columnSize"></a><span class="keyword">int</span> <span class="fname">columnSize</span>() <span class="keyword">const</span>  <div>返回有过滤信息的指定自动过滤列的数量。
+</div>
+ </li> 
+ <li>
+  <a name="columnByIndex"></a><a href="filterColumn.html">FilterColumn</a> <span class="fname">columnByIndex</span>(<span class="keyword">int</span> index)  <div>返回指定的自动过滤列的索引信息。
+</div>
+ </li> 
+ <li>
+  <a name="getSortRange"></a><span class="keyword">bool</span> <span class="fname">getSortRange</span>(<span class="keyword">int</span>* rowFirst, <span class="keyword">int</span>* rowLast, <span class="keyword">int</span>* colFirst, <span class="keyword">int</span>* colLast)  <div>获取要排序的整个数据范围。如果错误，返回 false。<br/>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+ <li>
+  <a name="getSort"></a><span class="keyword">bool</span> <span class="fname">getSort</span>(<span class="keyword">int</span>* columnIndex, <span class="keyword">bool</span>* descending)  <div>获取自动排序中排序列的零基索引和排序顺序。如果错误，返回 false。<br/>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+ <li>
+  <a name="setSort"></a><span class="keyword">bool</span> <span class="fname">setSort</span>(<span class="keyword">int</span> columnIndex, <span class="keyword">bool</span> descending = <span class="keyword">false</span>)  <div>设置自动过滤中的零基索引和排序顺序。如果错误，返回 false。<br/>使用 <a href="workbook.html#errorMessage">Book::errorMessage()</a> 获取错误信息。</div>
+ </li> 
+</ul>
+        <div class="blinks"><a href="index.html">Index</a>&nbsp;<a href="workbook.html">Book</a>&nbsp;<a href="spreadsheet.html">Sheet</a>&nbsp;<a href="format.html">Format</a>&nbsp;<a href="font.html">Font</a>&nbsp;<b>AutoFilter</b>&nbsp;<a href="filterColumn.html">FilterColumn</a>&nbsp;<a href="richString.html">RichString</a></div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td id="footer">?2008 - 2020 XLware. All rights reserved.</td>
+  </tr>
+  </tbody>
+  </table>
+</body>
+</html>

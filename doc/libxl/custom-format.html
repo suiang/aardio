@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+ 
+  <title>LibXL custom format guidelines</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />  
+  <link rel="stylesheet" type="text/css" href="style.css" />  
+   </head><body>  
+
+  <table id="container" cellspacing="6">  
+   <tbody><tr>
+ <td id="header">
+  <a href="http://www.libxl.com" title="Home">  <img src="images/logo.png" style="border: medium none ; float: left; margin-left: 2em;" alt="LibXL - direct reading and writing Excel files" />
+  </a>  <div style="margin-left: 13em; margin-top: 2em;">
+   <span id="title">LibXL</span>
+   <br/> 
+   <div id="subtitle">API 参考版本 3.9.1</div>
+  </div>
+ </td>
+</tr>
+   <tr>
+ <td valign="top" width="100%">
+  <div id="content">
+   <div>
+  <a href="javascript:history.back();">返回</a>
+</div>
+
+<h3>自定义格式字符串指南</h3>
+
+<div>
+ 最多可以指定四个部分的格式代码。<br/>由分号分隔的格式代码定义了以下内容
+ 正数、负数、零值和文本的格式，依次类推。<br/>如果只有两个部分是
+ 指定，第一个用于正数和 0，第二个用于负数。<br/>如果只有
+ 如果指定了一个部分，那么它将用于所有的数字。<br/><br/>四个部分的例子：
+ <div style="margin: 20px; font-size: 16px;">
+  #,###.00_);[Red](#,###.00);0.00;"sales "@
+ </div>                
+ 下表描述了可用于自定义数字格式的不同符号。
+ <table class="helptable">
+  <thead>
+   <tr><td width="100">符号</td><td>描述和结果</td></tr>                  
+  </thead>
+  <tbody><tr><td>0</td><td>数字占位符。<br/>例如，如果要将 8.9 显示为 8.90，请使用格式 #.00</td></tr>                  
+  <tr><td>#</td><td>数字占位符。该符号与 0 符号的规则相同。<br/>
+  但是，当输入的数字在小数点两边的位数少于格式中的 # 符号时，
+  应用程序不得显示额外的 0。<br/>例如，如果自定义格式是#.###，
+  单元格中有 8.9，则显示数字 8.9</td></tr>
+  <tr><td>?</td><td>数字占位符。这个符号与 0 符号的规则相同。<br/>然而，
+  应用程序应在小数点的两边为不重要的零留出一个空格，以便小数点在列中对齐。<br/>
+  例如，自定义格式 0.0?  将数字 8.9 和 88.99 的小数点排列在一列中。</td></tr>
+  <tr><td>. (period)</td><td>小数点</td></tr>
+  <tr><td>%</td><td>百分比。<br/>如果单元格中包含一个介于0和1之间的数字，并且使用了自定义格式0%，<br/>
+  应用程序应将该数字乘以100，并在单元格中添加百分比符号。</td></tr>
+  <tr><td>, (comma)</td><td>千位数分隔符。<br/>
+  如果格式中包含用数字符号 (#) 或零括起来的逗号，应用程序应以逗号分隔千位。<br/>
+  在占位符后面的逗号将数字按千位比例排列。<br/>
+  例如，如果格式是`#.0`，单元格值是 12,200,000，则显示数字 12.2</td></tr>
+  <tr><td>E- E+ e- e+</td><td>科学格式。<br/>应用程序应在 "E" 符号右边显示一个数字，
+  该数字与小数点移动的位数相对应。<br/>例如，如果格式为`0.00E+00`，单元格中的数值为 12200000，
+  则显示数字1.22E+07。<br/>如果数字格式为 `#0.0E+0`，则显示数字12.2E+6。</td></tr>
+  <tr><td>$-+/():space</td><td>显示符号。<br/>如果想显示与这些符号不同的字符，
+  请在该字符前加上反斜杠(\)，或者用引号将该字符括起来。<br/>
+例如，如果数字格式为(000)，而单元格中的数值为 12，则显示数字 (012)。</td></tr>
+  <tr><td>\</td><td>显示格式中的下一个字符，应用程序不得显示反斜杠。<br/>
+例如，如果数字格式是`0\!`，而单元格中的值是 3，则显示值 3!</td></tr>
+  <tr><td>*</td><td>重复格式中的下一个字符，次数足够多，以填满该列的当前宽度。
+<br/>在格式的一个部分中，不得有超过一个星号。<br/>如果在格式的一个部分出现一个以上的星号，除了最后一个星号外，其他星号都应被忽略。<br/>
+例如，如果数字格式为 `0*x`，单元格中的数值为 3，则显示数值 3xxxxxx。<br/>单元格中显示的 x 字符数根据列的宽度而变化。</td></tr>
+  <tr><td>_ (underline)</td><td>跳过下一个字符的宽度。这对于在同一列的不同单元格中排列负值和正值很有用。<br/>
+例如，数字格式 `_(0.0_);(0.0)` 将列中的数字 2.3 和 -4.5 对齐，即使负数被括号包围。</td></tr>
+  <tr><td>"text"</td><td>显示引号内的任何文字。<br/>
+  例如，当单元格中的数值为 1.23 时，格式为 `0.00 "dollars"` 会显示 1.23 dollars。</td></tr>
+  <tr><td>@</td><td>文本占位符。<br/>如果在单元格中输入了文本，则单元格中的文本将以 at 符号(@) 出现的格式放置。<br/>
+  例如，如果数字格式是 `Bob "@" Smith`（包括引号），而单元格中的值 "John"，则显示值Bob John Smith。</td></tr>
+ </tbody></table>
+</div>
+
+<h3>指定颜色</h3>
+
+<div>
+  要设置格式中某一节的文字颜色，请在该节的方括号内输入以下八种颜色之一的名称。颜色代码必须是该部分的第一项。
+ <table style="font-size: 16px;" cellspacing="20">
+  <tbody><tr><td>[Black]</td><td>[Green]</td><td>[White]</td><td>[Blue]</td><td>[Magenta]</td><td>[Yellow]</td><td>[Cyan]</td><td>[Red]</td></tr>
+ </tbody></table>
+可以不使用颜色的名称，而是使用颜色索引，比如红色的[Color3]。<br/>颜色的有效数字索引范围为1到56，通过索引引用到传统调色板。
+</div>
+
+<h3>指定条件</h3>
+
+<div> 要设置只有当一个数字符合以下条件时才会应用的数字格式，
+在指定的条件下，将条件用方括号括起来。<br/><br/>在方括号中括入条件，
+条件由一个比较运算符和一个值组成。比较操作符包括： <br/>等于[=]、大于[&gt]、小于[&lt]、大于等于[&gt;=]、
+小于或等于[&lt;=]、和不等于[&lt;&gt;]。<br/>
+<br/>‎例如，以下格式以红色字体显示小于或等于 100 的数字，以蓝色字体显示大于 100 的数字。‎
+<div style="margin: 20px; font-size: 16px;">[Red][&lt;=100];[Blue][&gt;100]</div>
+  如果单元格的值不符合任何标准，那么在单元格的宽度上就会显示磅号（"#"）。
+</div>
+
+<h3>日期和时间</h3>
+
+<div>
+ <table class="helptable">
+  <thead>
+   <tr><td width="100">显示</td><td width="150">视图</td><td width="100">代码</td></tr>
+  </thead>
+  <tbody><tr><td>月份</td><td>1-12</td><td>m</td></tr>
+  <tr><td>月份</td><td>01-12</td><td>mm</td></tr>
+  <tr><td>月份</td><td>Jan-Dec</td><td>mmm</td></tr>
+  <tr><td>月份</td><td>January-December</td><td>mmmm</td></tr>
+  <tr><td>月份</td><td>J-D</td><td>mmmmm</td></tr>
+  <tr><td>天数</td><td>1-31</td><td>d</td></tr>
+  <tr><td>天数</td><td>01-31</td><td>dd</td></tr>
+  <tr><td>天数</td><td>Sun-Sat</td><td>ddd</td></tr>
+  <tr><td>天数</td><td>Sunday-Saturday</td><td>dddd</td></tr>
+  <tr><td>年份</td><td>00-99</td><td>yy</td></tr>
+  <tr><td>年份</td><td>1900-9999</td><td>yyyy</td></tr>
+  <tr><td>小时</td><td>0-23</td><td>h</td></tr>
+  <tr><td>小时</td><td>00-23</td><td>hh</td></tr>
+  <tr><td>分钟</td><td>0-59</td><td>m</td></tr>
+  <tr><td>分钟</td><td>00-59</td><td>mm</td></tr>
+  <tr><td>秒数</td><td>0-59</td><td>s</td></tr>
+  <tr><td>秒数</td><td>00-59</td><td>ss</td></tr>
+  <tr><td>时间</td><td>4 AM</td><td>h AM/PM</td></tr>
+  <tr><td>时间</td><td>4:36 PM</td><td>h:mm AM/PM</td></tr>
+  <tr><td>时间</td><td>4:36:03 P</td><td>h:mm:ss A/P</td></tr>
+  <tr><td>时间</td><td>4:36:03.75</td><td>h:mm:ss.00</td></tr>
+  <tr><td>所用时间</td><td>1:02</td><td>[h]:mm</td></tr>
+  <tr><td>所用时间</td><td>62:16</td><td>[mm]:ss</td></tr>
+  <tr><td>所用时间</td><td>3735.80</td><td>[ss].00</td></tr>
+ </tbody></table>
+</div>
+
+<h3>范例</h3>
+
+<div>
+ <table class="helptable">
+   <thead>
+    <tr><td width="100">显示</td><td width="100">视图</td><td width="100">代码</td></tr>  
+   </thead>
+   <tbody><tr><td>1234.59</td><td>1234.6</td><td>####.#</td></tr>
+   <tr><td>8.9</td><td>8.900</td><td>#.000</td></tr>
+   <tr><td>.631</td><td>0.6</td><td>0.#</td></tr>
+   <tr><td>12<br/>1234.568</td><td>12.0<br/>1234.57</td><td>#.0#</td></tr>
+   <tr>
+    <td>44.398<br/>102.65<br/>2.8</td>
+    <td>
+     <table class="aligntable">
+      <tbody><tr><td align="right">44</td><td align="left">.398</td></tr>
+      <tr><td align="right">102</td><td align="left">.65</td></tr>
+      <tr><td align="right">2</td><td align="left">.8</td></tr>
+     </tbody></table>
+    </td>
+    <td>???.???</td>
+   </tr>
+   <tr><td>5.25<br/>5.3</td><td>5 1/4<br/>5 3/10</td><td># ??/??</td></tr>
+   <tr><td>12000</td><td>12,000</td><td>#,###</td></tr>
+   <tr><td>12000</td><td>12</td><td>#,</td></tr>
+   <tr><td>12400000</td><td>12.4</td><td>0.0,,</td></tr>
+ </tbody></table>
+</div>
+
+<div class="blinks">
+  <a href="javascript:history.back();">返回</a>
+</div>
+  </div>
+ </td>
+</tr>
+   <tr>
+ <td id="footer">?2008 - 2020 XLware. All rights reserved.</td>
+</tr>
+  </tbody></table>
+ </body></html>
